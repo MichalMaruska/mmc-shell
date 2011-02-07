@@ -1,0 +1,66 @@
+#! /bin/zsh
+
+# usage:   gnome-doc  {C-symbol-name}
+#  C-symbol-name is a function/variable/type name
+#  example:  gnome-doc gtk_main
+
+# i generated the file w/ tools in  ~/sc/text/gtk.scm
+index_file=~/.gnome-api-references
+
+
+symbol=${1}
+
+section=$(echo ${symbol} |sed -e 's/_/-/g')
+
+
+gtk_doc_root="/usr/share/gtk-doc"
+
+
+# find the file
+# echo grep -A 1  $symbol $index_file
+
+# the mapping is like this:
+
+# ..... line before     
+# symbol name            
+# filename
+# ...... next line
+basename=$(grep -A 1  $symbol $index_file |tail -n 1) 
+
+if [ \! -z "$basename" ]
+    then
+    filename=$(find ${gtk_doc_root}/html/ -name ${basename})
+    else
+    if (echo $section |grep '^db-')
+    then
+    
+    c_symbol=$(echo ${symbol} |sed -e 's/-/_/g;s/db_cursor/dbc/g')
+
+    root=/usr/share/doc/db-4.2.52_p2/html/api_c
+    if [ -e  ${root}/${c_symbol}.html ]
+        then
+        filename="file://${root}/${c_symbol}.html"
+    else
+    # db-cursor -> dbc
+    # db-env ->  env
+    
+        filename="file://$root/api_index.html"
+    fi
+    else
+    # echo "$symbol not found in $index_file:   grep -A 1  $symbol $index_file"
+    exit
+    fi
+fi
+# the files are in different subdirs:
+
+# fixme:  if not found ??
+#echo  $dir/$basename
+
+#echo "${filename}#$section"
+
+# use your favourite browser:
+
+# elinks
+# lynx
+echo "file://${filename}#$section"
+exec ${BROWSER:-elinks} "file://${filename}#$section"

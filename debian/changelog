@@ -1,0 +1,66 @@
+mmc-shell (2.3.6) maverick; urgency=low
+
+  * all in git
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 18 Mar 2011 10:42:53 +0100
+
+mmc-shell (2.3.5) maverick; urgency=low
+
+  * install into /usr/bin (and drop some commands)
+
+ -- Michal Maruska <mmaruska@gmail.com>  Mon, 07 Feb 2011 23:37:06 +0100
+
+mmc-shell (2.3.4) maverick; urgency=low
+
+  * maverick
+
+ -- Michal Maruska <mmaruska@gmail.com>  Mon, 07 Feb 2011 12:56:42 +0100
+
+mmc-shell (2.3.3) lucid; urgency=low
+
+  * play flac
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 11 Nov 2010 02:18:15 +0200
+
+mmc-shell (2.3.2) lucid; urgency=low
+
+  * still fixing echo & mplayer
+
+ -- Michal Maruska <mmaruska@gmail.com>  Tue, 26 Oct 2010 04:47:25 +0300
+
+mmc-shell (2.3.1) lucid; urgency=low
+
+  * fix debianization
+
+ -- Michal Maruska <mmaruska@gmail.com>  Mon, 25 Oct 2010 03:38:02 +0300
+
+mmc-shell (2.3) lucid; urgency=low
+
+  * mmplay: echo & mplayer
+
+ -- Michal Maruska <michal@ruska.it>  Mon, 25 Oct 2010 03:25:49 +0300
+
+mmc-shell (2.2) lucid; urgency=low
+
+  * debian fix
+
+ -- Michal Maruska <mmaruska@gmail.com>  Sun, 27 Jun 2010 04:06:03 +0300
+
+mmc-shell (2.1-1) gutsy; urgency=low
+
+  * new files
+
+ -- Michal Maruska <michal@ruska.it>  Wed, 26 Mar 2008 23:27:34 +0100
+
+mmc-shell (2-1) gutsy; urgency=low
+
+  * some more added!
+
+ -- Michal Maruska <michal@ruska.it>  Wed, 07 Nov 2007 00:19:05 +0100
+
+mmc-shell (1-1) unstable; urgency=low
+
+  * Initial release 
+
+ -- Michal Maruska <michal@ruska.it>  Tue, 06 Nov 2007 22:58:10 +0100
+

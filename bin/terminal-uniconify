@@ -1,0 +1,7 @@
+#! /bin/zsh
+
+# Uniconify
+echo -n '\e[1t'
+
+# raise to top
+echo -n '\e[5t'

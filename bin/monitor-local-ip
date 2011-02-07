@@ -1,0 +1,28 @@
+#! /bin/zsh
+
+setopt noprintexitvalue
+
+
+iface=${1:-eth0}
+
+get_ip()
+{
+	ifconfig  ${iface}|grep 'inet ' |\
+	sed -e 's/^.*inet addr:\([0-9.]\+\) .*$/\1/g'
+}
+
+oldip=$(get_ip);
+echo -n $oldip "  "; date
+
+while true;
+do
+ip=$(get_ip);
+if [ \! "$ip" = "$oldip" ]>& /dev/null ;
+then
+	echo -n $ip "  ";
+	date; ring >& /dev/null;
+else
+	true;
+fi;
+oldip=$ip;  sleep 1;
+done

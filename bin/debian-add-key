@@ -1,0 +1,10 @@
+#! /bin/zsh
+
+
+key=$1
+gpg --keyserver pgpkeys.pca.dfn.de --recv-keys $key
+gpg --fingerprint $key
+# compare the fingerprint with a fingerprint on a machine with a trust path
+gpg --export -a $key | apt-key add -
+
+

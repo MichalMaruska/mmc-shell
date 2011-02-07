@@ -1,0 +1,66 @@
+#!/bin/bash
+
+echo "running ring"
+#/usr/local/bin/ring_old
+beep
+
+sound_dir=${activity_dir:-/x/activity}/sounds
+
+#/usr/lib/sounds
+# 
+case $LOGNAME in
+    mmc)
+	FILE=complete.wav
+	;;
+    beta)
+	FILE=connect.wav
+	;;
+    laura)
+	FILE=scream02.wav
+	;;
+    alice)
+	FILE=explod02.wav
+	;;
+
+    root)
+	FILE=ding.wav
+	;;
+    *)
+        FILE=ding.wav
+	;;
+esac
+
+
+
+
+
+
+if [ $# -gt 0 ];
+then
+    FILE=$sound_dir/$1
+# Change
+else
+    if [ -z "$LOGNAME" ]
+    then
+    FILE=$sound_dir/mmc
+    else
+    FILE=$sound_dir/$LOGNAME
+    fi
+fi
+
+# wavplay
+
+
+
+#echo  $FILE
+aplay --quiet $FILE > /dev/null || wavplay  $FILE
+#complete.wav
+
+if [ $# -gt 1 ];
+    then
+#    shift
+    echo $* >> /var/log/rings;
+    else
+    echo "$LOGNAME:$TERM:$terminal"  >> /var/log/rings;
+fi
+

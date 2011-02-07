@@ -1,0 +1,31 @@
+#! /bin/zsh -f
+
+number=$1;
+file=$number.pnm
+
+rotation=0
+if [ $# -ge 2 ]
+then
+    rotation=$2
+fi
+
+
+if [ -e $number.png ]
+then
+echo "the destination file exists! remove it first!  rm -vf $number.png"
+else
+    scanimage   --resolution 300 --mode Halftone -x 210 > $file
+    ## toggled
+    ring slide.wav
+    echo "scanning into $file finished!"
+    if [ $rotation = 0 ]
+    then 
+        convert  $file $number.png && rm $file
+    else
+        convert -rotate $rotation $file $number.png && rm $file
+    fi
+    ring slide.wav
+    ring slide.wav
+    # ring metal.wav
+fi
+

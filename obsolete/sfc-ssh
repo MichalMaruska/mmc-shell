@@ -1,0 +1,5 @@
+#! /bin/sh
+
+
+sawfish-client -e "(setenv \"SSH_AUTH_SOCK\"   \"$SSH_AUTH_SOCK\")"
+sawfish-client -e "(setenv \"SSH_AGENT_PID\"   \"$SSH_AGENT_PID\")" 

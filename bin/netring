@@ -1,0 +1,55 @@
+#! /bin/bash
+
+### Decide the Host
+if [ $# -ge 1 ];
+then
+    host=$1
+else
+    if [ ! -z "${SSH_CLIENT}" ]
+    then
+        host=$(echo ${SSH_CLIENT}| sed -e 's/^\([^ ]*\) .*$/\1/')
+    else
+        host=$(who -m | sed -e 's/^.*(\(.*\))/\1/')
+    fi
+fi
+
+# echo $host
+
+
+### Decide the User ... fixme: we are always the same user? (see the bottom)
+## I want to exclude using root in RSH/SSH
+user=$LOGNAME
+if [ "$user" = "root" ]
+then
+user=mmc
+fi
+
+
+
+### Obsolete nonsense?
+if false;
+then
+if [ -z "$host" ];
+then
+    file=/var/state/where/$user
+    if [ -f $file ]
+    then
+	host=$(cat $file)
+    else
+	host="linux3"
+    fi
+fi
+fi
+
+
+
+shift
+# rsh -l $user $host /usr/local/bin/ring $*
+
+if [ -z "$host" ];
+then
+    ring
+else
+# disable X forwarding!  it's useless but init code is time consuming!
+    ssh -x -i ~/.ssh/ring/ring  mmc@$host ring
+fi

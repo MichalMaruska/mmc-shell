@@ -1,0 +1,138 @@
+#!/usr/bin/perl
+# $Id: from,v 1.5 1998/07/05 16:10:13 sverrehu Exp $
+$id = $0;
+$id =~ s#.*/(.*)#$1#;
+#############################################################################
+### from v1.2.1 [1998-07-05] by Sverre H. Huseby, Norway.
+###
+### A program that will list sender and subject of unread mail (mail found
+### in the system mailbox). Command line arguments are as for the BSD
+### version.
+###
+### Configuration section ###################################################
+
+$maildir = "/var/spool/mail";
+
+### End of configuration section ############################################
+
+$user = `whoami`;
+chop $user;
+$mailcount = $longest_from = 0;
+@from = ();
+@subject = ();
+$arguser = $argfile = $argsender = "";
+
+sub mimeToChar {
+    local($mstr) = @_;
+
+    $mstr =~ s/=//;
+    return pack("C", hex($mstr));
+}
+
+sub unMimeWord {
+    local($in) = @_;
+
+    $in =~ s/_/\x20/g;
+    $in =~ s/(=..)/&mimeToChar($1)/ige;
+    return $in;
+}
+
+sub unMime {
+    local($str) = @_;
+
+    $str =~ s/=\?iso-8859-1\?q\?([^\?]*)\?=/&unMimeWord($1)/ige;
+    return $str;
+}
+
+while (@ARGV) {
+    $arg = shift(@ARGV);
+    if ($arg =~ /^-(.)\s*(.*)/) {
+	($first, $rest) = ($1, $2);
+	if ($first eq "s") {
+	    if ($rest) {
+		$argsender = $rest;
+	    } else {
+		$argsender = shift(@ARGV);
+		die "$id: sender expected after -s\n" if !$argsender;
+	    }
+	} elsif ($first eq "f") {
+	    if ($rest) {
+		$argfile = $rest;
+	    } else {
+		$argfile = shift(@ARGV);
+		die "$id: file expected after -f\n" if !$argfile;
+	    }
+	}
+    } else {
+	$arguser = $arg;
+    }
+}
+
+die "$id: both user and mailfile given\n" if ($arguser && $argfile);
+if ($arguser) { $user = $arguser; }
+$mailfile = "$maildir/$user";
+if ($argfile) { $mailfile = $argfile; }
+
+if (!-f $mailfile) {
+    die "$id: no file $mailfile\n" if ($arguser || $argfile);
+    die "No mail\n";
+}
+open(MBOX, $mailfile) || die "$id: unable to open $mailfile\n";
+while (<MBOX>) {
+    next unless /^From /;
+    ($from_from) = /^From\s(\S*)/;
+    ++$mailcount;
+    $from_user = $from_real = $subject = "";
+    while (<MBOX>) {
+	chop;
+	last if /^$/;
+	if (/^From:\s/) {
+	    $from = $_;
+	    if (/<.*>/) {
+		($from_real, $from_user)
+		    = /^From:\s*\"?([^\"]*)\"?\s*<(\S*)>/; #"
+	    } elsif (/\(.*\)/) {
+		($from_user, $from_real)
+		    = /^From:\s*(\S*)\s*\((.*)\)/;
+	    } else {
+		($from_user) = /^From:\s*(\S*)\s*/;
+	    }
+	}
+	if (/^Subject: /) {
+	    ($subject) = /^Subject: (.*)/;
+	}
+    }
+    next if $argsender && !($from =~ /$argsender/);
+    if ($from_real) {
+	$from = $from_real;
+    } elsif ($from_user) {
+	$from = $from_user;
+    } else {
+	$from = $from_from;
+    }
+    $from =~ s/^\s*(\S.*\S)\s*$/$1/;
+    $from = &unMime($from);
+    $from =~ s/\s*$//;
+    push(@from, $from);
+    if (length($from) > $longest_from) {
+	$longest_from = length($from);
+    }
+    if ($subject) {
+	$subject = &unMime($subject);
+	$subject =~ s/\s*$//;
+	push(@subject, $subject);
+    } else {
+	push(@subject, "");
+    }
+}
+close(MBOX);
+if (@from == 0) {
+    print "No mail\n";
+} else {
+    ++$longest_from;
+    while (@from) {
+	$from = shift(@from);
+	$subject = shift(@subject);
+	printf("%-" . $longest_from . "s \"%s\"\n", "$from:", $subject);
+    }
+}

@@ -1,0 +1,9 @@
+#! /bin/bash
+
+
+
+for i ;
+do
+ldd $i |\
+sed -n -e "s§.*=> \(/[^ ].*\) .*§\1§p"
+done

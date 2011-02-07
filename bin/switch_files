@@ -1,0 +1,35 @@
+#! /bin/bash
+file1=$1
+file2=$2
+
+#echo "switch_files"
+
+if [ ! -e $file2 ];
+then 
+    if [ ! -e $file1 ];
+    then 
+    echo -n ""
+#	echo "null"
+        # mv $file2 $file1;
+    else 
+    mv $file1 $file2;
+    fi
+else
+#    echo "$file2 exists"
+    if [ ! -e $file1 ];
+    then 
+#	echo "single"
+        mv $file2 $file1;
+    else 
+    # /tmp directory is not good !!!    if not on the same physical disk! then copying/chmod/chown ...
+    tmpfile=$file1.switch.$$
+    if [ -e $tmpfile ];
+    then exit
+    else
+    mv -i $file1 $tmpfile
+    mv -i $file2 $file1
+    mv -i $tmpfile $file2
+    fi
+    fi
+fi
+

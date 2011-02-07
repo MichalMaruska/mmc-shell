@@ -1,0 +1,13 @@
+#! /bin/bash
+
+if [ $# -lt 1 ]
+then
+    exit -1
+fi
+
+pid=$1
+#ps uww -p 
+while  kill -0 ${pid};
+do
+  sleep 10s;
+done

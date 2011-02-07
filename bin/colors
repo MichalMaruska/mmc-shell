@@ -1,0 +1,181 @@
+#! /bin/zsh -f
+
+
+#sh
+# COLORS
+if true;
+then
+echo '[00;30mblack[00m'
+echo '[00;31mred[00m'
+echo '[00;32mgreen[00m'
+echo '[00;33myellow[00m'
+echo '[00;34mblue[00m'
+echo '[00;35mviolet[00m'
+echo '[00;36mcyan[00m'
+echo '[00;37mwhite[00m'
+echo '[00;38mwhite[00m'
+echo '[00;39mwhite[00m'
+
+
+echo '                  Highlight'
+echo '[01;30mblack[00m'
+echo '[01;31mred[00m'
+echo '[01;32mgreen[00m'
+echo '[01;33myellow[00m'
+echo '[01;34mblue[00m'
+echo '[01;35mviolet[00m'
+echo '[01;36mcyan[00m'
+echo '[01;37mwhite[00m'
+
+echo '                  black'
+echo '[02;30mblack[00m'
+echo '[02;31mred[00m'
+echo '[02;32mgreen[00m'
+echo '[02;33myellow[00m'
+echo '[02;34mblue[00m'
+echo '[02;35mviolet[00m'
+echo '[02;36mcyan[00m'
+echo '[02;37mwhite[00m'
+
+echo '                  normal'
+echo '[03;30mblack[00m'
+echo '[03;31mred[00m'
+echo '[03;32mgreen[00m'
+echo '[03;33myellow[00m'
+echo '[03;34mblue[00m'
+echo '[03;35mviolet[00m'
+echo '[03;36mcyan[00m'
+echo '[03;37mwhite[00m'
+
+echo '                  white'
+echo '[04;30mblack[00m'
+echo '[04;31mred[00m'
+echo '[04;32mgreen[00m'
+echo '[04;33myellow[00m'
+echo '[04;34mblue[00m'
+echo '[04;35mviolet[00m'
+echo '[04;36mcyan[00m'
+echo '[04;37mwhite[00m'
+
+echo '                  blinking'
+echo '[04;30mblack[00m'
+echo '[05;31mred[00m'
+echo '[05;32mgreen[00m'
+echo '[05;33myellow[00m'
+echo '[05;34mblue[00m'
+echo '[05;35mviolet[00m'
+echo '[05;36mcyan[00m'
+echo '[05;37mwhite[00m'
+
+echo '                  blinking'
+echo '[04;30;41mblack[00m'
+echo '[05;31;42mred[00m'
+echo 
+echo '[05;32;43mgreen[00m'
+echo '[05;33;44myellow[00m'
+echo '[05;34;45mblue[00m'
+echo '[05;35;46mviolet[00m'
+echo '[05;36;47mcyan[00m'
+echo '[05;37;48mwhite[00m'
+
+
+
+
+#               att fr ba       
+echo '                  blinking'
+echo '[01;30;41mblack[00m'
+echo '[01;31;42mred[00m'
+echo '[01;32;43mgreen[00m'
+echo '[01;33;44myellow[00m'
+echo '[01;34;45mblue[00m'
+echo '[01;35;46mviolet[00m'
+echo '[01;36;47mcyan[00m'
+echo '[01;37;48mwhite[00m'
+
+
+
+
+
+
+
+
+
+# Set 
+
+echo '[01;34;41mblack[00m'
+echo '[3;01;33;40m'
+
+echo '[8]'
+
+fi
+
+
+
+if if [ $# -le 0 ];
+then
+  #!/bin/bash
+  # Display ANSI colours.
+  #
+  esc="\033["
+  echo -n " _ _ _ _ _40 _ _ _ 41_ _ _ _42 _ _ _ 43"
+  echo "_ _ _ 44_ _ _ _45 _ _ _ 46_ _ _ _47 _"
+  for fore in 30 31 32 33 34 35 36 37; do
+    line1="$fore  "
+    line2="    "
+    for back in 40 41 42 43 44 45 46 47; do
+      line1="${line1}${esc}${back};${fore}m Normal  ${esc}0m"
+      line2="${line2}${esc}${back};${fore};1m Bold    ${esc}0m"
+    done
+    echo -e "$line1\n$line2"
+  done
+
+
+fi
+
+#echo '[3;05;32;43m'
+
+
+if [ $# -ge 1 ];
+then
+    echo -e "\x1b[48;5;$1m your color $1 ";
+fi
+
+
+if true;
+then  
+# now the grayscale ramp
+echo "Grayscale ramp:\n";
+# 232
+for ((color = 1; color < 256; color=color+1))
+{
+    echo -e "\x1b[38;5;${color}m $color ";
+}
+fi
+
+
+if if [ $# -le 0 ];
+then
+for ((i = 0; i < 6; i=i+1))
+{
+    for ((j = 0; j < 6; j=j+1))
+    {
+        (( color=33+i+j*6*6));
+        echo -e -n "\x1b[38;5;${color}m $i $j ";
+    }
+    echo 
+}
+fi
+
+#        print "\x1b[0m\n";
+
+
+
+# > black   :           R = 0000, G = 0000, B = 0000)
+# red     :           R = 1000, G = 0000, B = 0010)
+# green   :           R = 0030, G = 0920, B = 0000)
+# yellow  :           R = 0990, G = 1000, B = 0000)
+# blue    :           R = 0000, G = 0000, B = 0990)
+# magenta :           R = 0990, G = 0000, B = 1000)
+# cyan    :           R = 0020, G = 1000, B = 1000)
+# white   :           R = 0250, G = 0250, B = 0250)
+

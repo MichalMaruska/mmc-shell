@@ -1,0 +1,9 @@
+#! /bin/bash
+
+
+dh_checkdir | exit -1;
+
+for p in $(dpatch list-all); do \                                                                  
+     quilt import -P $p.diff debian/patches/$p.dpatch; \                                            
+     quilt push; \ 
+done                                                                                               

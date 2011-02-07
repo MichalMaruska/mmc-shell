@@ -1,0 +1,17 @@
+#! /bin/zsh -f
+
+
+
+
+mp3info  -x $* 2>/dev/null |grep --colour=auto 'File:\|Audio'
+
+
+if false;
+then
+for file in $*
+do
+echo $file
+ mpg123 -n1  $file  |& grep  --color=always  'kbit/s'
+# |sed -e 's/^(.*)/'
+done
+fi

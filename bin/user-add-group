@@ -1,0 +1,18 @@
+#! /bin/zsh -f
+
+# user-add-group mmc foto
+
+if [ $# -le 1 ]
+then
+echo insufficient arguments $#
+echo usage: user-add-group mmc foto
+exit -1
+else
+user=$1
+group=$2
+
+groups $user
+usermod -a -G $group $user
+# usermod -G $(groups ${user} |sed -e 's/ /,/g'),${group} $user
+groups $user
+fi

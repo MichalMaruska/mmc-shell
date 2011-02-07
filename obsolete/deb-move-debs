@@ -1,0 +1,41 @@
+#! /usr/bin/zsh -f
+
+# This script moves the .DEB files into the repo for the HOST's (its own) release!
+# 
+
+
+# exit on non-zero exit status.  Correct, in the middle?
+set -e 
+
+
+## fixme: how to be sure?
+release=$(lsb_release --codename| cut -f 2)
+distrodir=/net/linux2/var/www/maruska/michal/debian/dists
+repodir=${distrodir}/${release}/main/
+
+# binary=binary-i386
+#~/debian/maruska-repo/
+
+# trap
+
+foreach deb (*.deb)
+{
+    # separate the architecture dep.  packages into different dir-trees.
+    arch=$(echo $deb|sed -e 's/^.*_\([^_]\+\)\.deb$/\1/')
+    mv -v $deb ${repodir}/binary-${arch}/
+}
+
+
+# *.changes
+mv -v --update  *.dsc       ${repodir}/source/
+# fixme: don't fail on NO *diff.gz matching files!
+# setopt
+# if -z  *.diff.gz
+mv -v --update  *.diff.gz   ${repodir}/source/
+cp -uv *.tar.gz             ${repodir}/source/
+
+
+cd $distrodir
+./update
+cd -
+

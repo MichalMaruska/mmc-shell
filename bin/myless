@@ -1,0 +1,32 @@
+#!/bin/zsh
+#-y
+# mmc: SH_WORD_SPLIT -> $LS_OPTIONS is decomposed!
+
+# My generic view program ()
+
+
+set -A ls /bin/ls ${=LS_OPTIONS}
+
+if [ $# -gt 0 ]
+    then # We are given the filename
+    filename=$1;    
+    if [ -d "$filename" ]
+        then
+	#cecho red directory
+	$ls "$filename"
+    else 
+	ext=`filextension $filename`
+	if [ "$TERM" = "xterm" ]; then
+	    x_title $filename;
+	fi
+	case $ext in
+            'htm'| 'html') ${HTML_BROWSER-elinks}  "$filename";;
+            'pod') my-perldoc "$filename";;
+            'dvi') xd "$filename";;
+            *) less $*;;
+	esac
+    fi
+else 
+    less
+fi
+

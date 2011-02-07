@@ -1,0 +1,11 @@
+Source: mmc-shell
+Section: misc
+Priority: extra
+Maintainer: Michal Maruska <mmaruska@gmail.com>
+Build-Depends: cdbs, debhelper (>= 5)
+Standards-Version: 3.7.2
+
+Package: mmc-shell
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, zsh, mp3info, mpg123
+Description: collection of shell scripts

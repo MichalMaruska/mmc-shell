@@ -1,0 +1,12 @@
+#! /bin/bash
+
+TITLE=$1
+echo -e -n '\033]0;'${TITLE}'\a'
+
+  
+# export PROMPT_COMMAND="";
+# PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD}\007"'
+
+echo -e -n '\033]0;'${TITLE}'\a'
+#  P s = 2 1 -> Report xterm window's title as OSC l title ST 
+# echo -e -n '\033]21;'${TITLE}'\a'

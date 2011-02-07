@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+  
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/makefile.mk
+
+# Add here any variable or target overrides you need.
+
+
+# Experiment:
+#SITE=http://www.ruska.it/michal/comp/packages
+# PKG=mmc-shell
+# VER=2 
+# include /usr/share/quilt/quilt.debbuild.mk
+
+
+# Add here any variable or target overrides you need.
+clean::
+	-$(MAKE) clean
+
+install/mmc-shell::
+	$(MAKE) install DESTDIR=$(DEB_DESTDIR)
