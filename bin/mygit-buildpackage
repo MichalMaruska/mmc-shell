@@ -1,0 +1,13 @@
+#! /usr/bin/zsh -f
+
+# Features:
+# * invoke with --git-prebuild=./auto only
+#
+
+if [ -e auto ]
+then
+    git-buildpackage --git-prebuild=./auto  $@
+else
+    git-buildpackage $@
+fi
+

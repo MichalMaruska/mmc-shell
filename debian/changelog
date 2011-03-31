@@ -1,3 +1,9 @@
+mmc-shell (2.3.7) maverick; urgency=low
+
+  * mygit-buildpackage
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 31 Mar 2011 10:02:14 +0200
+
 mmc-shell (2.3.6) maverick; urgency=low
 
   * all in git
