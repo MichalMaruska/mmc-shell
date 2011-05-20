@@ -1,0 +1,26 @@
+#! /usr/bin/zsh -f
+
+setopt extendedglob
+
+
+foreach dir (^build-area(/)) {
+    cd $dir
+    if [ -d .git ];
+    then
+	files=$(git ls-files -o)
+#    echo $files
+	if [ ! -z $files ]
+	then
+	    pwd
+	    ls -l --color $(git ls-files -o)
+
+	    
+	    if git remote |grep origin;
+	    then
+		echo "pushing to ";git remote show origin|grep 'Push  URL'
+		git push origin
+	    fi
+	fi
+    fi
+    cd -
+}
