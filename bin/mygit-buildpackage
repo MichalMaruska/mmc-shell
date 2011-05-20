@@ -4,10 +4,23 @@
 # * invoke with --git-prebuild=./auto only
 #
 
+# scan $@ and drop -i
+# -i -> --git-ignore-new
+args=()
 if [ -e auto ]
 then
-    git-buildpackage --git-prebuild=./auto  $@
-else
-    git-buildpackage $@
+    args+="--git-prebuild=./auto"
 fi
 
+foreach arg ($@)
+{
+    case $arg in
+	-i)
+	    args+="--git-ignore-new"
+	    ;;
+	*)
+	    args+=$arg
+    esac
+}
+
+git-buildpackage $args
