@@ -1,3 +1,9 @@
+mmc-shell (2.3.10) maverick; urgency=low
+
+  * push/pull-git-subdirs
+
+ -- Michal Maruska <mmaruska@gmail.com>  Mon, 23 May 2011 12:38:52 +0200
+
 mmc-shell (2.3.8) maverick; urgency=low
 
   * -i abbrev  for mygit-buildpackage
