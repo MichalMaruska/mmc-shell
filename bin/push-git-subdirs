@@ -2,7 +2,6 @@
 
 setopt extendedglob
 
-
 foreach dir (^build-area(/)) {
     cd $dir
     if [ -d .git ];
@@ -13,7 +12,9 @@ foreach dir (^build-area(/)) {
 	then
 	    pwd
 	    ls -l --color $(git ls-files -o)
-
+	fi
+	if git status;
+	then
 	    if git remote |grep origin;
 	    then
 		echo "pushing to ";git remote show origin|grep 'Push  URL'
