@@ -1,3 +1,9 @@
+mmc-shell (2.3.13) maverick; urgency=low
+
+  * cecho in push-git...
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 25 May 2011 23:05:34 +0200
+
 mmc-shell (2.3.12) maverick; urgency=low
 
   * cecho
