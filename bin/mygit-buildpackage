@@ -18,6 +18,8 @@ foreach arg ($@)
 	-i)
 	    args+="--git-ignore-new"
 	    ;;
+	-u)
+	    args+="-uc -us";;
 	*)
 	    args+=$arg
     esac
