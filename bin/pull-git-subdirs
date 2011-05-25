@@ -8,19 +8,20 @@ foreach dir (^build-area(/)) {
     if [ -d .git ];
     then
 #    echo $files
-	if git status;
+	if git remote |grep origin;
 	then
-	    echo -n "==========="; pwd;
-	    git branch
-	    if git remote |grep origin;
+	    if git status;
 	    then
+		echo -n "==========="; pwd;
+		git branch
+		
 		echo "pulling from ";git remote show origin|grep 'Fetch URL'
 		git pull origin master
 	    else
-		echo $dir is not associated with any Origin
+		echo $dir is not clean!
 	    fi
 	else
-	    echo $dir is not clean!
+	    echo $dir is not associated with any Origin
 	fi
     else
 	echo $dir  is not Git
