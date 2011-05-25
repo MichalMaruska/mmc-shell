@@ -14,16 +14,16 @@ foreach dir (^build-area(/)) {
 	    git branch
 	    if git remote |grep origin;
 	    then
-		echo "pulling from ";git remote show origin|grep 'Fetch URL'
+		cecho green "pulling from ";git remote show origin|grep 'Fetch URL'
 		git pull origin master
 	    else
-		echo $dir is not associated with any Origin
+		cecho yellow $dir is not associated with any Origin
 	    fi
 	else
-	    echo $dir is not clean!
+	    cecho red $dir is not clean!
 	fi
     else
-	echo $dir  is not Git
+	cecho red $dir  is not Git
     fi
     cd -
 }
