@@ -17,17 +17,17 @@ fi
 if [ $hash_support = 1 ]
 then
 declare -A _COLORS
-_COLORS[black]='\E[30;47m'
-_COLORS[red]='\E[31;47m'
-_COLORS[green]='\E[32;47m'
-_COLORS[yellow]='\E[33;47m'
+_COLORS[black]='\E[30m'
+_COLORS[red]='\E[31m'
+_COLORS[yellow]='\E[32m'
+_COLORS[green]='\E[33m'
 _COLORS[hiyellow]='\033[1;32m'
-_COLORS[blue]='\E[34;47m'
+_COLORS[blue]='\E[34m'
 _COLORS[hiblue]='\033[1;34m'
 #hiblue=$blue
-_COLORS[magenta]='\E[35;47m'
-_COLORS[cyan]='\E[36;47m'
-_COLORS[white]='\E[37;47m'
+_COLORS[magenta]='\E[35m'
+_COLORS[cyan]='\E[36m'
+_COLORS[white]='\E[37m'
 _COLORS[bold]='\033[1m'
 else
    declare -a _COLORS
