@@ -1,3 +1,11 @@
+mmc-shell (2.3.14) maverick; urgency=low
+
+  * invert conditions for git-pull verbosity
+  * mygit-build...   support building without signing
+  * cecho  BG neutral.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 27 May 2011 10:56:00 +0200
+
 mmc-shell (2.3.13) maverick; urgency=low
 
   * cecho in push-git...
