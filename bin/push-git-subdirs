@@ -17,16 +17,16 @@ foreach dir (^build-area(/)) {
 	then
 	    if git remote |grep origin;
 	    then
-		echo "pushing to ";git remote show origin|grep 'Push  URL'
+		cecho green "pushing to ";git remote show origin|grep 'Push  URL'
 		git push origin
 	    else
-		echo $dir is not associated with any Origin
+		cecho yellow $dir is not associated with any Origin
 	    fi
 	else
-	    echo $dir is not clean!
+	    cecho red $dir is not clean!
 	fi
     else
-	echo $dir  is not Git
+	cecho blue $dir  is not Git
     fi
     cd -
 }
