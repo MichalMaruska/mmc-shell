@@ -2,22 +2,26 @@
 
 setopt extendedglob
 
+gitoptions="--no-pager"
+git=(git $gitoptions)
+
 foreach dir (^build-area(/)) {
     cd $dir
     if [ -d .git ];
     then
-	files=$(git ls-files -o)
+	cecho yellow "===" $dir "==="
+	files=$(${git} ls-files -o)
 #    echo $files
 	if [ ! -z $files ]
 	then
 	    pwd
-	    ls -l --color $(git ls-files -o)
+	    ls -l --color $files
 	fi
-	if git status;
+	if ${git} status;
 	then
 	    if git remote |grep origin;
 	    then
-		cecho green "pushing to ";git remote show origin|grep 'Push  URL'
+		cecho green -n "pushing to ";git remote show origin|grep 'Push  URL'
 		git push origin
 	    else
 		cecho yellow $dir is not associated with any Origin

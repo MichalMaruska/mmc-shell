@@ -2,18 +2,21 @@
 
 setopt extendedglob
 
+gitoptions="--no-pager"
+git=(git $gitoptions)
+
 
 foreach dir (^build-area(/)) {
     cd $dir
     if [ -d .git ];
     then
 #    echo $files
-	if git remote |grep origin;
+	if ${git} remote |grep origin;
 	then
-	    if git status;
+	    if ${git} status;
 	    then
-		cecho green "pulling from ";git remote show origin|grep 'Fetch URL'
-		git pull origin master
+		cecho green -n "pulling from ";${git} remote show origin|grep 'Fetch URL'
+		${git} pull origin master
 	    else
 		cecho yellow $dir is not associated with any Origin
 	    fi
