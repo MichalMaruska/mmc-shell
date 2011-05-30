@@ -14,5 +14,5 @@ install:
 	  $(INSTALL) -v -m 555 $$p $(DESTDIR)$(BIN_INSTALL_DIR) ; \
 	done
 clean:
-
+	git clean -f -d -x
 
