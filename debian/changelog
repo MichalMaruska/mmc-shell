@@ -1,3 +1,14 @@
+mmc-shell (2.3.15) maverick; urgency=low
+
+  * make cecho able to avoid the final newline
+  * push/pull  avoid PAGER & use less lines
+  * try to Git clean
+  * git-since-last-tag
+  * push: short & fix the colors
+  * push/pull  tags (& not only "origin")
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 01 Jun 2011 23:03:29 +0200
+
 mmc-shell (2.3.14) maverick; urgency=low
 
   * invert conditions for git-pull verbosity
