@@ -5,11 +5,14 @@ setopt extendedglob
 gitoptions="--no-pager"
 git=(git $gitoptions)
 
+
+
+
 foreach dir (^build-area(/)) {
     cd $dir
     if [ -d .git ];
     then
-	cecho yellow "===" $dir "==="
+	cecho blue "===" $dir "==="
 	files=$(${git} ls-files -o)
 #    echo $files
 	if [ ! -z $files ]
@@ -17,8 +20,10 @@ foreach dir (^build-area(/)) {
 	    pwd
 	    ls -l --color $files
 	fi
-	if ${git} status;
+	if ${git} status --short;
 	then
+	    git-since-last-tag
+
 	    if git remote |grep origin;
 	    then
 		cecho green -n "pushing to ";git remote show origin|grep 'Push  URL'
