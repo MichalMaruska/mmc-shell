@@ -27,8 +27,9 @@ foreach dir (^build-area(/)) {
 	    if git remote |grep $remote;
 	    then
 		cecho green -n "pushing to ";git remote show $remote|grep 'Push  URL'
-		git push $remote
-		git push $remote --tags
+		# fixme: all branches
+		git push --tags $remote master
+		# git push $remote
 	    else
 		cecho yellow $dir is not associated with any $remote
 	    fi
