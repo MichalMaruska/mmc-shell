@@ -6,25 +6,28 @@ gitoptions="--no-pager"
 git=(git $gitoptions)
 
 
+remote=origin
 foreach dir (^build-area(/)) {
     cd $dir
     if [ -d .git ];
     then
-#    echo $files
-	if ${git} remote |grep origin;
+	cecho blue -n "===" $dir "==="
+	if ${git} remote |grep $remote > /dev/null;
 	then
-	    if ${git} status;
+	    echo
+	    if ${git} status --short;
 	    then
-		cecho green -n "pulling from ";${git} remote show origin|grep 'Fetch URL'
-		${git} pull origin master
+		cecho green -n "pulling from ";${git} remote show $remote|grep 'Fetch URL'
+		${git} pull $remote master
+		${git} fetch --tags $remote
 	    else
-		cecho yellow $dir is not associated with any Origin
+		cecho red $dir is not clean!
 	    fi
 	else
-	    cecho red $dir is not clean!
+	    cecho yellow ... is not associated with any $remote
 	fi
     else
-	cecho red $dir  is not Git
+	cecho blue $dir  is not Git
     fi
     cd -
 }
