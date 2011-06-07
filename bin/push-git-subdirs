@@ -13,6 +13,9 @@ foreach dir (^build-area(/)) {
     if [ -d .git ];
     then
 	cecho blue "===" $dir "==="
+
+if false;
+then
 	files=$(${git} ls-files -o)
 #    echo $files
 	if [ ! -z $files ]
@@ -20,6 +23,8 @@ foreach dir (^build-area(/)) {
 	    pwd
 	    ls -l --color $files
 	fi
+fi
+
 	if ${git} status --short;
 	then
 	    git-since-last-tag
