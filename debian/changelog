@@ -1,3 +1,10 @@
+mmc-shell (2.3.16) maverick; urgency=low
+
+  * push tags (& not only "origin")
+  * fetch tags, not pull
+
+ -- Michal Maruska <mmaruska@gmail.com>  Tue, 07 Jun 2011 14:10:13 +0200
+
 mmc-shell (2.3.15) maverick; urgency=low
 
   * make cecho able to avoid the final newline
