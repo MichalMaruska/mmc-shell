@@ -17,9 +17,10 @@ foreach dir (^build-area(/)) {
 	    echo
 	    if ${git} status --short;
 	    then
-		cecho green -n "pulling from ";${git} remote show $remote|grep 'Fetch URL'
-		${git} pull $remote master
-		${git} fetch --tags $remote
+		cecho green -n "pulling";
+		#  from       ${git} remote show $remote|grep 'Fetch URL'
+		${git} pull --tags $remote master
+		# ${git} fetch --tags $remote
 	    else
 		cecho red $dir is not clean!
 	    fi
