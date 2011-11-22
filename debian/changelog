@@ -1,10 +1,17 @@
+mmc-shell (2.4.0) oneiric; urgency=low
+
+  * install Zsh completion functions
+  * mmplay ...gapless.  But more will come (_batching_ files to mpg123)
+
+ -- Michal Maruska <mmaruska@gmail.com>  Tue, 22 Nov 2011 01:35:39 +0100
+
 mmc-shell (2.3.17) maverick; urgency=low
 
   * be less verbose & fetch tags in one go.
   * push tags in 1 go
   * stop showing other files --- we have  short status already!
 
- -- Michal Maruska <mmaruska@gmail.com>  Wed, 08 Jun 2011 11:37:28 +0200
+ -- Michal Maruska <mmaruska@gmail.com>  Tue, 22 Nov 2011 01:34:44 +0100
 
 mmc-shell (2.3.16) maverick; urgency=low
 
