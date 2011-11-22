@@ -68,7 +68,7 @@ play_one ()
        # fixme: this is oss, not ALSA!
 	if [ -z ${playdsp} ];
 	then
-            mpg123 --aggressive -q  "$1"
+            mpg123 --gapless --aggressive -q  "$1"
 	else
             mpg123 -a ${playdsp:-/dev/dsp} --aggressive -q  "$1" 
 	fi
