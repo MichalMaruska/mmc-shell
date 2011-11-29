@@ -5,10 +5,10 @@ SELF_CMD=$0
 
 # if [ -z ${PLAY} ];
 
-# not used anymore 
+# not used anymore
 
 # if [ ${UID} = 0 ];
-#     then 
+#     then
 # #    PLAY="nice -n -19 amp -b 10000 "
 #     PLAY="nice -n -19 mpg123 -b 1000"
 #     else
@@ -16,7 +16,7 @@ SELF_CMD=$0
 # then
 #     PLAY="mpg321 --aggressive -q -b 10000"
 #     # " #alsa!
-#     #amp -b 10000 
+#     #amp -b 10000
 # else
 #     PLAY="mpg123 -b 10000"
 # fi
@@ -30,74 +30,7 @@ color_echo ()
 	echo `color green`  `color bd` "$1" `color off`
     else
 	echo "$1"
-    fi    
-}
-
-#copied to aliases?
-play_one ()
-#=======
-{
-    # cecho  red "play $1:"
-    case $1 in
-	( *.mpg)
-#    if expr match "$1"  '.*\.mpg$';
-#    then
-        # mpg123 -b 10000 "$1" ;;
-	color_echo $1
-	mpg321 --aggressive -q -b 10000 "$1";;
-        
-#    else
-
-	( *.mp2)
-	color_echo $1
-        mpg321 --aggressive -q -b 10000  "$1" ;;
-	(  *.xmms.mp3)
-	echo xmms  --play ${1};;
-
-
-	( *.mp3)
-	color_echo "$1"
-	#    echo `color red`  `color bd` $1 `color off`
-
-       # mpg321 skips when over Net!
-       # --buffer 10000
-       # problems w/ hi bit-rates!
-       # mpg321 --aggressive -o alsa09 -q -b 10000  "$1" 
-
-       # -b 10000    ... fails silently!
-       # fixme: this is oss, not ALSA!
-	if [ -z ${playdsp} ];
-	then
-            mpg123 --gapless --aggressive -q  "$1"
-	else
-            mpg123 -a ${playdsp:-/dev/dsp} --aggressive -q  "$1" 
-	fi
-
-       # mpg123 --aggressive -q  "$1";;
-	;;
-
-	(  *.ogg)
-	color_echo "$1"
-	ogg123 --quiet  "$1";;
-
-
-
-	(  *.m4a)
-	color_echo "$1"
-	# 
-	mplayer -really-quiet -ao pulse,alsa "$1" </dev/null ;;
-
-
-	(  *.flac)
-	color_echo "$1"
-	# 
-	mplayer -really-quiet -ao pulse,alsa "$1" </dev/null ;;
-
-
-    # enqueue
-#       fi
-    esac
-    # until $PLAY $1 ;do echo ; done
+    fi
 }
 
 
@@ -148,7 +81,7 @@ setopt SH_WORD_SPLIT
 for song in $songs;
 do
     unsetopt SH_WORD_SPLIT
-# We must return to use commonly accepted syntax: 
+# We must return to use commonly accepted syntax:
     IFS="${old_ifs}"
     if [ $START -gt 1 ];
     then
