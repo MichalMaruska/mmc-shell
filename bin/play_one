@@ -1,29 +1,33 @@
 #! /usr/bin/zsh -f
 
 
-#copied to aliases?
-play_one ()
-#=======
+
+
+
+
+function play_one ()
 {
     # cecho  red "play $1:"
+
+
     case $1 in
-	( *.mpg)
-#    if expr match "$1"  '.*\.mpg$';
-#    then
+	*.mpg)
         # mpg123 -b 10000 "$1" ;;
 	cecho green $1
-	mpg321 --aggressive -q -b 10000 "$1";;
+	mpg321 --aggressive -q -b 10000 "$1"
+	;;
 
-#    else
 
-	( *.mp2)
+
+	*.mp2)
 	cecho green $1
         mpg321 --aggressive -q -b 10000  "$1" ;;
 	(  *.xmms.mp3)
-	echo xmms  --play ${1};;
+	echo xmms  --play ${1}
+	;;
 
 
-	( *.mp3)
+	*.mp3)
 	cecho green "$1"
 	#    echo `color red`  `color bd` $1 `color off`
 
@@ -44,27 +48,30 @@ play_one ()
        # mpg123 --aggressive -q  "$1";;
 	;;
 
-	(  *.ogg)
+	*.ogg)
 	cecho green "$1"
 	ogg123 --quiet  "$1";;
 
 
 
-	(  *.m4a)
+	*.m4a)
 	cecho green "$1"
 	#
 	mplayer -really-quiet -ao pulse,alsa "$1" </dev/null ;;
 
 
-	(  *.flac)
+	*.flac)
 	cecho green "$1"
 	#
 	mplayer -really-quiet -ao pulse,alsa "$1" </dev/null ;;
 
 
+	*)
+	    mplayer -really-quiet -ao pulse,alsa "$1" </dev/null ;;
     # enqueue
-#       fi
     esac
+
+
     # until $PLAY $1 ;do echo ; done
 }
 
