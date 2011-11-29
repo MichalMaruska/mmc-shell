@@ -1,13 +1,15 @@
-#!/bin/bash
+#!/bin/bash -e
 
-echo "running ring"
-#/usr/local/bin/ring_old
-beep
+# echo "running ring"
+# /usr/local/bin/ring_old
+if which beep 2>/dev/null;
+then
+    beep
+fi
 
-sound_dir=${activity_dir:-/x/activity}/sounds
+sound_dir=${activity_dir:-/usr/share}/sounds
 
-#/usr/lib/sounds
-# 
+
 case $LOGNAME in
     mmc)
 	FILE=complete.wav
@@ -34,7 +36,6 @@ esac
 
 
 
-
 if [ $# -gt 0 ];
 then
     FILE=$sound_dir/$1
@@ -48,6 +49,7 @@ else
     fi
 fi
 
+echo $FILE
 play_one $FILE
 
 if [ $# -gt 1 ];
