@@ -1,0 +1,10 @@
+#compdef source-highlight
+
+_arguments \
+  '-h[--help]' \
+  '-V[--version]' \
+  '--lang-list[]' \
+  '-f[--out-format=]'
+
+
+#   '*:Other options:_git-buildpackage'
