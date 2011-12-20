@@ -1,4 +1,4 @@
-#! /usr/bin/zsh -f
+#! /usr/bin/zsh -fe
 
 # Features:
 # * invoke with --git-prebuild=./auto only
@@ -7,10 +7,32 @@
 # scan $@ and drop -i
 # -i -> --git-ignore-new
 args=()
+
+
+function debian_control_automatic() {
+    count1=$(git ls-files debian/control.in|wc -c)
+
+    count2=$(git ls-files debian/control|wc -c)
+    test \( $count1 != 0 -a $count2 = 0 \)
+}
+
+
 if [ -e auto ]
 then
     args+="--git-prebuild=./auto"
 fi
+
+
+if debian_control_automatic;
+then
+
+    # ./auto
+    # generate-debian-control
+    args+="--git-prebuild=generate-debian-control"
+#    exit 1
+fi
+
+# DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 
 foreach arg ($@)
 {
