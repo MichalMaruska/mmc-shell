@@ -64,4 +64,4 @@ done
 shift OPTIND-1
 OPTIND=1
 # echo $args
-git-buildpackage $args
+git-buildpackage $args "$@"
