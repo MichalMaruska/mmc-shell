@@ -34,17 +34,34 @@ fi
 
 # DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 
-foreach arg ($@)
-{
-    case $arg in
-	-i)
+
+while getopts :iu OPT; do
+    case $OPT in
+	i|+i)
 	    args+="--git-ignore-new"
 	    ;;
-	-u)
-	    args+="-uc -us";;
-	*)
-	    args+=$arg
-    esac
-}
+	u|+u)
+	    args+="-uc -us "
+	    ;;
+	?)
+	    # I need to break out of this while.
 
+	    # OPTIND is pointing at THE current broken arg.
+	    # so we can break out of here.
+	    # no need to save the $OPTARG
+	    # args+=$OPTARG
+	    # echo "found alien: $@"
+	    break
+	    ;;
+	*)
+	    args+=$OPT
+	    print "usage: ${0##*/} [+-iu} [--] ARGS..."
+	    exit 2
+    esac
+done
+
+# what is this?
+shift OPTIND-1
+OPTIND=1
+# echo $args
 git-buildpackage $args
