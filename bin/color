@@ -15,6 +15,7 @@ fi
 if [ $hash_support = 1 ]
 then
 declare -A _COLORS
+_COLORS[reset]='\E[00m'
 _COLORS[black]='\E[30m'
 _COLORS[red]='\E[31m'
 _COLORS[yellow]='\E[32m'
@@ -30,6 +31,7 @@ _COLORS[bold]='\033[1m'
 else
 declare -a _COLORS
 _COLORS=(
+"reset:\E[00m"
 "black:\E[30;47m"
 "red:\E[31;47m"
 "green:\E[32;47m"
