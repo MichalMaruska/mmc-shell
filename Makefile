@@ -27,5 +27,7 @@ install-zsh:
 
 
 clean:
+
+git-clean:
 	git clean -f -d -x
 
