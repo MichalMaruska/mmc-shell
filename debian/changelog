@@ -1,8 +1,14 @@
-mmc-shell (2.5.2) maverick; urgency=low
+mmc-shell (2.7) maverick; urgency=low
 
   * fix: append the transfered & original args
+  * new tools for debian source dirs.
+  * new color
+  * "reset" color
+  * complete: source-hightlight
+  * we build out of the git repo.  Stop using git for "clean"
+  * drop build-system specific commands
 
- -- Michal Maruska <mmaruska@gmail.com>  Fri, 23 Dec 2011 12:20:01 +0100
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 18 Jan 2012 13:56:02 +0100
 
 mmc-shell (2.5.1) maverick; urgency=low
 
