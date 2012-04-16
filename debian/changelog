@@ -1,3 +1,9 @@
+mmc-shell (2.9) release; urgency=low
+
+  * only bumping the version (for mmc-build-system)
+
+ -- Michal Maruska <mmaruska@gmail.com>  Mon, 16 Apr 2012 16:12:36 +0200
+
 mmc-shell (2.8) release; urgency=low
 
   * drop deb-pkg-*  (moved to mmc-build-system)
