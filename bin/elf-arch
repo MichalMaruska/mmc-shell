@@ -1,0 +1,4 @@
+#! /bin/bash
+
+readelf -A $1| tail -n 15 |grep -i cpu_arch
+

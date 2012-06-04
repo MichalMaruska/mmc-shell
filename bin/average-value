@@ -1,0 +1,11 @@
+#! /bin/bash
+
+# file=times.pure
+# with precision 9
+# register a ... count
+# register r ... macro
+#
+# $file
+dc -f - -e '9k  1sa  [+1  la+sa   z1<r]sr z1<r  la / p' 2>/dev/null
+
+
