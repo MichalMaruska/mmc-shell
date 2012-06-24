@@ -1,3 +1,10 @@
+mmc-shell (2.10) release; urgency=low
+
+  * new: choose-browser
+  * new commands:  average-value  elf-arch hilite-outline expr-verbose
+
+ -- Michal Maruska <mmaruska@gmail.com>  Sun, 24 Jun 2012 13:37:29 +0200
+
 mmc-shell (2.9) release; urgency=low
 
   * only bumping the version (for mmc-build-system)
