@@ -1,0 +1,27 @@
+#! /usr/bin/zsh -feux
+
+# "mmc-all"
+sum_br=$1
+
+# how to
+typeset -a branches
+_tmp=$(grep -v '^#' .git/mmc/$sum_br)
+branches=(${(f)_tmp})
+
+echo
+
+# if exists such branch/tag ->abort
+first=$branches[1]
+
+others=($branches[2,-1])
+#(mmc-fixes mmc-keep-time mmc-xi-adaptation mmc-debug-grabs mmc-plugin-loader mmc-handy michal-xkb)
+
+#exit 1
+
+# git co $sum
+# git co -b $sum_br $first
+
+foreach next ($others)
+{
+    git merge $next;
+}
