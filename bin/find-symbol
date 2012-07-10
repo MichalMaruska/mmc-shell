@@ -1,0 +1,13 @@
+#! /usr/bin/zsh -f
+
+
+symbol=$1
+
+
+foreach lib (/lib/lib* /usr/lib/lib*(.) )
+{
+    if (nm $lib| grep $symbol ) &> /dev/null;
+    then
+	echo $lib
+    fi
+}
