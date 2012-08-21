@@ -1,4 +1,28 @@
 #! /usr/bin/zsh -feux
+reset=n
+dry=n
+
+while getopts :rd OPT; do
+    case $OPT in
+	d)
+	    dry=y;;
+	r|+r)
+	    # reset:
+	    reset=y
+	    ;;
+	*)
+	    print "usage: ${0##*/} [+-r} [--] ARGS..."
+	    exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+if [ $dry = "y" ]; then
+    cmd="echo"
+else
+    cmd=""
+fi
 
 # "mmc-all"
 sum_br=$1
@@ -20,10 +44,13 @@ others=($branches[2,-1])
 
 #exit 1
 
-# git co $sum
+if [ $reset = "y" ]; then
+    eval $cmd git co $sum_br
+    eval $cmd git reset --hard $first
+fi
 # git co -b $sum_br $first
 
 foreach next ($others)
 {
-    git merge $next;
+    eval $cmd git merge $next;
 }
