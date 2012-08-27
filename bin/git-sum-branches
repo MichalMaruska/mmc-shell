@@ -19,7 +19,7 @@ shift OPTIND-1
 OPTIND=1
 
 if [ $dry = "y" ]; then
-    cmd="echo"
+    cmd="cecho red"
 else
     cmd=""
 fi
@@ -47,6 +47,9 @@ others=($branches[2,-1])
 if [ $reset = "y" ]; then
     eval $cmd git co $sum_br
     eval $cmd git reset --hard $first
+else
+    eval $cmd git co $sum_br
+    eval $cmd git merge $first;
 fi
 # git co -b $sum_br $first
 
