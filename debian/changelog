@@ -1,3 +1,15 @@
+mmc-shell (2.11) release; urgency=low
+
+  * new simple-advanced git tools
+  * new find-symbol
+  * ask git for the .git directory
+  * Allow preview  --dry run
+  * git-sum-branches:  implement DRY
+  * git-sum-branches: reset
+  * pull-git-subdirs: accept a remote-name as cmdline option
+
+ -- Michal Maruska <mmaruska@gmail.com>  Mon, 27 Aug 2012 12:36:44 +0200
+
 mmc-shell (2.10) release; urgency=low
 
   * new: choose-browser
