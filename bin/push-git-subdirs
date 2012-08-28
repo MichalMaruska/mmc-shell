@@ -6,6 +6,8 @@ gitoptions="--no-pager"
 git=(git $gitoptions)
 
 
+export GIT_SSH=ssh-quiet
+
 remote=origin
 
 foreach dir (^build-area(/)) {

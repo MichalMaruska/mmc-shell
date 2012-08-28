@@ -1,0 +1,6 @@
+#! /bin/bash
+
+host=$1
+command=$2
+
+exec ssh -o VisualHostKey=no $host $command
