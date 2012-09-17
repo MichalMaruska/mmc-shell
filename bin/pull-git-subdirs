@@ -5,8 +5,39 @@ setopt extendedglob
 gitoptions="--no-pager"
 git=(git $gitoptions)
 
-
 remote=origin
+while getopts :r: OPT; do
+    case $OPT in
+	r|+r)
+	    remote="$OPTARG"
+	    ;;
+	*)
+	    print "usage: ${0##*/} [+-r ARG} [--] ARGS..."
+	    exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+
+do_pull()
+{
+    dir=$1
+    remote=$2
+    echo
+    if ${git} status --short;
+    then
+	cecho green -n "pulling";
+		#  from       ${git} remote show $remote|grep 'Fetch URL'
+	${git} pull --tags $remote master
+		# ${git} fetch --tags $remote
+    else
+	cecho red $dir is not clean!
+    fi
+}
+
+
+
 foreach dir (^build-area(/)) {
     cd $dir
     if [ -d .git ];
@@ -14,18 +45,10 @@ foreach dir (^build-area(/)) {
 	cecho blue -n "===" $dir "==="
 	if ${git} remote |grep $remote > /dev/null;
 	then
-	    echo
-	    if ${git} status --short;
-	    then
-		cecho green -n "pulling";
-		#  from       ${git} remote show $remote|grep 'Fetch URL'
-		${git} pull --tags $remote master
-		# ${git} fetch --tags $remote
-	    else
-		cecho red $dir is not clean!
-	    fi
+	    do_pull $dir $remote
 	else
-	    cecho yellow ... is not associated with any $remote
+	    cecho yellow "... is not associated with any $remote, trying origin"
+	    do_pull $dir origin
 	fi
     else
 	cecho blue $dir  is not Git
