@@ -1,0 +1,21 @@
+#! /bin/bash
+
+# this is recursive. First time it invokes the find
+# and the second time (invoked by find) it will invoke (correctly) the user's command.
+# The key aim is to invoke the command in the "found" directory.
+
+: ${FOR_EACH_DIR_CHILD=0}
+
+export FOR_EACH_DIR_CHILD
+
+if [ $FOR_EACH_DIR_CHILD = 0 ]; then
+    FOR_EACH_DIR_CHILD=1
+    find . -type d -name .git -printf '\033[01;33m%p\033[0m\n'  -exec $0 \{\} "$@" \;
+# foreach d (*(/)) {echo $d; pushd $d; cecho green $(git describe) ; popd }
+else
+    cd $1
+#cecho green $(git describe) ;
+    shift
+    eval $@
+fi
+
