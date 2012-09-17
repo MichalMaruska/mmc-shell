@@ -1,18 +1,28 @@
 #! /bin/bash -e
 
+usage()
+{
+    # echo "usage: ${0##*/} [+-h] branch base [new-base]"
+    cat <<EOF
+$0 [+-h] branch base [new-base]
+EOF
+}
 
 
 while getopts :h OPT; do
     case $OPT in
 	h|+h | *)
-	    echo "usage: ${0##*/} [+-h] branch base [new-base]"
+	    usage
 	    exit 2
     esac
 done
 shift $(( OPTIND - 1 ))
 OPTIND=1
+
 branch=$1
 base=$2
+
+
 ## if git status
 
 # git co $branch

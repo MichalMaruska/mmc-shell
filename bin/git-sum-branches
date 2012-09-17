@@ -1,7 +1,7 @@
 #! /usr/bin/zsh -feux
 
 
-# by default make a `clean' merge.
+# by default make a `clean' merge. This means
 reset=y
 dry=n
 
@@ -30,7 +30,6 @@ else
     cmd=""
 fi
 
-# "mmc-all"
 sum_br=$1
 
 dir=$(git rev-parse --show-toplevel)
@@ -40,15 +39,12 @@ typeset -a branches
 _tmp=$(grep -v '^#' $dir/.git/mmc/$sum_br)
 branches=(${(f)_tmp})
 
-echo
+echo $branches
 
 # if exists such branch/tag ->abort
 first=$branches[1]
 
 others=($branches[2,-1])
-#(mmc-fixes mmc-keep-time mmc-xi-adaptation mmc-debug-grabs mmc-plugin-loader mmc-handy michal-xkb)
-
-#exit 1
 
 if [ $reset = "y" ]; then
     eval $cmd git co $sum_br
