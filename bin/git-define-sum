@@ -1,0 +1,66 @@
+#! /bin/bash -ue
+
+# Manage the Sum information:
+# list ..
+# add
+# remove
+#
+
+usage()
+{
+    cat <<EOF
+Usage:
+${0##*/} [+-h]
+${0##*/} branch
+${0##*/} branch new-merge-branch
+${0##*/} branch -drop-merge-branch
+
+EOF
+}
+
+while getopts :h OPT; do
+    case $OPT in
+	h|+h)
+	    usage
+	    exit 0
+	    ;;
+	*)
+	    usage
+	    exit 2
+    esac
+done
+shift $(( OPTIND - 1 ))
+OPTIND=1
+
+
+
+name=$1
+shift
+
+# ensure-dir
+[ -d .git/mmc/ ] || mkdir .git/mmc/
+
+sum_file=.git/mmc/$name
+
+
+if [ $# = 0 ]; then
+    cat $sum_file
+else
+    for br in "$@"
+    do
+	case "$br" in
+	    -*)
+		br=$(expr substr "$br" 2 $(expr length "$br" ) )
+		cecho red $br
+		temp=${TEMP-/tmp}/git-define-sum
+		grep -v -e "^$br$" $sum_file > $temp
+		mv $temp $sum_file
+		;;
+	    *)
+		cecho green $br
+		echo $br >> $sum_file
+		;;
+	esac
+    done
+    cat $sum_file
+fi

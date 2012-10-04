@@ -1,0 +1,9 @@
+#! /usr/bin/zsh -fe
+
+# input-clients atkbd-fix hid-adaptation-to-input michal-misc input-accepts-events hid-adaptation
+# mmc-all
+# mmc-monotonic-2010
+foreach branch (mmc1-first-attempt-push-events) {
+    git tag "${branch}_0" $branch
+    git br -D $branch
+}

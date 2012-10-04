@@ -1,0 +1,27 @@
+#! /bin/bash -uxe
+
+
+# -d  delete!
+#
+
+branch=$1
+shift
+file=.git/refs/base/$branch
+
+
+if [ $# = 1 ]; then
+
+    cecho red "new base: $1"
+    # could be hash tag branch !
+    echo "ref: refs/heads/$1" > $file
+else
+    base=$(cat $file| sed -e 's/^ref: //' | sed -e 's|^refs/heads/||')
+# could be hash
+
+# or ref - tag or head.
+
+
+
+#
+    cecho green $base
+fi

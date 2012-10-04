@@ -1,0 +1,16 @@
+#! /usr/bin/zsh -feu
+
+
+br=$1
+start="start/$br"
+base="base/$br"
+# base=
+# base/mmc-atkbd
+
+git-rebase-branch $br $start $base
+
+# wrong?
+newstart=$(git show-ref --hash $base)
+
+echo $newstart >! .git/refs/start/$br
+# echo $(git rev-ref $base) > .git/refs/start/$br
