@@ -1,5 +1,6 @@
 #! /usr/bin/zsh -feux
 
+# re-make a "sum" branch:
 
 # by default make a `clean' merge. This means
 reset=y
