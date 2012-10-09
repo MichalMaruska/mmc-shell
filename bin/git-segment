@@ -1,6 +1,5 @@
 #! /usr/bin/zsh -feu
 
-
 usage()
 {
     cat <<EOF
@@ -9,13 +8,13 @@ usage: ${0##*/} [+-h} [--] branch symbolic-base [current-base]
 EOF
 }
 
-
 while getopts :h OPT; do
     case $OPT in
 	h|+h)
 	    usage
 	    exit 0
 	    ;;
+	# d)  delete
 	*)
 	    print "usage: ${0##*/} [+-h} [--] ARGS..."
 	    exit 2
@@ -29,10 +28,18 @@ basefile=.git/refs/base/$name
 startfile=.git/refs/start/$name
 
 if [ $# = 1 ]; then
-    cat $basefile
+    # cat $basefile
+    # could be hash
+    # or ref - tag or head.
+    base=$(cat $basefile| sed -e 's/^ref: //' | sed -e 's|^refs/heads/||')
+    cecho green $base
     cat $startfile
 else
     from=$2
+
+    base=$(git show-ref $from|head -n 1|cut -f 2 -d ' ')
+    cecho yellow "so the base is $base"
+
 
     if [ $# -ge 3 ]; then
 	# fixme: this is a pattern.
@@ -42,15 +49,14 @@ else
 	start=$(git show-ref --hash $from)
 	#if [ ${start} -gt 1 ]; then error;fi
     fi
+    cecho yellow "so the start is $start"
+    # git show $start
 
-# if exists
+    # branch_exists $name
     [ -e .git/refs/heads/$name ] || git git br $name
 
-    mkdir -p .git/refs/base .git/refs/start
-
+    mkdir -p $(dirname $basefile) $(dirname $startfile)
 # canonize:
-    base=$(git show-ref $from|head -n 1|cut -f 2 -d ' ')
-
     echo "ref: $base" > $basefile
     echo $start > $startfile
 fi
