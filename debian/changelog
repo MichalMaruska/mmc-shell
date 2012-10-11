@@ -1,3 +1,24 @@
+mmc-shell (2.13) release; urgency=low
+
+  * init-design
+  * dev
+  * simplify (& rename) - dump - on non -related base & start.
+  * rebase-segment:
+  * document
+  * New:  rebasing tree
+  * git-segment now implements git-base.
+  * (re-)Create the sum branch if missing
+  * Clean sum definition on  -c option. And correctly add summands.
+  * dropped too specific tool
+  * NEW: git-rename
+  * convert to Zsh.  -s -d options: -d  show the dir, -s to pass the dir as first argument
+  * new tool: git-delete
+  * fix temp file handling
+  * documentation
+  * fix:  don't try to resolve hash. -- workaround
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 11 Oct 2012 16:58:56 +0200
+
 mmc-shell (2.12) release; urgency=low
 
   * be quiet for SSH during  mass git push/pull
