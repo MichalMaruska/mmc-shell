@@ -5,7 +5,7 @@
 
 # Get a temp file:
 # generate
-GRAPH=${TEMP-/run/tmp/}/graph
+GRAPH=$(mktemp --tempdir=${TEMP-/run/tmp/}  graph.XXX)
 
 segment_base()
 {
@@ -38,3 +38,5 @@ foreach sum ($GIT_DIR/.git/mmc/*(.))
 
 # tsort
 tsort $GRAPH | tac
+rm -f $GRAPH
+
