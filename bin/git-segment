@@ -44,7 +44,7 @@ else
     if [ $# -ge 3 ]; then
 	# fixme: this is a pattern.
 	#refs/heads/master
-	start=$(git show-ref --hash $3)
+	start=$(git show-ref --hash $3 || echo $3)
     else
 	start=$(git show-ref --hash $from)
 	#if [ ${start} -gt 1 ]; then error;fi
