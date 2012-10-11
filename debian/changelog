@@ -1,3 +1,9 @@
+mmc-shell (2.13.1) release; urgency=low
+
+  * fix: mktemp usage
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 11 Oct 2012 17:23:39 +0200
+
 mmc-shell (2.13) release; urgency=low
 
   * init-design
