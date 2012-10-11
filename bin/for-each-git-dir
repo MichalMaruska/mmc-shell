@@ -1,21 +1,46 @@
-#! /bin/bash
+#! /usr/bin/zsh -feu
 
 # this is recursive. First time it invokes the find
-# and the second time (invoked by find) it will invoke (correctly) the user's command.
+# and the second time (invoked by find) it will invoke (correctly)
+# the user's command.
 # The key aim is to invoke the command in the "found" directory.
 
 : ${FOR_EACH_DIR_CHILD=0}
-
 export FOR_EACH_DIR_CHILD
 
+# declare
+typeset -a print_args
+print_args=()
+# print_args=(-printf '\033[01;33m%p\033[0m\n')
+
 if [ $FOR_EACH_DIR_CHILD = 0 ]; then
-    FOR_EACH_DIR_CHILD=1
-    find . -type d -name .git -printf '\033[01;33m%p\033[0m\n'  -exec $0 \{\} "$@" \;
+
+    if [ $1 = "-s" ]; then
+	FOR_EACH_DIR_CHILD=2
+	shift;
+    else
+	FOR_EACH_DIR_CHILD=1
+    fi
+
+    export FOR_EACH_BASE_DIR=$(pwd)
+    find . -type d -name .git $print_args  -exec $0 \{\} "$@" \;
 # foreach d (*(/)) {echo $d; pushd $d; cecho green $(git describe) ; popd }
 else
-    cd $1
-#cecho green $(git describe) ;
+    # return from the .git
+    dir=$(expr match $1 '\(.*\)/.git')
     shift
-    eval $@
+    cd $dir
+
+    if [ $1 = "-d" ]; then
+	cecho green $dir
+	shift;
+    fi
+    # $(git describe) ;
+    # set -x
+    if [ $FOR_EACH_DIR_CHILD = 2 ]; then
+	eval $@[1] $@[2,-1]
+    else
+	eval $@[1] $dir $@[2,-1]
+    fi
 fi
 
