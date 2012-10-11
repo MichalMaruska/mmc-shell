@@ -57,8 +57,8 @@ tag_exists $old_base_tag && git tag -d $old_base_tag
 
 foreach branch ($(cat $GITDIR/mmc/$BRANCHES_FILE))
 {
-    ~/git-rebase-branch $branch $base_tag $new_base
-};
+    git-rebase-branch $branch $base_tag $new_base
+}
 
 git tag $old_base_tag $base_tag
 git tag -f $base_tag $new_base
