@@ -1,3 +1,11 @@
+mmc-shell (2.15) release; urgency=low
+
+  * for-each-git-dir:  -h as help
+  * for-each-git-dir: use getopts.
+  * new tool: compare-git-deb
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 01 Nov 2012 17:43:14 +0100
+
 mmc-shell (2.14) release; urgency=low
 
   * Move git-* tools to a separate (source) package.
