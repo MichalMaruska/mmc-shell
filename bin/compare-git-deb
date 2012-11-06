@@ -1,34 +1,43 @@
-#! /bin/bash
+#! /usr/bin/zsh -feu
 
 # Compare Git repository which carries a source debian package
 # with what is released as a debian package.
 
-
+# fixme: must be invoked inside DIR.
 DIR=$1
+name=$(basename $(readlink -e .))
 
-a=$(git describe --tags HEAD 2>/dev/null)
+last_release_tag=$(git describe --tags HEAD 2>/dev/null)
+
+
+
+# binary package, somehow representing the source package in that Git repo:
+# todo:
+info=$(deb-pkg-installed-version $name |tail -n 1)
+
+
+version=$info
+#(echo $info)
 
 # path from $FOR_EACH_BASE_DIR
 
 if [ 0 = $? ]; then
-    post=$(expr match $a '^.*-\([[:digit:]]\+\)-[[:alnum:]]\+$')
-#    echo $?
-    if [ $? = 0 ];
+    set +e
+    post=$(expr match $last_release_tag '^.*-\([[:digit:]]\+\)-[[:alnum:]]\+$')
+    match_status=$?
+    set -e
+    if [ $match_status = 0 ];
     then
 	#echo -n "$post "
-	# (readlink -f $(pwd)/..)
-	# $(basename $(readlink -f $DIR ))
-	cecho red -n $DIR
-	echo -e '\tis ' $post ' commits ahead release'
+	tag=$(expr match $last_release_tag '^\(.*\)-[[:digit:]]\+-[[:alnum:]]\+$')
+	cecho red -n $name
+	echo -e '\tis ' $post " commits ahead of\t $tag"
     else
-	# $(basename $(readlink -f $(pwd)/..))
-
-	echo -e $DIR  '\t' $a '\t' $version
+	gitversion=${last_release_tag#*/}
+	if [ "$gitversion" != "$version" ]; then
+	    cecho yellow -e $name  '\t' $last_release_tag  '\t installed:' $version
+	    else
+	    echo -e $name  '\t' $last_release_tag  '\t installed:' $version
+	fi
     fi
 fi
-
-
-
-#	info=$(deb-pkg-installed-version)
-#	version=$(echo $info|tail -n 1)
-
