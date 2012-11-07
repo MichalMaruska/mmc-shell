@@ -1,3 +1,11 @@
+mmc-shell (2.16) release; urgency=low
+
+  * fix: use one of the binary packages to compare versions.
+  * switch the colors (red & yellow)
+  * compare-git-deb: clean the shell. Report the Installed deb. version.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 07 Nov 2012 13:05:03 +0100
+
 mmc-shell (2.15) release; urgency=low
 
   * for-each-git-dir:  -h as help
