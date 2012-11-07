@@ -13,7 +13,9 @@ last_release_tag=$(git describe --tags HEAD 2>/dev/null)
 
 # binary package, somehow representing the source package in that Git repo:
 # todo:
-info=$(deb-pkg-installed-version $name |tail -n 1)
+
+debpkg=$(deb-pkg-name debian/control*)
+info=$(deb-pkg-installed-version $debpkg |tail -n 1)
 
 
 version=$info
