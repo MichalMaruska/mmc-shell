@@ -5,8 +5,6 @@
 
 # fixme: must be invoked inside DIR.
 DIR=$1
-name=$(basename $(readlink -e .))
-
 last_release_tag=$(git describe --tags HEAD 2>/dev/null)
 
 
@@ -14,10 +12,12 @@ last_release_tag=$(git describe --tags HEAD 2>/dev/null)
 # binary package, somehow representing the source package in that Git repo:
 # todo:
 
-debpkg=$(deb-pkg-name debian/control*)
-info=$(deb-pkg-installed-version $debpkg |tail -n 1)
+deb_src_pkg=$(deb-pkg-name debian/control*)
+name=$deb_src_pkg
 
 
+deb_pkg=$(deb-pkg-binary-packages .)
+info=$(deb-pkg-installed-version $deb_pkg |tail -n 1)
 version=$info
 #(echo $info)
 
