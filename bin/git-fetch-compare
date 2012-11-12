@@ -1,0 +1,50 @@
+#! /usr/bin/zsh -feu
+
+## compare (local branch) head  with a remote head.
+
+
+branch=HEAD
+#master
+remote=maruska
+
+
+hash_of()
+{
+    git log $1 --max-count=1 --format="%H"
+}
+
+# return 1 if A < B
+# 0 if  A=B
+# -1
+# 2 incomparable?
+compare_commits()
+{
+    first=$(git log $1 --max-count=1 --format="%H")
+    second=$(git log $2 --max-count=1 --format="%H")
+    if [ $first = $second ]; then
+	return 0;
+    fi
+
+    common=$(git merge-base $1 $2)
+    if [ $common = $second ]; then
+	return 1;
+    elif [ $common = $first ]; then
+	return -1;
+    else
+	return 2
+    fi
+}
+
+
+
+git fetch --all
+#$remote
+
+set +e
+compare_commits $branch remotes/$remote/master;
+cmp=$?
+set -e
+
+
+echo $cmp
+exit 0
