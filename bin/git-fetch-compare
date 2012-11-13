@@ -45,6 +45,10 @@ compare_commits $branch remotes/$remote/master;
 cmp=$?
 set -e
 
-
 echo $cmp
+
+if [ $push = yes -a $cmp = 1 ];
+then
+    echo git push master
+fi
 exit 0
