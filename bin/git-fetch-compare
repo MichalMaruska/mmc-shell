@@ -19,8 +19,8 @@ hash_of()
 # 2 incomparable?
 compare_commits()
 {
-    first=$(git log $1 --max-count=1 --format="%H")
-    second=$(git log $2 --max-count=1 --format="%H")
+    local first=$(git log $1 --max-count=1 --format="%H")
+    local second=$(git log $2 --max-count=1 --format="%H")
     if [ $first = $second ]; then
 	return 0;
     fi
