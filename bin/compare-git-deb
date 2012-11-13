@@ -39,7 +39,7 @@ if [ 0 = $? ]; then
 	echo -e '\tis ' $post " commits ahead of\t $tag"
 
 	if [ "$gitversion" != "$version" ]; then
-	    cecho blue "\tdifferent versions: $gitversion vs $version"
+	    cecho blue -e "\tdifferent versions: $gitversion vs $version"
 	fi
 
 
