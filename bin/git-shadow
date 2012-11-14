@@ -1,0 +1,17 @@
+#! /bin/bash
+
+
+# create a workspace, with the shared .git directory.
+# Thus you can *consume* & still work with Git commands.
+
+dir=$1
+new=$(basename $(readlink -f $dir)).new
+
+mkdir -p $new
+rsync --exclude .git  -rv  $dir/ $new/
+ln -s $dir/.git $new/.git
+
+exit 0
+
+cd $new
+magit
