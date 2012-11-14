@@ -15,7 +15,7 @@ usage()
 Usage $0 [-s] [-d]
 
 -d debug ...
--s don't pass the relative path as first argument.
+-s don\'t pass the relative path as first argument.
 EOF
 }
 
