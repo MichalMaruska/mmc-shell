@@ -1,0 +1,40 @@
+#! /bin/bash -uex
+
+
+# This should `save' the current-branches -- the `horizon'
+# which could be checked after the -- uncontrolled sync.
+
+
+extract_branches()
+{
+    grep -B1  ref: $1|sed 's|ref: refs/heads/||' |grep -v -e '--'
+}
+
+
+get_horizon()
+{
+    name=$1
+    # `forall'
+    repo forall -c repo-save-head  > .$name
+    extract_branches .$name > .$name.br
+}
+
+compare_horizons()
+{
+    colordiff .$1.br .$2.br
+}
+
+
+get_horizon pre
+
+cecho red "press enter ==>"
+read a
+# This can fail
+set +e
+repo sync
+set -e
+
+get_horizon post
+
+
+compare_horizons pre post
