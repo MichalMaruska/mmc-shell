@@ -1,3 +1,14 @@
+mmc-shell (2.20) release; urgency=low
+
+  * compare-  fixlet (echo -n for \t)
+  * local vars in a function
+  * maybe  PUSH when ahead?
+  * new: git-shadow. Create a second work area for a git repo...
+  * make Emacs happy
+  * New: repo-sync
+
+ -- Michal Maruska <mmaruska@gmail.com>  Tue, 20 Nov 2012 01:37:17 +0100
+
 mmc-shell (2.19) release; urgency=low
 
   * compare-git-deb: report the Name before any info related.
