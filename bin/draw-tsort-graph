@@ -1,0 +1,80 @@
+#! /usr/bin/zsh -fuex
+
+# Given a file prepared for tsort(1),
+# invoke dot(1) on it.
+# That means conversion + some header configuration.
+
+FORMAT=png
+#xlib
+keep_graph_file=no
+
+usage()
+{
+    cat <<EOF
+usage: ${0##*/} [+-kpj] [-F format] [--] ARGS...
+-h help
+
+-p PNG
+-P ps
+-f pdf
+-F format
+EOF
+}
+
+while getopts :kpPfF: OPT; do
+    case $OPT in
+	h)
+	    usage
+	    exit 0
+	    ;;
+	k|+k)
+	    keep_graph_file=yes
+	    ;;
+	p|+p)
+	    FORMAT=png
+	    ;;
+	P)
+	    FORMAT=ps
+	    ;;
+	f)
+	    FORMAT=pdf
+	    ;;
+	F)
+	    FORMAT=$OPTARG
+	    ;;
+	*)
+	    usage
+	    exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+temp=$(mktemp)
+
+echo "digraph { " > $temp
+echo "fontsize=24;" >> $temp
+
+# size=\"64,48\";
+
+# either from stdin or a file
+if [ $# = 1 ];then
+    cat $1 >> $temp
+else
+    cat >> $temp
+fi
+
+echo "}" >> $temp
+
+echo $temp >&2
+set -x
+dot -T$FORMAT $temp
+
+
+if [ $keep_graph_file = yes ];then
+    echo "dot file $temp" >&2
+else
+    rm -f $temp
+fi
+
+#dot -Nshape=box  /tmp/file.dot > /tmp/file.jpeg
