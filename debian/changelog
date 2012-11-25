@@ -1,3 +1,10 @@
+mmc-shell (2.21) release; urgency=low
+
+  * new: draw-tsort-graph
+  * cecho: check output, not input, for terminal-ness
+
+ -- Michal Maruska <mmaruska@gmail.com>  Sun, 25 Nov 2012 22:05:22 +0100
+
 mmc-shell (2.20) release; urgency=low
 
   * compare-  fixlet (echo -n for \t)
