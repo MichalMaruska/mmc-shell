@@ -74,12 +74,12 @@ if [ -t 1 -o -S /dev/stdout ]; then
 	-o "${TERM}" = "rxvt" \
 	-o "${TERM}" = "ansi" ]; then
 	emit_color $COLOR
-	echo $@
+	echo "$@"
 	tput sgr0
 	# echo
     else
-	echo $@
+	echo "$@"
     fi
 else
-    echo $@
+    echo "$@"
 fi
