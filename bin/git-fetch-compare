@@ -21,6 +21,9 @@ compare_commits()
 {
     local first=$(git log $1 --max-count=1 --format="%H")
     local second=$(git log $2 --max-count=1 --format="%H")
+    if [ -z "$first" -o -z "$second" ]; then
+	return 2
+    fi
     if [ $first = $second ]; then
 	return 0;
     fi
