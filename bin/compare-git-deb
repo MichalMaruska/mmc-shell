@@ -51,8 +51,9 @@ if [ 0 = $? ]; then
     else
 	if [ "$gitversion" != "$version" ]; then
 	    cecho red -e $name  '\t' $last_release_tag  '\t installed:' $version
-	    else
-	    echo -e $name  '\t' $last_release_tag  '\t installed:' $version
+	else
+	    echo -e $name  '\t' $last_release_tag
+	    #   '\t installed:' $version
 	fi
     fi
 fi
