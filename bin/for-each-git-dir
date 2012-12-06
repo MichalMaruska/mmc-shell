@@ -64,7 +64,7 @@ else
     cd $dir
 
     if [ $1 = "-d" ]; then
-	cecho green $dir
+	cecho cyan $dir
 	shift;
     fi
     # $(git describe) ;
