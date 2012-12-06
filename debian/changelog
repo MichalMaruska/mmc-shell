@@ -1,3 +1,14 @@
+mmc-shell (2.23) release; urgency=low
+
+  * change to informative-neutral color  (red-yellow-green reserved).
+  * show the log of fetched commits.
+  * compare_commits(): recover if the remote is wrong.
+  * hightlight the git-distance
+  * don't print twice the equal version
+  * Suggest to push, if ahead of remote.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 06 Dec 2012 13:10:07 +0100
+
 mmc-shell (2.22) release; urgency=low
 
   * cecho: quote the accepted parameters (to avoid filename generation)
