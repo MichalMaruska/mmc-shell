@@ -6,6 +6,7 @@
 branch=HEAD
 #master
 remote=maruska
+push=yes
 
 
 hash_of()
@@ -53,6 +54,6 @@ echo $cmp
 
 if [ $push = yes -a $cmp = 1 ];
 then
-    echo git push master
+    cecho yellow  "git push master"
 fi
 exit 0
