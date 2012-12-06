@@ -38,6 +38,7 @@ compare_commits()
 
 
 git fetch --all
+git log --oneline HEAD..FETCH_HEAD
 #$remote
 
 set +e
