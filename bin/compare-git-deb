@@ -36,7 +36,9 @@ if [ 0 = $? ]; then
 	#echo -n "$post "
 	tag=$(expr match $last_release_tag '^\(.*\)-[[:digit:]]\+-[[:alnum:]]\+$')
 	cecho yellow -n $name
-	echo -e '\tis ' $post " commits ahead of\t $tag"
+	echo -n -e '\tis '
+	cecho cyan -n $post
+	echo " commits ahead of\t $tag"
 
 	if [ "$gitversion" != "$version" ]; then
 	    cecho blue -e "\tdifferent versions: $gitversion vs $version"
