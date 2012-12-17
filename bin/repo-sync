@@ -21,7 +21,7 @@ get_horizon()
 
 compare_horizons()
 {
-    colordiff .$1.br .$2.br
+    colordiff --unified=1 .$1.br .$2.br
 }
 
 
