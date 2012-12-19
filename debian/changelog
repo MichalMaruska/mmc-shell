@@ -1,3 +1,10 @@
+mmc-shell (2.24) release; urgency=low
+
+  * debian: arch:all packages don't need ${shlibs:Depends}
+  * Fix: point shebang to /bin/
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 20 Dec 2012 00:32:08 +0100
+
 mmc-shell (2.23) release; urgency=low
 
   * change to informative-neutral color  (red-yellow-green reserved).
