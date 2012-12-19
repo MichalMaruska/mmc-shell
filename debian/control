@@ -7,5 +7,6 @@ Standards-Version: 3.7.2
 
 Package: mmc-shell
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, zsh, mp3info, mpg123
+Depends: ${misc:Depends}, zsh
+Recommends: mp3info, mpg123
 Description: collection of shell scripts
