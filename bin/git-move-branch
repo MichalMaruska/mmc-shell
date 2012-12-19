@@ -1,4 +1,4 @@
-#! /usr/bin/zsh -feu
+#! /bin/zsh -feu
 
 branch=$1
 commit=$2

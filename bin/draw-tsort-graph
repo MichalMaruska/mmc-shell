@@ -1,4 +1,4 @@
-#! /usr/bin/zsh -fuex
+#! /bin/zsh -fuex
 
 # Given a file prepared for tsort(1),
 # invoke dot(1) on it.

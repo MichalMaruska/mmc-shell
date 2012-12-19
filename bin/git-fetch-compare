@@ -1,4 +1,4 @@
-#! /usr/bin/zsh -feu
+#! /bin/zsh -feu
 
 ## compare (local branch) head  with a remote head.
 

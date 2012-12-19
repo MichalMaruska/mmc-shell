@@ -1,4 +1,4 @@
-#! /usr/bin/zsh -feu
+#! /bin/zsh -feu
 
 # Compare Git repository which carries a source debian package
 # with what is released as a debian package.

@@ -1,4 +1,4 @@
-#! /usr/bin/zsh -feu
+#! /bin/zsh -feu
 
 # this is recursive. First time it invokes the find
 # and the second time (invoked by find) it will invoke (correctly)
