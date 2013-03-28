@@ -3,8 +3,8 @@
 ## compare (local branch) head  with a remote head.
 
 
+## `Defaults'
 branch=HEAD
-#master
 remote=maruska
 push=yes
 
@@ -39,11 +39,56 @@ compare_commits()
     fi
 }
 
+usage()
+{
+    cat <<EOF
+usage: ${0##*/} [+-f] [-r <remote>| -a]  [--] ARGS...
+EOF
+}
+
+push=no
+
+set -x
+# how can I have optional argument to ... ?
+while getopts :hpP:r:a OPT; do
+    case $OPT in
+	p|+p)
+	    push=yes
+	    ;;
+	P)
+	    push=$OPTARG
+	    ;;
+	h)
+	    usage
+	    exit
+	    ;;
+	a)
+	    remote="--all"
+	    ;;
+	r)
+	    remote=$OPTARG
+	    ;;
+	?)
+	    if [ $OPTARG = "p" ];then
+		push=$remote
+		exit
+	    fi
+	    ;;
+	*)
+	    print "usage: ${0##*/} [+-f] [--] ARGS..."
+	    exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+set +x
 
 
+# remote or --all
 git fetch --all
+# git fetch $remote
 git log --oneline HEAD..FETCH_HEAD
-#$remote
+
 
 set +e
 compare_commits $branch remotes/$remote/master;
@@ -52,8 +97,16 @@ set -e
 
 echo $cmp
 
-if [ $push = yes -a $cmp = 1 ];
+if [ ! $push = no -a $cmp = 1 ];
 then
+    # if maruska -> --mirror
+
+    # push   .. as configured
+    # push : .. corresponding
+    #
     cecho yellow  "git push master"
+#    echo git push $remote master
 fi
+
+
 exit 0
