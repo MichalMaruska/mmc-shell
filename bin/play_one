@@ -54,10 +54,10 @@ function play_one ()
 
 
 
-	*.m4a)
+	*.flv | *.mp4 | *.m4a)
 	cecho green "$1"
 	#
-	mplayer -really-quiet -ao pulse,alsa "$1" </dev/null ;;
+	mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null ;;
 
 
 	*.flac)
@@ -67,7 +67,7 @@ function play_one ()
 
 
 	*)
-	    mplayer -really-quiet -ao pulse,alsa "$1" </dev/null ;;
+	    mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null ;;
     # enqueue
     esac
 
