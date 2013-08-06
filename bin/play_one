@@ -2,33 +2,24 @@
 
 
 
-
-
-
 function play_one ()
 {
     # cecho  red "play $1:"
-
-
     case $1 in
 	*.mpg)
         # mpg123 -b 10000 "$1" ;;
-	cecho green $1
-	mpg321 --aggressive -q -b 10000 "$1"
-	;;
-
-
-
+	    cecho green $1
+	    mpg321 --aggressive -q -b 10000 "$1"
+	    ;;
 	*.mp2)
-	cecho green $1
-        mpg321 --aggressive -q -b 10000  "$1" ;;
-	(  *.xmms.mp3)
-	echo xmms  --play ${1}
-	;;
+	    cecho green $1
+            mpg321 --aggressive -q -b 10000  "$1" ;;
 
-
+	 *.xmms.mp3)
+	    echo xmms  --play ${1}
+	    ;;
 	*.mp3)
-	cecho green "$1"
+	    cecho green "$1"
 	#    echo `color red`  `color bd` $1 `color off`
 
        # mpg321 skips when over Net!
@@ -38,40 +29,37 @@ function play_one ()
 
        # -b 10000    ... fails silently!
        # fixme: this is oss, not ALSA!
-	if [ -z ${playdsp} ];
-	then
-            mpg123 --gapless --aggressive -q  "$1"
-	else
-            mpg123 -a ${playdsp:-/dev/dsp} --aggressive -q  "$1"
-	fi
+	    if [ -z ${playdsp} ];
+	    then
+		mpg123 --gapless --aggressive -q  "$1"
+	    else
+		mpg123 -a ${playdsp:-/dev/dsp} --aggressive -q  "$1"
+	    fi
 
        # mpg123 --aggressive -q  "$1";;
-	;;
+	    ;;
 
 	*.ogg)
-	cecho green "$1"
-	ogg123 --quiet  "$1";;
+	    cecho green "$1"
+	    ogg123 --quiet  "$1";;
 
 
 
 	*.flv | *.mp4 | *.m4a)
-	cecho green "$1"
-	#
-	mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null ;;
-
+	    cecho green "$1"
+	    #
+	    mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null
+	    ;;
 
 	*.flac)
-	cecho green "$1"
-	#
-	mplayer -really-quiet -ao pulse,alsa "$1" </dev/null ;;
-
-
+	    cecho green "$1"
+	    mplayer -really-quiet -ao pulse,alsa "$1" </dev/null
+	    ;;
 	*)
-	    mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null ;;
+	    mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null
+	    ;;
     # enqueue
     esac
-
-
     # until $PLAY $1 ;do echo ; done
 }
 
