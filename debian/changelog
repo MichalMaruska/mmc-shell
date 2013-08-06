@@ -1,3 +1,12 @@
+mmc-shell (2.27) release; urgency=low
+
+  * format
+  * cunning shell
+  * for-each-git-dir:  migrate to getopt, and rename the -s option
+  * Skip .repo
+
+ -- Michal Maruska <mmaruska@gmail.com>  Tue, 06 Aug 2013 17:22:32 +0200
+
 mmc-shell (2.26) release; urgency=low
 
   * mp3: play youtube files w/o video.
