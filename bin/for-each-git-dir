@@ -64,8 +64,9 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
     done
 
 
+    # skip  .repo
     export FOR_EACH_BASE_DIR=$(pwd)
-    find . -type d -name .git $print_args \
+    find . -name .repo -prune -o -type d -name .git $print_args \
 	 -exec $0 \{\} $args $cmd_options \;
 
 else
