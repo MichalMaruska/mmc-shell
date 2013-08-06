@@ -5,20 +5,28 @@
 # the user's command.
 # The key aim is to invoke the command in the "found" directory.
 
+if getopt -T; then # should test (( $? = -4 ))
+    echo "incompatible  getopt(1) installed. Abort"
+    exit -1
+fi
+
+
 : ${FOR_EACH_DIR_CHILD=0}
 export FOR_EACH_DIR_CHILD
-
 
 usage()
 {
     cat <<EOF
 Usage $0 [-s] [-d]
 
--d debug ...
--s don\'t pass the relative path as first argument.
+--debug  | -d  debug ...
+--pass   | -p  pass the relative path as first argument.
+--help   | -h
 EOF
 }
 
+
+## Executed in the parent:
 if [ $FOR_EACH_DIR_CHILD = 0 ]; then
 
     # declare
@@ -29,34 +37,37 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
     typeset -a args
     args=()
     # default
-    FOR_EACH_DIR_CHILD=1
+    FOR_EACH_DIR_CHILD=2
 
-    while getopts :sdh OPT; do
-	case $OPT in
-	    s|+s)
-		FOR_EACH_DIR_CHILD=2
+    typeset -a cmd_options
+    cmd_options=( $(getopt --name $0 --shell bash \
+	--longoptions pass,debug,help --options pdh \
+	-- "$@" )) || { usage && exit 1 }
+
+    while (( ${#cmd_options} > 0 )) do
+	case $cmd_options[1] in
+	    -p|--pass)
+		FOR_EACH_DIR_CHILD=1
 		;;
-	    d|+d)
+	    -d|--debug)
 		args+=(-d)
 		;;
-	    h|+h)
+	    --help|-h)
 		usage
 		exit 0
 		;;
-	    *)
-		print "usage: ${0##*/} [+-sdh} [--] ARGS..."
-		exit 2
+	    --)
+		shift cmd_options
+		break;
 	esac
+	shift cmd_options
     done
-    shift OPTIND-1
-    OPTIND=1
 
 
     export FOR_EACH_BASE_DIR=$(pwd)
     find . -type d -name .git $print_args \
-	 -exec $0 \{\} $args "$@" \;
+	 -exec $0 \{\} $args $cmd_options \;
 
-# foreach d (*(/)) {echo $d; pushd $d; cecho green $(git describe) ; popd }
 else
     # return from the .git
     dir=$(expr match $1 '\(.*\)/.git')
