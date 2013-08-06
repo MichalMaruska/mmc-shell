@@ -29,14 +29,7 @@ function play_one ()
 
        # -b 10000    ... fails silently!
        # fixme: this is oss, not ALSA!
-	    if [ -z ${playdsp} ];
-	    then
-		mpg123 --gapless --aggressive -q  "$1"
-	    else
-		mpg123 -a ${playdsp:-/dev/dsp} --aggressive -q  "$1"
-	    fi
-
-       # mpg123 --aggressive -q  "$1";;
+            echo mpg123 --gapless ${playdsp+-a $playdsp} --aggressive -q  "$1"
 	    ;;
 
 	*.ogg)
