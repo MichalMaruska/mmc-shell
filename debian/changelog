@@ -1,3 +1,9 @@
+mmc-shell (2.27.1) release; urgency=low
+
+  * play_one .... but even more files
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 07 Aug 2013 23:28:37 +0200
+
 mmc-shell (2.27) release; urgency=low
 
   * format
