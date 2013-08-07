@@ -51,11 +51,11 @@ function play_one ()
 	*)
 	    mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null
 	    ;;
-    # enqueue
     esac
-    # until $PLAY $1 ;do echo ; done
 }
 
 
 
-play_one "$@"
+for file in "$@"; do
+    play_one $file
+done
