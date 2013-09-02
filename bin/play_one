@@ -1,7 +1,5 @@
 #! /bin/zsh -f
 
-
-
 function play_one ()
 {
     # cecho  red "play $1:"
@@ -53,8 +51,6 @@ function play_one ()
 	    ;;
     esac
 }
-
-
 
 for file in "$@"; do
     play_one $file
