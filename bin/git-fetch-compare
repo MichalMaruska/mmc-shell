@@ -48,40 +48,36 @@ EOF
 
 push=no
 
-set -x
 # how can I have optional argument to ... ?
-while getopts :hpP:r:a OPT; do
-    case $OPT in
-	p|+p)
+cmd_options=$(getopt --name $0 --shell bash \
+	--longoptions push,pushto:,remote --options r:pP:h \
+	-- "$@" ) || { usage && exit 1 }
+
+eval set -- "$cmd_options"
+
+while (( $# > 0 )); do
+    case $1 in
+	-p)
 	    push=yes
 	    ;;
-	P)
-	    push=$OPTARG
+	-P | --pushto)
+	    shift
+	    push=$1
 	    ;;
-	h)
+	-h | --help)
 	    usage
-	    exit
+	    exit 0
 	    ;;
-	a)
+	--all | -a)
 	    remote="--all"
 	    ;;
-	r)
-	    remote=$OPTARG
+	-r | --remote)
+	    shift
+	    remote=$1
 	    ;;
-	?)
-	    if [ $OPTARG = "p" ];then
-		push=$remote
-		exit
-	    fi
-	    ;;
-	*)
-	    print "usage: ${0##*/} [+-f] [--] ARGS..."
-	    exit 2
     esac
+    shift
 done
-shift OPTIND-1
-OPTIND=1
-set +x
 
 
 # remote or --all
