@@ -1,7 +1,7 @@
 #! /bin/zsh -feu
 
-## compare (local branch) head  with a remote head.
-
+## keep the local git repo up-to-date & report situation.
+## i.e. compare (local branch) head with a remote head.
 
 ## `Defaults'
 branch=HEAD
@@ -43,6 +43,9 @@ usage()
 {
     cat <<EOF
 usage: ${0##*/} [+-f] [-r <remote>| -a]  [--] ARGS...
+-P | --pushto {remote}
+-r | --remote [remote]   ....
+-a | --all
 EOF
 }
 
