@@ -46,10 +46,10 @@ fi
 START=1
 
 if [ $# -ge 1 ];
-    then
+then
     START=$1
+    echo "skipping to $START"
 fi
-echo "skipping $START"
 
 
 #
