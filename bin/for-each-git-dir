@@ -39,13 +39,13 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
     # default
     FOR_EACH_DIR_CHILD=2
 
-    typeset -a cmd_options
-    cmd_options=( $(getopt --name $0 --shell bash \
+    cmd_options=$(getopt --name $0 --shell bash \
 	--longoptions pass,debug,help --options pdh \
-	-- "$@" )) || { usage && exit 1 }
+	-- "$@" ) || { usage && exit 1 }
+    eval set -- "$cmd_options"
 
-    while (( ${#cmd_options} > 0 )) do
-	case $cmd_options[1] in
+    while (( $# > 0 )) do
+	case $1 in
 	    -p|--pass)
 		FOR_EACH_DIR_CHILD=1
 		;;
@@ -57,10 +57,10 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
 		exit 0
 		;;
 	    --)
-		shift cmd_options
+		shift
 		break;
 	esac
-	shift cmd_options
+	shift
     done
 
 
