@@ -45,7 +45,7 @@ if [ 0 = $? ]; then
 	fi
 
 
-	git log --format='%C(green)%h %C(blue)%s' $tag..HEAD
+	git --no-pager log --format='%C(green)%h %C(blue)%s' $tag..HEAD
 	# git log --oneline $tag..HEAD
 	echo
     else
