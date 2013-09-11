@@ -1,3 +1,10 @@
+mmc-shell (2.29) release; urgency=low
+
+  * compare-git-deb: avoid pager
+  * compare-git-deb: colors: improve visibility & fix after git log
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 11 Sep 2013 23:07:59 +0200
+
 mmc-shell (2.28.1) release; urgency=low
 
   * Fix: still getopt in for-each-git-dir
