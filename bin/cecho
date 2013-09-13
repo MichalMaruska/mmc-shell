@@ -68,7 +68,7 @@ fi
 
 
 
-if [ -t 1 -o -S /dev/stdout ]; then
+if [ -t 1 -o "${FORCE_COLOR-}" = y -o -S /dev/stdout ]; then
     if [ "${TERM}" = "xterm" \
 	-o "${TERM}" = "screen" \
 	-o "${TERM}" = "rxvt" \
