@@ -1,0 +1,32 @@
+#! /usr/bin/zsh -feu
+
+dir=$1
+cd $dir
+name=${2#refs/heads/}
+
+# but is the base pre_fetch_head?
+if git-segment $name;
+then
+    # or poset?
+    git-rebase-segment $name
+elif git-sum $name
+then
+    git-rebase-poset $name
+fi
+
+
+
+
+git checkout $name
+
+# join -t ' ' -v 1 -1 1 -2 1   .pre.br .post.br | awk '/^(.*) (.*)$/  {system(sprintf("echo %s  %s", $1, $2));}'
+
+
+# exists base ->
+# git br -f base tt-server/ics-dev
+# git-rebase-poset all
+
+# repo_save_horizon > .now
+
+# join -t ' ' -v 1 -1 1 -2 1   .pre.br .now  | awk '/^(.*) (.*)$/  {system(sprintf("~/git-restate %s  %s", $1, $2));}'
+
