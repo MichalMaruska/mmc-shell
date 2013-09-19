@@ -1,3 +1,14 @@
+mmc-shell (2.30) release; urgency=low
+
+  * have a way to cecho(1) color into pipe
+  * simplify pull-git-subdirs by using for-each-git-dir
+  * new: repo_save_horizon from repo-sync
+  * repo_save_horizon improvement.
+  * new tool: git-restate
+  * use repo_save_horizon and invoke git-restate to restore the symbolic state
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 19 Sep 2013 14:47:07 +0200
+
 mmc-shell (2.29) release; urgency=low
 
   * compare-git-deb: avoid pager
