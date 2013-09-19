@@ -1,31 +1,6 @@
 #! /bin/bash -uex
 
-
-# This should `save' the current-branches -- the `horizon'
-# which could be checked after the -- uncontrolled sync.
-
-
-extract_branches()
-{
-    grep -B1  ref: $1|sed 's|ref: refs/heads/||' |grep -v -e '--'
-}
-
-
-get_horizon()
-{
-    name=$1
-    # `forall'
-    repo forall -c repo-save-head  > .$name
-    extract_branches .$name > .$name.br
-}
-
-compare_horizons()
-{
-    colordiff --unified=1 .$1.br .$2.br
-}
-
-
-get_horizon pre
+repo_save_horizon > .pre.br
 
 cecho red "press enter ==>"
 read a
@@ -34,7 +9,24 @@ set +e
 repo sync
 set -e
 
-get_horizon post
+repo_save_horizon > .post.br
 
 
-compare_horizons pre post
+compare_horizons()
+{
+    # 2 files
+    # project  ref
+    # find which missed in 2nd file, and differences.
+    join -t '	' -v 1 -1 1 -2 1 $1 $2  |\
+      awk '/^(.*) (.*)$/  {system(sprintf("git-restate %s  %s", $1, $2));}'
+#    join -t '\t' -v 1 $1 $2
+#    join -v 2 $1 $2
+    # colordiff --unified=1 .$1.br .$2.br
+}
+
+# not on a ref now:
+
+# different refs:
+
+# equalize-horizon:
+compare_horizons .pre.br .post.br
