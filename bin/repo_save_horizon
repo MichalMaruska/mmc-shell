@@ -3,26 +3,5 @@
 # This should `save' the current-branches -- the `horizon'
 # which could be checked after the -- uncontrolled sync.
 
-extract_branches()
-{
-    # find where HEAD equals a symbolic ref.
-    # But -- since using -B we have to remove the separator lines: --
-    grep -B1  ref: $1|sed 's|ref: refs/heads/||' |grep -v -e '--'
-}
-
-get_horizon()
-{
-    #name=$(tempfile --dir ${TMPDIR-/run/tmp/})
-    #name=$1
-    # `forall'
-    repo forall -c repo-save-head  |\
+repo forall -c repo-save-head  |\
     awk 'BEGIN {getline;dir=$0};/^ref: (.+)$/ {printf "%s\t%s\n", dir, $2;};{getline; dir=$0}'
-    #> $name
-    # extract_branches $name
-    # > .$name.br
-}
-
-
-# main
-get_horizon
-#$1
