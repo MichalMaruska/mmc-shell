@@ -17,8 +17,9 @@ compare_horizons()
     # 2 files
     # project  ref
     # find which missed in 2nd file, and differences.
+    # \s instead of space. not correct.
     join -t '	' -v 1 -1 1 -2 1 $1 $2  |\
-      awk '/^(.*) (.*)$/  {system(sprintf("git-restate %s  %s", $1, $2));}'
+      awk '/^(.*)\s(.*)$/  {system(sprintf("git-restate %s  %s", $1, $2));}'
 #    join -t '\t' -v 1 $1 $2
 #    join -v 2 $1 $2
     # colordiff --unified=1 .$1.br .$2.br
