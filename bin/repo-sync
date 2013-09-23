@@ -11,23 +11,4 @@ set -e
 
 repo_save_horizon > .post.br
 
-
-compare_horizons()
-{
-    # 2 files
-    # project  ref
-    # find which missed in 2nd file, and differences.
-    # \s instead of space. not correct.
-    join -t '	' -v 1 -1 1 -2 1 $1 $2  |\
-      awk '/^(.*)\s(.*)$/  {system(sprintf("git-restate %s  %s", $1, $2));}'
-#    join -t '\t' -v 1 $1 $2
-#    join -v 2 $1 $2
-    # colordiff --unified=1 .$1.br .$2.br
-}
-
-# not on a ref now:
-
-# different refs:
-
-# equalize-horizon:
-compare_horizons .pre.br .post.br
+repo_restore_horizon  .pre.br .post.br
