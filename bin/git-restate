@@ -1,7 +1,9 @@
 #! /usr/bin/zsh -feu
 
 dir=$1
+cecho hiyellow $dir
 cd $dir
+
 name=${2#refs/heads/}
 
 # but is the base pre_fetch_head?
