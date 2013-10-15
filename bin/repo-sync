@@ -1,6 +1,7 @@
 #! /bin/bash -uex
 
-repo_save_horizon > .pre.br
+repo_save_horizon > horizon.pre
+cat horizon.pre
 
 cecho red "press enter ==>"
 read a
@@ -9,6 +10,6 @@ set +e
 repo sync
 set -e
 
-repo_save_horizon > .post.br
+repo_save_horizon > horizon.post
 
-repo_restore_horizon  .pre.br .post.br
+repo_restore_horizon  horizon.pre horizon.post
