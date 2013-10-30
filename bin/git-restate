@@ -21,7 +21,8 @@ fi
 
 git checkout $name
 
-# join -t ' ' -v 1 -1 1 -2 1   .pre.br .post.br | awk '/^(.*) (.*)$/  {system(sprintf("echo %s  %s", $1, $2));}'
+# join -t ' ' -v 1 -1 1 -2 1   $1 $2 |\
+# awk '/^(.*) (.*)$/  {system(sprintf("echo %s  %s", $1, $2));}'
 
 
 # exists base ->
@@ -30,5 +31,6 @@ git checkout $name
 
 # repo_save_horizon > .now
 
-# join -t ' ' -v 1 -1 1 -2 1   .pre.br .now  | awk '/^(.*) (.*)$/  {system(sprintf("~/git-restate %s  %s", $1, $2));}'
+# join -t ' ' -v 1 -1 1 -2 1   .pre.br .now  |\
+# awk '/^(.*) (.*)$/  {system(sprintf("~/git-restate %s  %s", $1, $2));}'
 
