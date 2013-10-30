@@ -60,7 +60,7 @@ eval set -- "$cmd_options"
 
 while (( $# > 0 )); do
     case $1 in
-	-p)
+	-p | --push )
 	    push=yes
 	    ;;
 	-P | --pushto)
@@ -87,6 +87,8 @@ done
 git fetch --all
 # git fetch $remote
 git log --oneline HEAD..FETCH_HEAD
+
+git status --short
 
 
 set +e
