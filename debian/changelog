@@ -1,3 +1,14 @@
+mmc-shell (2.31) release; urgency=low
+
+  * repo-sync: correct the parsing of TAB separated
+  * split off repo_restore_horizon
+  * Start git-restart with writing the directory path.
+  * show the horizont when prompting for Enter
+  * git-fetch-compare: show git status -- uncommited files in (local) workdirs
+  * format
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 30 Oct 2013 14:04:20 +0100
+
 mmc-shell (2.30) release; urgency=low
 
   * have a way to cecho(1) color into pipe
