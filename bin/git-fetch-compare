@@ -84,7 +84,7 @@ done
 
 
 # remote or --all
-git fetch --all
+git fetch --all --quiet
 # git fetch $remote
 git log --oneline HEAD..FETCH_HEAD
 
@@ -96,7 +96,22 @@ compare_commits $branch remotes/$remote/master;
 cmp=$?
 set -e
 
-echo $cmp
+case $cmp in
+    1)
+	echo "local is ahead"
+	;;
+    0)
+	echo " =="
+	;;
+    -1)
+	echo "local is behind"
+	;;
+    2)
+	echo "error in comparing $branch & FETCHMAIL"
+	;;
+    *)
+	echo $cmp
+esac
 
 if [ ! $push = no -a $cmp = 1 ];
 then
