@@ -3,12 +3,10 @@
 repo_save_horizon > horizon.pre
 cat horizon.pre
 
-cecho red "press enter ==>"
-read a
+#cecho red "press enter ==>"
+# read a
 # This can fail
-set +e
-repo sync
-set -e
+repo sync || :
 
 repo_save_horizon > horizon.post
 
