@@ -1,5 +1,9 @@
 #! /bin/bash -uex
 
+# invoke repo sync, and then restore the checked-out branches.
+# It's assumed they know how to rebase. ( git-rebase-* cmds)
+
+
 repo_save_horizon > horizon.pre
 cat horizon.pre
 

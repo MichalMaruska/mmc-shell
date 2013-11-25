@@ -1,5 +1,12 @@
 #! /usr/bin/zsh -feu
 
+# USAGE: $0 dir head
+
+# In directory @dir, assumed git,
+# checks-out @head, possibly rebasing it by `git-rebase-poset'
+
+
+
 dir=$1
 cecho hiyellow $dir
 cd $dir
