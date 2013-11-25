@@ -1,6 +1,14 @@
 #! /bin/bash -eu
 # pipefail
 
+TAB='	'
+dry=no
+
+usage()
+{
+    echo "usage: ${0##*/} [+-dvh} [--] ARGS..."
+}
+
 
 compare_horizons()
 {
@@ -8,12 +16,42 @@ compare_horizons()
     # project  ref
     # find which missed in 2nd file, and differences.
     # \s instead of space. not correct.
-    join -t '	' -v 1 -1 1 -2 1 $1 $2  |\
-      awk '/^(.*)\s(.*)$/  {system(sprintf("git-restate %s  %s", $1, $2));}'
-#    join -t '\t' -v 1 $1 $2
-#    join -v 2 $1 $2
-    # colordiff --unified=1 .$1.br .$2.br
+
+    # set difference: 1 - 2 by joining by fields 1, 1
+    join -t "$TAB" -v 1 \
+	-1 1 -2 1 \
+	$1 $2  |\
+    (if test "$dry" = yes;
+	then
+	cat
+	else
+	awk '/^(.*)\s(.*)$/  {system(sprintf("git-restate %s  %s", $1, $2));}'
+	fi
+    )
+# join -t '\t' -v 1 $1 $2
+# join -v 2 $1 $2
+# colordiff --unified=1 .$1.br .$2.br
 }
+
+
+while getopts :dh OPT; do
+    case $OPT in
+	d|+d)
+	    dry=yes
+	    ;;
+#	v|+v)
+#	    ;;
+	h|+h)
+	    usage
+	    ;;
+	*)
+	    usage
+	    exit 2
+    esac
+done
+shift $(( OPTIND - 1 ))
+OPTIND=1
+
 
 # not on a ref now:
 
@@ -21,4 +59,3 @@ compare_horizons()
 
 # equalize-horizon:
 compare_horizons $1 $2
-
