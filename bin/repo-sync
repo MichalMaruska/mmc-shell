@@ -15,3 +15,7 @@ repo sync || :
 repo_save_horizon > horizon.post
 
 repo_restore_horizon  horizon.pre horizon.post
+
+repo_save_horizon > horizon.restored
+
+repo_restore_horizon horizon.pre horizon.restored
