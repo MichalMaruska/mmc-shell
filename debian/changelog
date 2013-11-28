@@ -1,3 +1,14 @@
+mmc-shell (2.32) release; urgency=low
+
+  * git-fetch-compare: better information on the comparison
+  * repo-sync: don't prompt. &  improve shell
+  * Document repo/git-related tools
+  * repo-sync: show the final diff of horizons
+  * repo_restore_horizon: dry to show the diff
+  * exit after -h help
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 28 Nov 2013 18:27:27 +0100
+
 mmc-shell (2.31) release; urgency=low
 
   * repo-sync: correct the parsing of TAB separated
