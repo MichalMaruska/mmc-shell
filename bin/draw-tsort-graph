@@ -1,4 +1,4 @@
-#! /bin/zsh -fuex
+#! /bin/zsh -fue
 
 # Given a file prepared for tsort(1),
 # invoke dot(1) on it.
@@ -13,7 +13,7 @@ usage()
     cat <<EOF
 usage: ${0##*/} [+-kpj] [-F format] [--] ARGS...
 -h help
-
+-d debug/trace
 -p PNG
 -P ps
 -f pdf
@@ -21,7 +21,7 @@ usage: ${0##*/} [+-kpj] [-F format] [--] ARGS...
 EOF
 }
 
-while getopts :kpPfF: OPT; do
+while getopts :dkpPfF: OPT; do
     case $OPT in
 	h)
 	    usage
@@ -41,6 +41,9 @@ while getopts :kpPfF: OPT; do
 	    ;;
 	F)
 	    FORMAT=$OPTARG
+	    ;;
+	d)
+	    set -x
 	    ;;
 	*)
 	    usage
@@ -67,8 +70,8 @@ fi
 echo "}" >> $temp
 
 echo $temp >&2
-set -x
-dot -T$FORMAT $temp
+
+(set -x; dot -T$FORMAT $temp)
 
 
 if [ $keep_graph_file = yes ];then
