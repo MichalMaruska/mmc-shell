@@ -84,11 +84,15 @@ done
 
 
 # remote or --all
-git fetch --all --quiet
 # git fetch $remote
+
+git fetch --all --quiet
+# git log --oneline  ORIG_HEAD..HEAD --
+
 git status --short
 
 set +e
+# could compare with FETCH_HEAD
 compare_commits $branch remotes/$remote/master;
 cmp=$?
 set -e
