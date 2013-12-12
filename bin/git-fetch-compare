@@ -103,6 +103,29 @@ compare_commits $branch remotes/$remote/master;
 cmp=$?
 set -e
 
+git_ref_exists()
+{
+    [ -e .git/refs/$1 ]
+}
+
+# fixme: from where I have just fetched!
+
+remotes=$(git remote)
+if [ ${#remotes} = 1 ]
+then
+    REMOTE=remotes/${remotes[1]}/master
+elif git_ref_exists remotes/origin/master;
+then
+    REMOTE=remotes/origin/master
+elif git_ref_exists remotes/maruska/master
+then
+    REMOTE=remotes/maruska/master
+else
+    REMOTE=remotes/m/master
+fi
+# REMOTE=FETCH_HEAD
+
+
 case $cmp in
     1)
 	echo "local is ahead"
