@@ -22,14 +22,17 @@ hash_of()
 
 # return 1 if A < B
 # 0 if  A=B
-# -1
-# 2 incomparable?
+# 1 less
+# 2 more
+# 3  incomparable
+#
+# 4 error?
 compare_commits()
 {
     local first=$(git log $1 --max-count=1 --format="%H")
     local second=$(git log $2 --max-count=1 --format="%H")
     if [ -z "$first" -o -z "$second" ]; then
-	return 2
+	return 4
     fi
     if [ $first = $second ]; then
 	return 0;
@@ -39,9 +42,11 @@ compare_commits()
     if [ $common = $second ]; then
 	return 1;
     elif [ $common = $first ]; then
-	return -1;
+	return 2;
+	# -1 is nonsense if ever a standalone,
+	# but it got delivered as -1 as function!
     else
-	return 2
+	return 3
     fi
 }
 
@@ -127,22 +132,25 @@ fi
 
 
 case $cmp in
-    1)
-	echo "local is ahead"
-	git log --oneline $remote/master..HEAD --
-	;;
     0)
-	echo " =="
+	cecho bold "same"
 	;;
-    -1)
-	echo "local is behind"
-	git log --oneline HEAD..FETCH_HEAD --
+    1)
+	cecho green "HEAD ahead of $REMOTE"
+	git log --oneline $REMOTE..HEAD --
 	;;
     2)
+	cecho hiyellow "local is behind"
+	git log --oneline HEAD..$REMOTE --
+	;;
+    4)
 	echo "error in comparing $branch & FETCHMAIL"
 	;;
+    3)
+	echo "diverged"
+	;;
     *)
-	echo $cmp
+	echo "error while comparing: $cmp"
 esac
 
 if [ ! $push = no -a $cmp = 1 ];
