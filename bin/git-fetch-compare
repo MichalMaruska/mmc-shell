@@ -86,10 +86,7 @@ done
 # remote or --all
 git fetch --all --quiet
 # git fetch $remote
-git log --oneline HEAD..FETCH_HEAD
-
 git status --short
-
 
 set +e
 compare_commits $branch remotes/$remote/master;
@@ -99,12 +96,14 @@ set -e
 case $cmp in
     1)
 	echo "local is ahead"
+	git log --oneline $remote/master..HEAD --
 	;;
     0)
 	echo " =="
 	;;
     -1)
 	echo "local is behind"
+	git log --oneline HEAD..FETCH_HEAD --
 	;;
     2)
 	echo "error in comparing $branch & FETCHMAIL"
