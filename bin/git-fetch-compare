@@ -5,8 +5,14 @@
 
 ## `Defaults'
 branch=HEAD
-remote=maruska
 push=yes
+
+remotes=$(git remote)
+if [ ${#remotes} = 1 ]; then
+    remote=${remotes[1]}
+else
+    remote=maruska
+fi
 
 
 hash_of()
