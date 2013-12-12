@@ -4,7 +4,16 @@
 # It's assumed they know how to rebase. ( git-rebase-* cmds)
 
 
-repo_save_horizon > horizon.pre
+# taken from gen_platform_zip:
+{
+    repo forall -c 'echo $REPO_PATH `git log --format="format:%H" --max-count=1`' > git-heads.txt &
+    pid1=$tmpses
+    repo_save_horizon > horizon.pre &
+    pid2=$tmpses
+
+    wait $pid1 $pid2
+}
+
 cat horizon.pre
 
 #cecho red "press enter ==>"
