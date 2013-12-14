@@ -7,8 +7,8 @@ if true;
 then
 echo '\e[00;30mblack\e[00m'
 echo '\e[00;31mred\e[00m'
-echo '\e[00;32mgreen\e[00m'
-echo '\e[00;33myellow\e[00m'
+echo '\e[00;32myellow\e[00m'
+echo '\e[00;33mgreen\e[00m'
 echo '\e[00;34mblue\e[00m'
 echo '\e[00;35mviolet\e[00m'
 echo '\e[00;36mcyan\e[00m'
@@ -20,8 +20,8 @@ echo '\e[00;39mwhite\e[00m'
 echo '                  Highlight'
 echo '\e[01;30mblack\e[00m'
 echo '\e[01;31mred\e[00m'
-echo '\e[01;32mgreen\e[00m'
-echo '\e[01;33myellow\e[00m'
+echo '\e[01;32myellow\e[00m'
+echo '\e[01;33mgreen\e[00m'
 echo '\e[01;34mblue\e[00m'
 echo '\e[01;35mviolet\e[00m'
 echo '\e[01;36mcyan\e[00m'
@@ -30,8 +30,8 @@ echo '\e[01;37mwhite\e[00m'
 echo '                  black'
 echo '\e[02;30mblack\e[00m'
 echo '\e[02;31mred\e[00m'
-echo '\e[02;32mgreen\e[00m'
-echo '\e[02;33myellow\e[00m'
+echo '\e[02;32myellow\e[00m'
+echo '\e[02;33mgreen\e[00m'
 echo '\e[02;34mblue\e[00m'
 echo '\e[02;35mviolet\e[00m'
 echo '\e[02;36mcyan\e[00m'
@@ -40,8 +40,8 @@ echo '\e[02;37mwhite\e[00m'
 echo '                  normal'
 echo '\e[03;30mblack\e[00m'
 echo '\e[03;31mred\e[00m'
-echo '\e[03;32mgreen\e[00m'
-echo '\e[03;33myellow\e[00m'
+echo '\e[03;32myellow\e[00m'
+echo '\e[03;33mgreen\e[00m'
 echo '\e[03;34mblue\e[00m'
 echo '\e[03;35mviolet\e[00m'
 echo '\e[03;36mcyan\e[00m'
@@ -50,8 +50,8 @@ echo '\e[03;37mwhite\e[00m'
 echo '                  white'
 echo '\e[04;30mblack\e[00m'
 echo '\e[04;31mred\e[00m'
-echo '\e[04;32mgreen\e[00m'
-echo '\e[04;33myellow\e[00m'
+echo '\e[04;32myellow\e[00m'
+echo '\e[04;33mgreen\e[00m'
 echo '\e[04;34mblue\e[00m'
 echo '\e[04;35mviolet\e[00m'
 echo '\e[04;36mcyan\e[00m'
@@ -60,8 +60,8 @@ echo '\e[04;37mwhite\e[00m'
 echo '                  blinking'
 echo '\e[04;30mblack\e[00m'
 echo '\e[05;31mred\e[00m'
-echo '\e[05;32mgreen\e[00m'
-echo '\e[05;33myellow\e[00m'
+echo '\e[05;32myellow\e[00m'
+echo '\e[05;33mgreen\e[00m'
 echo '\e[05;34mblue\e[00m'
 echo '\e[05;35mviolet\e[00m'
 echo '\e[05;36mcyan\e[00m'
@@ -70,9 +70,9 @@ echo '\e[05;37mwhite\e[00m'
 echo '                  blinking'
 echo '\e[04;30;41mblack\e[00m'
 echo '\e[05;31;42mred\e[00m'
-echo 
-echo '\e[05;32;43mgreen\e[00m'
-echo '\e[05;33;44myellow\e[00m'
+echo
+echo '\e[05;32;43myellow\e[00m'
+echo '\e[05;33;44mgreen\e[00m'
 echo '\e[05;34;45mblue\e[00m'
 echo '\e[05;35;46mviolet\e[00m'
 echo '\e[05;36;47mcyan\e[00m'
@@ -81,12 +81,12 @@ echo '\e[05;37;48mwhite\e[00m'
 
 
 
-#               att fr ba       
+#               att fr ba
 echo '                  blinking'
 echo '\e[01;30;41mblack\e[00m'
 echo '\e[01;31;42mred\e[00m'
-echo '\e[01;32;43mgreen\e[00m'
-echo '\e[01;33;44myellow\e[00m'
+echo '\e[01;32;43myellow\e[00m'
+echo '\e[01;33;44mgreen\e[00m'
 echo '\e[01;34;45mblue\e[00m'
 echo '\e[01;35;46mviolet\e[00m'
 echo '\e[01;36;47mcyan\e[00m'
@@ -100,7 +100,7 @@ echo '\e[01;37;48mwhite\e[00m'
 
 
 
-# Set 
+# Set
 
 echo '\e[01;34;41mblack\e[00m'
 echo '\e[3;01;33;40m'
@@ -141,7 +141,7 @@ fi
 
 
 if true;
-then  
+then
 # now the grayscale ramp
     echo "Grayscale ramp:\n";
 # 232
