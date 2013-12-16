@@ -1,3 +1,17 @@
+mmc-shell (2.33) release; urgency=low
+
+  * draw-tsort-graph: better tracing
+  * Order the refs to show the difference between.
+  * Save also the commit-ids before repo sync.
+  * comments on git-fetch-compare
+  * FIX: repo-sync: use zsh for the zsh-only feature!
+  * fetch-compare: choose the remote
+  * Choose the remote
+  * change the CMP result from -1/0/1 to  0 1 2/ 3 4
+  * Correct historical bug of green/yellow switched
+
+ -- Michal Maruska <mmaruska@gmail.com>  Mon, 16 Dec 2013 11:08:13 +0100
+
 mmc-shell (2.32) release; urgency=low
 
   * git-fetch-compare: better information on the comparison
