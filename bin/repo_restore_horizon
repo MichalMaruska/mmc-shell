@@ -21,11 +21,12 @@ compare_horizons()
     join -t "$TAB" -v 1 \
 	-1 1 -2 1 \
 	$1 $2  |\
-    (if test "$dry" = yes;
+    (
+	if test "$dry" = yes;
 	then
-	cat
+	    cat
 	else
-	awk '/^(.*)\s(.*)$/  {system(sprintf("git-restate %s  %s", $1, $2));}'
+	    awk '/^(.*)\s(.*)$/  {system(sprintf("git-restate %s  %s", $1, $2));}'
 	fi
     )
 # join -t '\t' -v 1 $1 $2

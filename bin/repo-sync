@@ -27,4 +27,5 @@ repo_restore_horizon  horizon.pre horizon.post
 
 repo_save_horizon > horizon.restored
 
-repo_restore_horizon horizon.pre horizon.restored
+cecho cyan "Check any difference"
+repo_restore_horizon -d horizon.pre horizon.restored
