@@ -7,11 +7,12 @@
 # taken from gen_platform_zip:
 {
     repo forall -c 'echo $REPO_PATH `git log --format="format:%H" --max-count=1`' > git-heads.txt &
-    pid1=$tmpses
+    #pid1=$tmpsess
     repo_save_horizon > horizon.pre &
-    pid2=$tmpses
+    #pid2=$tmpsess
 
-    wait $pid1 $pid2
+    wait
+    #$pid1 $pid2
 }
 
 cat horizon.pre
