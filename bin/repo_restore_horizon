@@ -27,7 +27,7 @@ compare_horizons()
 	    cat
 	else
 	    # fixme: failure of `system' won't exit the awk!
-	    awk '/^(.*)\s(.*)$/  {if (system(sprintf("git-restate %s  %s", $1, $2)) != 0);{ exit 1}; }'
+	    awk '/^(.*)\s(.*)$/  {result=system(sprintf("git-restate %s  %s", $1, $2)); if (result != 0) { printf "failed %d", result; exit result}; }'
 	fi
     )
 # join -t '\t' -v 1 $1 $2
