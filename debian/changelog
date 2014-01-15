@@ -1,3 +1,14 @@
+mmc-shell (2.34) release; urgency=low
+
+  * Clean shell & hilite the final horizon comparison.
+  * Exit on any failure
+  * log before commencing
+  * make git-shadow robust -- parse better cmdline
+  * $tmpses does not exist (it worked in the past), so removing
+  * fix awk error detection
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 15 Jan 2014 16:01:21 +0100
+
 mmc-shell (2.33) release; urgency=low
 
   * draw-tsort-graph: better tracing
