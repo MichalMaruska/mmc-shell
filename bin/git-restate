@@ -14,17 +14,16 @@ cd $dir
 name=${2#refs/heads/}
 
 # but is the base pre_fetch_head?
-if git-segment $name &> /dev/null ;
-then
-    # why not *-poset ?
-    git-rebase-poset $name
-elif git-sum $name
+if
+    git-segment $name &> /dev/null ||
+    git-sum $name
 then
     git-rebase-poset $name
+    git checkout $name
+else
+    git checkout $name
 fi
 
-
-git checkout $name
 
 # join -t ' ' -v 1 -1 1 -2 1   $1 $2 |\
 # awk '/^(.*) (.*)$/  {system(sprintf("echo %s  %s", $1, $2));}'
