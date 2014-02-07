@@ -5,7 +5,9 @@
 # Thus you can *consume* & still work with Git commands.
 usage()
 {
-    echo "usage: ${0##*/} [+-h} [--] ARGS..."
+    echo "usage: ${0##*/} [+-h} [--] dir"
+    echo
+    echo "Creates dir/new which shares .git"
 }
 
 while getopts :h OPT; do
@@ -22,17 +24,24 @@ done
 shift $(( OPTIND - 1 ))
 OPTIND=1
 
-if [ $# -le 1 ]; then
+
+if [ $# -lt 1 ]; then
     usage
     exit 1
 fi
 
+
 dir=$1
-new=$(basename $(readlink -f $dir)).new
+new=$1/new
+
+if test -e $new; then
+    exit 1;
+fi
 
 mkdir -p $new
 rsync --exclude .git  -rv  $dir/ $new/
-ln -s $dir/.git $new/.git
+# ln -s $dir/.git $new/.git
+ln -s ../.git $new/.git
 
 exit 0
 
