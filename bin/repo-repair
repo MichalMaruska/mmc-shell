@@ -1,0 +1,9 @@
+#! /bin/bash -eux
+
+# This is meant to "resume" recovering after "repo sync".
+
+tmpname=$(mktemp)
+tmpname=horizon.restored
+repo_save_horizon > $tmpname
+
+repo_restore_horizon $1 $tmpname
