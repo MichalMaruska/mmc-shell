@@ -1,3 +1,12 @@
+mmc-shell (2.35) release; urgency=low
+
+  * git-restate: rebase the whole poset, not only the last segment.
+  * shell: correctly implement:    if A or B then C;
+  * git-shadow: less abstract, always "new" subdirectory, but correct
+  * new command: repo-repair  to resume after an error.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 13 Feb 2014 15:42:56 +0100
+
 mmc-shell (2.34) release; urgency=low
 
   * Clean shell & hilite the final horizon comparison.
