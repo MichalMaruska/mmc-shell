@@ -3,7 +3,8 @@
 usage()
 {
     cat <<EOF
-$0 [+-h] branch base [new-base]
+${0##*/} [+-h] branch base [new-base]
+
 EOF
 }
 
@@ -18,6 +19,11 @@ done
 shift $(( OPTIND - 1 ))
 OPTIND=1
 
+if [ $# -lt 2 ]
+then
+    usage
+    exit 1
+fi
 branch=$1
 base=$2
 
