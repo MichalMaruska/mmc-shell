@@ -3,11 +3,13 @@
 # invoke repo sync, and then restore the checked-out branches.
 # It's assumed they know how to rebase. ( git-rebase-* cmds)
 
+STEP_COLOR=green
 
 # taken from gen_platform_zip:
 {
     repo forall -c 'echo $REPO_PATH `git log --format="format:%H" --max-count=1`' > git-heads.txt &
     #pid1=$tmpsess
+    cecho $STEP_COLOR "saving sym refs in horizon.pre"
     repo_save_horizon > horizon.pre &
     #pid2=$tmpsess
 
@@ -15,13 +17,16 @@
     #$pid1 $pid2
 }
 
+
+cecho blue "Here the sym-ref horizon:"
 cat horizon.pre
 
 #cecho red "press enter ==>"
 # read a
 # This can fail
-repo sync || :
+time repo sync || cecho red "** repo sync FAILED **"
 
+cecho $STEP_COLOR "saving sym refs in horizon.post"
 repo_save_horizon > horizon.post
 
 repo_restore_horizon  horizon.pre horizon.post
@@ -29,3 +34,4 @@ repo_restore_horizon  horizon.pre horizon.post
 cecho cyan "Check any difference"
 repo_save_horizon > horizon.restored
 repo_restore_horizon -d horizon.pre horizon.restored
+cecho $STEP_COLOR "saving sha1-s in git-heads.txt."
