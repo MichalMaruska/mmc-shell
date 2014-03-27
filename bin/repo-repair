@@ -2,6 +2,33 @@
 
 # This is meant to "resume" recovering after "repo sync".
 
+usage()
+{
+cat <<EOF
+usage: ${0##*/} [+-h] [--] {horizont.pre}
+EOF
+}
+
+while getopts :h OPT; do
+    case $OPT in
+	h|+h)
+	    usage
+	    exit 0
+	    ;;
+	*)
+	    usage
+	    exit 2
+    esac
+done
+shift $(( OPTIND - 1 ))
+OPTIND=1
+
+
+if [ $# -le 1 ]; then
+    usage
+    exit 1
+fi
+
 tmpname=$(mktemp)
 tmpname=horizon.restored
 repo_save_horizon > $tmpname
