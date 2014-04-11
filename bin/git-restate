@@ -16,7 +16,7 @@ name=${2#refs/heads/}
 # but is the base pre_fetch_head?
 if
     git-segment $name &> /dev/null ||
-    git-sum $name
+    git-sum $name &> /dev/null
 then
     git-rebase-poset $name
     git checkout $name
