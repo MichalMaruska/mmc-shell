@@ -137,6 +137,7 @@ case $cmp in
 	;;
     1)
 	cecho green "HEAD ahead of $REMOTE"
+	git diff --shortstat  $REMOTE
 	git log --oneline $REMOTE..HEAD --
 	;;
     2)
