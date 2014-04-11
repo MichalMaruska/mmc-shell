@@ -4,7 +4,7 @@
 
 usage()
 {
-cat <<EOF
+    cat <<EOF
 usage: ${0##*/} [+-h] [--] {horizont.pre}
 EOF
 }
@@ -24,7 +24,7 @@ shift $(( OPTIND - 1 ))
 OPTIND=1
 
 
-if [ $# -le 1 ]; then
+if [ $# -lt 1 ]; then
     usage
     exit 1
 fi
