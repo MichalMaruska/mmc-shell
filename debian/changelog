@@ -1,3 +1,17 @@
+mmc-shell (2.36) release; urgency=low
+
+  * git-rebase-branch: print Usage on wrong invocation
+  * repo-sync: colorful progress messages
+  * Usage for repo-repair
+  * cdbs -> dh
+  * git-restate: be quiet (when only testing git-sum)
+  * repo-repair: error on no arg(horizont) provided.
+  * repo-sync: show a "repo diff".
+  * git-fetch-compare: show the statistics of changes
+  * Try to divide the AWK inline program in lines.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 18 Apr 2014 13:42:19 +0200
+
 mmc-shell (2.35) release; urgency=low
 
   * git-restate: rebase the whole poset, not only the last segment.
