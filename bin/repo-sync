@@ -13,7 +13,7 @@ mv -f git-heads.txt $start_git_heads
 {
     #pid1=$tmpsess
     cecho $STEP_COLOR "saving sym refs in horizon.pre"
-    repo_save_horizon > horizon.pre &
+    (repo_save_horizon > horizon.pre || rm -f horizon.pre) &
     #pid2=$tmpsess
     wait
     #$pid1 $pid2
