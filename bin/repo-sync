@@ -8,7 +8,8 @@ STEP_COLOR=green
 
 start_git_heads=git-heads.txt-$(date +%d-%H)
 # cecho $STEP_COLOR "saving sha1-s in git-heads.txt ... in background"
-mv -f git-heads.txt $start_git_heads
+# don't fail if the file is missing:
+test -f git-heads.txt && mv -f git-heads.txt $start_git_heads
 # taken from gen_platform_zip:
 {
     #pid1=$tmpsess
