@@ -1,4 +1,4 @@
-#! /usr/bin/zsh -feu
+#! /bin/zsh -feu
 
 # USAGE: $0 dir head
 

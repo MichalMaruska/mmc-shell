@@ -1,4 +1,4 @@
-#! /usr/bin/zsh -fue
+#! /bin/zsh -fue
 
 # invoke repo sync, and then restore the checked-out branches.
 # It's assumed they know how to rebase. ( git-rebase-* cmds)
