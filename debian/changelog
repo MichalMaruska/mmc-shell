@@ -1,3 +1,16 @@
+mmc-shell (2.37) release; urgency=low
+
+  * repo-sync: more readable output
+  * clean after a shell redirection fails.
+  * don't fail on missing git-heads.txt
+  * Use /bin/zsh, as dpkg warns about.
+  * git-restate: provide usage & check args. rename vars
+  * repo_restore_horizon: provide usage & check args. rename vars
+  * repo_restore_horizon: finish rebasing all; provide the final failure exit code
+  * include repo-diff(-int)
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 13 Jun 2014 11:31:30 +0200
+
 mmc-shell (2.36) release; urgency=low
 
   * git-rebase-branch: print Usage on wrong invocation
