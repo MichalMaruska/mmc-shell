@@ -1,27 +1,37 @@
 #! /bin/zsh -feu
 
-# USAGE: $0 dir head
+unsetopt FUNCTION_ARGZERO
 
+usage()
+{
+    cat <<EOF
+usage: ${0##*/} DIR HEAD
+EOF
+}
 # In directory @dir, assumed git,
 # checks-out @head, possibly rebasing it by `git-rebase-poset'
 
 
+if [ $# -lt 2 ]; then
+    usage
+    exit 1
+fi
 
 dir=$1
+GIT_REF=${2#refs/heads/}
+
 cecho hiyellow $dir
 cd $dir
 
-name=${2#refs/heads/}
 
 # but is the base pre_fetch_head?
-if
-    git-segment $name &> /dev/null ||
-    git-sum $name &> /dev/null
+if git-segment $GIT_REF &> /dev/null ||
+    git-sum $GIT_REF &> /dev/null
 then
-    git-rebase-poset $name
-    git checkout $name
+    git-rebase-poset $GIT_REF
+    git checkout $GIT_REF
 else
-    git checkout $name
+    git checkout $GIT_REF
 fi
 
 
