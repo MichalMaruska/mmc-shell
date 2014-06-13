@@ -1,0 +1,7 @@
+#! /bin/bash -eu
+
+
+# start_git_heads git-heads.txt
+repo-diff-int \
+	--cherry-pick --format=oneline --right-only --no-merges \
+	$1 $2

@@ -53,7 +53,5 @@ repo forall -c 'echo $REPO_PATH `git log --format="format:%H" --max-count=1`' > 
 if test -e $start_git_heads;
     then
     # --no-pager
-    vendor/tomtom/build/tools/platform-diff \
-	--cherry-pick --format=oneline --right-only --no-merges \
-	$start_git_heads git-heads.txt
+    repo-diff $start_git_heads git-heads.txt
 fi
