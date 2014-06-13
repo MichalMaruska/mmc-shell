@@ -1,12 +1,21 @@
-#! /bin/bash -eu
+#! /usr/bin/zsh -feu
 # pipefail
 
+unsetopt FUNCTION_ARGZERO
+
+
 TAB='	'
-dry=no
+DRY_RUN=no
 
 usage()
 {
-    echo "usage: ${0##*/} [+-dvh} [--] ARGS..."
+    cat <<EOF
+usage: ${0##*/} [+-dvh} [--] ARGS...
+
+ Invoke 'git-restate' in each repo project, that is messed-up.
+ As input (the mess-up diff) it takes 2 'horizon' files.
+
+EOF
 }
 
 
@@ -22,7 +31,7 @@ compare_horizons()
 	-1 1 -2 1 \
 	$1 $2  |\
     (
-	if test "$dry" = yes;
+	if test "$DRY_RUN" = yes;
 	then
 	    cat
 	else
@@ -41,7 +50,7 @@ if (result != 0) { printf "failed %d", result; exit result}; }'
 while getopts :dh OPT; do
     case $OPT in
 	d|+d)
-	    dry=yes
+	    DRY_RUN=yes
 	    ;;
 #	v|+v)
 #	    ;;
@@ -57,6 +66,10 @@ done
 shift $(( OPTIND - 1 ))
 OPTIND=1
 
+if [ $# -lt 2 ]; then
+    usage
+    exit 1
+fi
 
 # not on a ref now:
 
