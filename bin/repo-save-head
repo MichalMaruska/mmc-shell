@@ -1,5 +1,18 @@
 #!/bin/bash -eu
 
-pwd
-cat .git/HEAD
+# git stash -m "pre-repo-sync"
 
+# git stash create
+# git stash store -m
+sha=$(git stash create)
+
+if [ -n "$sha" ];
+then
+    git stash store -m "pre repo-sync" $sha
+fi
+
+pwd
+echo -e "$(cat .git/HEAD)" "\t" $sha
+
+
+git reset --hard > /dev/null

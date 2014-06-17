@@ -3,5 +3,12 @@
 # This should `save' the current-branches -- the `horizon'
 # which could be checked after the -- uncontrolled sync.
 
+
+# protocol:
+#  info in 2 lines:
+# dir
+# ref/sha1
 repo forall -c repo-save-head  |\
-    awk 'BEGIN {getline;dir=$0};/^ref: (.+)$/ {printf "%s\t%s\n", dir, $2;};{getline; dir=$0}'
+    awk 'BEGIN {getline;dir=$0};\
+/^ref: (.+)$/ {printf "%s\t%s\n", dir, $2;};\
+{getline; dir=$0}'
