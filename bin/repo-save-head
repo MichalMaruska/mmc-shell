@@ -1,14 +1,16 @@
-#!/bin/bash -eu
+#!/usr/bin/zsh -f
 
 # git stash -m "pre-repo-sync"
 
 # git stash create
 # git stash store -m
-sha=$(git stash create)
+
+msg="pre repo-sync"
+sha=$(git stash create "$msg")
 
 if [ -n "$sha" ];
 then
-    git stash store -m "pre repo-sync" $sha
+    git stash store -m "$msg" $sha
 fi
 
 pwd
