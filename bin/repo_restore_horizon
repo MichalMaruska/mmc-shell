@@ -38,14 +38,28 @@ compare_horizons()
 	then
 	    cat
 	else
+# todo:
+# inform about projects where git-rebase failed...
+# also:  git-rebase bracked by stash/pop possibly.
 	    # fixme: failure of `system' won't exit the awk!
 	    awk 'BEGIN{exit_code=0}\
-/^(.*)\s(.*)$/  {\
-result=system(sprintf("git-restate %s  %s", $1, $2));\
+/^(.*)\s(.*)\t(.*)$/  {\
+result=system(sprintf("git-restate %s %s", $1, $2));\
+if (result != 0) { \
+   printf "failed %d", result; \
+   exit_code=1; \
+   next \
+   };
+}\
+/^(.*)\s(.*)\t(.+)$/  {\
+result=system(sprintf("cd %s; git stash pop", $1));\
 if (result != 0) { printf "failed %d", result; exit_code=1}; }\
+\
 END { exit exit_code}'
 	fi
     )
+# fixme: currently not idempotent! `stash-pop' w/ no check.
+
 # join -t '\t' -v 1 $1 $2
 # join -v 2 $1 $2
 # colordiff --unified=1 .$1.br .$2.br
