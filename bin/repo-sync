@@ -43,9 +43,9 @@ time repo sync && \
     cecho red -e   "\n#################### ** repo sync FAILED **\n"
 
 cecho $STEP_COLOR "saving sym refs in horizon.post"
-repo_save_horizon > horizon.post
+repo-repair -t horizon.post horizon.pre
 
-repo_restore_horizon  horizon.pre horizon.post
+
 
 cecho cyan "Check any difference"
 repo_save_horizon > horizon.restored
