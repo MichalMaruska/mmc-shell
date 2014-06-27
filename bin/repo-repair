@@ -5,15 +5,19 @@
 usage()
 {
     cat <<EOF
-usage: ${0##*/} [+-h] [--] {horizont.pre}
+usage: ${0##*/} [+-h] [-t horizon.new] [--] {horizont.pre}
 EOF
 }
 
-while getopts :h OPT; do
+tmpname=horizon.restored
+while getopts :ht: OPT; do
     case $OPT in
 	h|+h)
 	    usage
 	    exit 0
+	    ;;
+	t)
+	    tmpname=$OPTARG
 	    ;;
 	*)
 	    usage
@@ -29,8 +33,7 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
-tmpname=$(mktemp)
-tmpname=horizon.restored
+# tmpname=$(mktemp)
 repo_save_horizon > $tmpname
 
 repo_restore_horizon $1 $tmpname
