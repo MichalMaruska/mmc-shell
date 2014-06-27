@@ -1,3 +1,16 @@
+mmc-shell (2.38) release; urgency=low
+
+  * Stash during save-head (horizon)
+  * repo: fix stashing with a good commit MSG
+  * output the stash sha1 into horizon.
+  * repo-sync:  make it a function: save_horizon_and_heads
+  * repo-sync: use existing tool: repo-repair
+  * repo-repair: usage & accept horizon.new (suggested filename)
+  * restore_horizon: usage
+  * restore_horizon: (awk) git-stash-pop when requested.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 27 Jun 2014 13:59:50 +0200
+
 mmc-shell (2.37) release; urgency=low
 
   * repo-sync: more readable output
