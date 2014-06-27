@@ -10,10 +10,13 @@ DRY_RUN=no
 usage()
 {
     cat <<EOF
-usage: ${0##*/} [+-dvh} [--] ARGS...
+usage: ${0##*/} [+-dvh} [--] horizon1 horizon2
 
- Invoke 'git-restate' in each repo project, that is messed-up.
- As input (the mess-up diff) it takes 2 'horizon' files.
+ As input it takes 2 'horizon' files.
+ Invoke 'git-restate' in each repo project, that is messed-up, i.e.
+ diff between horizons.
+
+-d ... just list the diff, no correction is done
 
 EOF
 }
