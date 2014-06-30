@@ -46,14 +46,14 @@ compare_horizons()
 /^(.*)\s(.*)\t(.*)$/  {\
 result=system(sprintf("git-restate %s %s", $1, $2));\
 if (result != 0) { \
-   printf "failed %d", result; \
+   printf "**** git-restate failed in %s: %d\n", $1, result; \
    exit_code=1; \
    next \
    };
 }\
 /^(.*)\s(.*)\t(.+)$/  {\
 result=system(sprintf("cd %s; git stash pop", $1));\
-if (result != 0) { printf "failed %d", result; exit_code=1}; }\
+if (result != 0) { printf "**** stash POP failed %d\n", result; exit_code=1}; }\
 \
 END { exit exit_code}'
 	fi

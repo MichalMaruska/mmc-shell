@@ -20,7 +20,7 @@ fi
 dir=$1
 GIT_REF=${2#refs/heads/}
 
-cecho hiyellow $dir
+cecho hiyellow "-- $dir"
 cd $dir
 
 
