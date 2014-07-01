@@ -1,0 +1,8 @@
+#! /usr/bin/zsh -feux
+
+BRANCH=$1
+steps_back=$2
+
+git co HEAD~0
+
+git branch -f $BRANCH  $BRANCH@{$steps_back}
