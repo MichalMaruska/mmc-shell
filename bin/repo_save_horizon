@@ -9,6 +9,9 @@
 # dir
 # ref/sha1
 repo forall -c repo-save-head  |\
-    awk 'BEGIN {getline;dir=$0};\
-/^ref: (.+)$/ {printf "%s\t%s\t%s\n", dir, $2,$3;};\
+    awk 'BEGIN {getline;dir=$0};
+/^ref: (.+)$/ {printf "%s\t%s", dir, $2;
+if ($3 != "") {printf "\t%s",$3;};
+printf "\n";};
 {getline; dir=$0}'
+
