@@ -42,8 +42,12 @@ time repo sync && \
     cecho green -e "\noooooooooooooooooooo ** repo PASSED **\n"  || \
     cecho red -e   "\n#################### ** repo sync FAILED **\n"
 
-cecho $STEP_COLOR "saving sym refs in horizon.post"
-repo-repair -t horizon.post horizon.pre
+#cecho $STEP_COLOR "saving sym refs in horizon.post"
+#repo-repair -t horizon.post horizon.pre
+
+repo-restore.awk < horizon.pre && \
+    cecho green -e "\noooooooooooooooooooo ** rebase PASSED **\n"  || \
+    {cecho red -e   "\n#################### ** rebase FAILED **\n"; exit 1}
 
 
 
@@ -52,11 +56,14 @@ repo_save_horizon > horizon.restored
 
 
 # can this fail?
-repo_restore_horizon -d horizon.pre horizon.restored && \
+if false;
+then
+    repo_restore_horizon -d horizon.pre horizon.restored && \
     cecho green -e "\noooooooooooooooooooo ** rebase PASSED **\n"  || \
     cecho red -e   "\n#################### ** rebase FAILED **\n"
+fi
 
-
+#todo: this is useless if the `rebase' failed:
 # show changelog
 cecho $STEP_COLOR "saving sha1-s in git-heads.txt."
 repo forall -c 'echo $REPO_PATH `git log --format="format:%H" --max-count=1`' > git-heads.txt
