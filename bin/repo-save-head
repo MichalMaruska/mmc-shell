@@ -1,20 +1,53 @@
-#!/usr/bin/zsh -f
+#!/usr/bin/zsh -feu
+
+# output the HEAD sha. possibly also a stash SHA1
+# git-reset, unless
+
+stash=y
+reset=y
 
 # git stash -m "pre-repo-sync"
-
 # git stash create
 # git stash store -m
+usage(){
+    print "usage: ${0##*/} [+-s}"
+}
 
-msg="pre repo-sync"
-sha=$(git stash create "$msg")
 
-if [ -n "$sha" ];
-then
-    git stash store -m "$msg" $sha
-fi
+while getopts :s OPT; do
+    case $OPT in
+	s|+s)
+	    # dont-stash
+	    stash=n
+	    reset=n
+	    ;;
+	*)
+	    usage
+	    exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
 
 pwd
-echo -e "$(cat .git/HEAD)" "\t" $sha
+echo -n "$(cat .git/HEAD)"
 
+if test $stash = y;
+then
+    msg="pre repo-sync"
+    sha=$(git stash create "$msg")
 
-git reset --hard > /dev/null
+    if [ -n "$sha" ];
+    then
+	git stash store -m "$msg" $sha
+    fi
+    echo -en "\t" $sha
+fi
+
+# newline:
+echo
+
+test "$reset" = y && git reset --hard > /dev/null
+
+exit 0

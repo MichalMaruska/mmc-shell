@@ -51,8 +51,10 @@ repo-restore.awk < horizon.pre && \
 
 
 
+# fixme: no point in stashing again!
 cecho cyan "Check any difference"
-repo_save_horizon > horizon.restored
+# todo --dont-stash
+repo_save_horizon -s > horizon.restored
 
 
 # can this fail?
