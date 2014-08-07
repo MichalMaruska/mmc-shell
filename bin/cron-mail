@@ -1,0 +1,37 @@
+#! /usr/bin/zsh -feu
+
+# Usage:  $0 [-m OK] cmd args
+#
+# invokes "CMD args", redirecting its output (also stderr!)
+# then sends an email.
+# if the status was 0,  email starts with OK, otherwise FAIL.
+
+# email address?
+EMAIL=Michal.Maruska@tomtom.com
+
+CMD=`shift`
+
+TEMP=$(mktemp $CMD.XXXX)
+
+# how to suppress the exit-on-failure here?
+if $CMD "$@" &> $TEMP;
+then
+    result=0
+else
+    result=$?
+#    echo "this way $result"
+fi
+
+
+if [ $result = 0 ];
+then
+    subject="OK $CMD"
+else
+    subject="FAIL $CMD"
+fi
+
+# stderr during this command is not controlled:
+# and it might invoke gnome-keyring.
+mail -s $subject $EMAIL < $TEMP
+
+rm $TEMP
