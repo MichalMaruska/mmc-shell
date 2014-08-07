@@ -5,11 +5,7 @@ cmd=""
 # echo
 }
 
-# {print $1, $2, $3;}
-# \t?(.*)?$
-
 /^.*	.*/  {
-    print "running";
     result=system(sprintf("%s git-restate %s %s", cmd, $1, $2));
     if (result != 0) {
 	    printf "**** git-restate failed in %s: %d\n", $1, result;

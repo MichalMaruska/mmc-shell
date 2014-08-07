@@ -1,5 +1,8 @@
 #! /bin/zsh -feu
 
+# In directory @dir, assumed git,
+# checks-out @head, possibly rebasing it by `git-rebase-poset'
+
 unsetopt FUNCTION_ARGZERO
 
 usage()
@@ -8,8 +11,6 @@ usage()
 usage: ${0##*/} DIR HEAD
 EOF
 }
-# In directory @dir, assumed git,
-# checks-out @head, possibly rebasing it by `git-rebase-poset'
 
 
 if [ $# -lt 2 ]; then
@@ -33,17 +34,3 @@ then
 else
     git checkout $GIT_REF
 fi
-
-
-# join -t ' ' -v 1 -1 1 -2 1   $1 $2 |\
-# awk '/^(.*) (.*)$/  {system(sprintf("echo %s  %s", $1, $2));}'
-
-
-# exists base ->
-# git br -f base tt-server/ics-dev
-# git-rebase-poset all
-
-# repo_save_horizon > .now
-
-# join -t ' ' -v 1 -1 1 -2 1   .pre.br .now  |\
-# awk '/^(.*) (.*)$/  {system(sprintf("~/git-restate %s  %s", $1, $2));}'
