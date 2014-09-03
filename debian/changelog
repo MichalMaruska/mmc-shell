@@ -1,3 +1,16 @@
+mmc-shell (2.39) release; urgency=low
+
+  * improve logging of errors & divide the log by git dir.
+  * Make the stash in horizon optional
+  * Use new repo-restore.awk which restores (no messing with diff)
+  * Don't stash when producing the post horizont
+  * New command: cron-mail
+  * comments
+  * git-revert-branch: new tool to restore from  reflog
+  * change the color for Directory title
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 03 Sep 2014 13:08:11 +0200
+
 mmc-shell (2.38) release; urgency=low
 
   * Stash during save-head (horizon)
