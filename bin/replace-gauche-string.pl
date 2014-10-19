@@ -1,7 +1,20 @@
 #! /usr/bin/perl
 
+# Rewrite the debian/control to _bind_ all the _binary_ packages to
+# certain API version.
+# And add it as a provider for virtual package.
 
-# process the debian/control to fix the API version:
+# Usage:
+# replace-gauche-string.pl debian/control.in $GAUCHE_VERSION > debian/control
+
+# todo:
+# replace the dependency on gauche with  gauche-API!
+
+
+# todo: if only 1, we need *.install file. Might provide one.
+# but then  debian/rules  need the option to dh-install.
+# fixme!  should NOT
+
 
 use strict;
 use feature qw(switch);
@@ -10,48 +23,37 @@ use Dpkg::Control::Info;
 use Dpkg::Control;
 
 use Getopt::Mixed "nextOption";
-my @options=("help verbose debug>verbose  arch=s d>verbose h>help v>verbose");
+my @options=("help verbose debug>verbose d>verbose h>help v>verbose");
 Getopt::Mixed::init( @options);
 
+my $debug = 0;
 
-
-# given a pkg name,
-# convert the debian/*.install and  debian/control
+# Given a pkg name, convert the debian/*.install and  debian/control
 # to change the pkg name to an ABI-bound one.
 
-sub add_abstract_package {
-    my ($name,$abi)=(@_);# ,$info  ,$3 @_; $1,$2
-
+sub create_virtual_package {
+    my ($pgk_name,$abi)=(@_);
     # print "called " . $name . "\n";
-# Add:
-    my $new_abstract= Dpkg::Control->new(type => CTRL_INFO_PKG);
 
-#my $fields=$new_abstract->{fields};
-#$fields->{'Package'}= "newp";
+    my $new_package= Dpkg::Control->new(type => CTRL_INFO_PKG);
 
-#my %hash=('Package', "new2");
-#$new_abstract->set_options(%hash);
-
-# print "xxxx" . $new_abstract->{'Package'} . "\n";
-#= "new";
-#$new_abstract{'Architecture'} ="any";
-    $new_abstract->{'Package'}=$name;
-    $new_abstract->{'Depends'}=$abi;
-    $new_abstract->{'Architecture'}="all";
-    #$new_abstract->{'Provides'}=$name;
-    $new_abstract->{'Description'}="Package to provide one candidate of multi-api-version package.";
-    # if $debug $new_abstract->output(\*STDOUT);
-    return $new_abstract;
+    $new_package->{'Package'}=$pgk_name;
+    $new_package->{'Depends'}=$abi;
+    $new_package->{'Architecture'}="all";
+    $new_package->{'Description'}=
+	"Package to provide one candidate of multi-api-version package.";
+    if ($debug) {
+	print STDERR "new virtual package\n";
+	$new_package->output(\*STDERR);
+	print STDERR "\n";
+    }
+    return $new_package;
 }
 
 
-my @new=();
-# todo: pass the @new array:
-sub bind_package_to_version {
+# this assumes the CWD is debian/..
+sub rename_install_file{
     my ($pkg, $newpkg) = (@_);
-
-    # rename
-    $_->{Package} = $newpkg;
 
     # rename the debian/$pkg.install
     my $install_file="debian/" . $pkg . ".install";
@@ -59,32 +61,137 @@ sub bind_package_to_version {
 	rename($install_file,
 	       "debian/" . $newpkg . ".install");
     }
-
-    # add a wrapper:
-    push @new, add_abstract_package($pkg, $newpkg);
 }
+
+my @new=();
+
+# todo: pass the @new array:
+sub bind_package_to_version {
+    my ($pkg, $name, $new_name) = (@_);
+
+    # rename
+    $pkg->{Package} = $new_name;
+    # mmc: necessary?
+    # $_->{Provides} = $pkg
+
+    rename_install_file($name, $new_name);
+    # add a wrapper:
+    push @new, create_virtual_package($name, $new_name);
+}
+
+
+
+
+# return true iff the package is Architecture NOT all.
+sub package_is_binary{
+    my ($name) = (@_);
+
+    #optimization
+    if ($name eq '${shlibs:Depends}' || $name eq '${misc:Depends}') {
+	return;
+    }
+
+    # pkg -> source_pkg  how to? no way?
+    # just a hint. otherwise some pre-indexing.
+    my @debian_dirs = glob '~/repo/gauche/*/debian/';
+    print STDERR "looking for package $name\n" if ($debug);
+    #if (-f "~/repo/gauche/$name/debian/control.in") {
+    # "~/repo/gauche/$name/debian/control.in"
+    my $d;
+    foreach $d (@debian_dirs) {
+	my $control_file;
+
+	if (-f "$d/control.in") {
+	    $control_file="$d/control.in";
+	} elsif (-f "$d/control") {
+	    $control_file="$d/control";
+	} else {
+	    break;
+	}
+
+
+	# Parse:
+	# print STDERR "testing $control_file\n";
+
+	my $info=Dpkg::Control::Info->new($control_file);
+	my $pkg;
+	if ($pkg = $info->get_pkg_by_name($name)) {
+	    print STDERR "found $pkg->{Package}", "\n" if ($debug);
+	    if ($pkg) {
+		return ($pkg->{Architecture} ne "all");
+	    }
+	}
+	# todo:
+	# Build-dep:  fix the ABI of any binary package:
+	#   this is because I can describe what is needed.
+	#   think:  gauche-dev  & gauche-gtk ... they have to be
+	#   the SAME ABI version. i.e. gauche-gtk must be that of
+	#   ABI specified by gauche-dev.
+
+
+	    # scan the packages & create new ones.
+
+	    # look in
+	    # find the package's architecture.
+	    # or just ask dpkg?
+	    }
+}
+
+
+# in $pkg, replace the dependencies on $name with $name-$abi:
+# similar for other...  if the dependency is another api-bound
+# we need the _same_ version.
+# Example: gauche-pg-gtk
+# needs    gauche-ABI-gtk
+# and      gauche-ABI-pg
+sub bind_pkg_deps {
+    my ($pkg, $name, $abi) = (@_);
+    my @deps = split(', *', $pkg->{Depends});
+    my @newdeps = ();
+
+    foreach $_ (@deps) {
+	# print STDERR "Examining the dependency on $_\n";
+
+	if ($_ eq $name) {
+	    # Gauche itself.
+	    my $new="$_-$abi";
+	    print STDERR "changing dependency: $_ -> $new\n" if ($debug);
+	    push (@newdeps, $new);
+	} elsif (package_is_binary($_)){
+	    # fixme: this should invoke recursion!  bug?
+	    my $new="$_-$abi";
+	    print STDERR "changing dependency: $_ -> $new\n" if ($debug);
+	    push (@newdeps, $new);
+	} else {
+	    push (@newdeps, $_);
+	}
+    }
+    # rewrite:
+    $pkg->{Depends}= join (", ", @newdeps);
+}
+
 
 
 #### CMD line processsing:
 my ($option, $value, $pretty);
 while (($option, $value, $pretty) = nextOption()) {
 
-    given($option){
-	when ("help") {
-	    print "Help!\n";
-	}
-	when ("verbose") {
-	    print "I'll be verbose!\n";
-	}
-	default {}
-    }
+    if ($option eq "help") {
+	print STDERR "Help!\n";
+    } elsif ($option eq "verbose") {
+	# print STDERR "I'll be verbose!\n";
+	$debug=1;
+    };
 }
 Getopt::Mixed::cleanup();
 
 
+# the rest is the debian/control filename:
 my $file=shift;
 #    . "/debian/control";
 my $abi_version=shift;
+my $name = "gauche";
+
 
 unless  (-f $file) {
     $file=$file . ".in";
@@ -98,15 +205,26 @@ unless  (-f $file) {
 my $info=Dpkg::Control::Info->new($file);
 
 
+# todo:
+# Build-dep:  fix the ABI of any binary package:
+#   this is because I can describe what is needed.
+#   think:  gauche-dev  & gauche-gtk ... they have to be
+#   the SAME ABI version. i.e. gauche-gtk must be that of
+#   ABI specified by gauche-dev.
+
+
 # scan the packages & create new ones.
 foreach $_ ($info->get_packages())
 {
     if ($_->{Architecture} ne "all") {
-	my $pkg=$_->{Package};
+	# any, i386, amd64, arm ...
+	my $pkg_name=$_->{Package};
 
-	my $newpkg= $pkg;
-	$newpkg =~ s/gauche-/gauche-$abi_version-/g;
-	bind_package_to_version($pkg, $newpkg);
+	# gauche-pg will be  gauche-API-pg
+	# replace `name' with `name_api'
+	my $new_pkg_name = $pkg_name =~ s/\Q$name-/$name-$abi_version-/r;
+	bind_package_to_version($_, $pkg_name, $new_pkg_name);
+	bind_pkg_deps($_, $name, $abi_version);
 	# exchange & add
 	# print $_->{Package}, "\n";
     }
