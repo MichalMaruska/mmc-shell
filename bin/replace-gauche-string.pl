@@ -188,8 +188,13 @@ Getopt::Mixed::cleanup();
 
 # the rest is the debian/control filename:
 my $file=shift;
-#    . "/debian/control";
-my $abi_version=shift;
+# I could default to "./debian/control";
+
+# Could accept as a param:
+my $abi_version=`gauche-config -V|sed -e 's/_/-/'`;
+chomp $abi_version;
+# print STDERR $abi_version;
+
 my $name = "gauche";
 
 
