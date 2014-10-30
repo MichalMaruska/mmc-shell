@@ -1,0 +1,109 @@
+#! /usr/bin/zsh -feu
+
+# I run this script to RSYNC the source tree faithfully from my
+# (at the moment remote) workstation to BUILD server (localhost).
+
+# The tree is in a SOURCE_REPO, and is synced to some ROOT directory
+# on the localhost.
+
+# The config files itself are expected inside ROOT, so rsync can update them.
+# hopefully not overwrite while it's executing.
+
+# those are:  .rsync.env .rsync-ignore
+
+# see example .rsync-ignore...
+# to avoid copying cscope* files, and also the git files -- not relevant
+# for building.
+
+# Since the source tree on the build server contans (unfortunately)
+# the build results, I make the rsync ignore those too.
+
+# there are 2 grades of ignoring files:
+# 1/ make sure it's not on the build host -- actively remove it
+# 2/ ignore it. -- this has the annoing effect of reporting parent
+#   dirs as non-removable as non-empty.
+
+
+# For the build to succeed -- to nont consult the version control for example,
+# I need some more fake files. Created them once:
+
+# mkdir .repo;
+# mkdir kernel/.git;
+
+# I could create a "dont-delete" file inside them...
+# ... as I use   "dont-delete" files to keep directories present.
+
+
+
+# how to bootstrap:
+# on server:
+#    mkdir DIR2
+#    mkdir .repo;  touch .repo/dont-delete
+#    mkdir kernel/.git; touch kernel/.git/dont-delete
+
+# on workstation:
+#    scp  DIR/rsync*  server:DIR2/
+# then on the server:
+#    DIR2/rsync-from-me
+
+
+# How to invoke:
+# invoked in CWD -> these files are located:
+# .rsync.env  and .rsync.ignore
+# If not found -> exit.
+# then parameters are ... the subdirs.
+
+die()
+{
+    echo $@ >&2
+    exit 1;
+}
+
+if ! [ -e .rsync.env -a -e .rsync-ignore ]; then
+    die "missing env file in $(pwd)"
+fi
+
+source .rsync.env
+
+# sanity check:
+if [ -z "${SOURCE_REPO-}" ]; then
+    die "the env file does not define the SOURCE_REPO"
+fi
+if [ -z "${RSYNC_RULES-}" ]; then
+    die "the env file does not define the RSYNC_RULES"
+fi
+
+ROOT=$(pwd)
+
+do_once()
+{
+    time rsync --exclude-from=$ROOT/.rsync-ignore \
+	$LOG_OPTIONS $CHECK_OPTIONS \
+	--recursive --archive \
+	--delete --delete-excluded --max-delete 100 \
+	$TRANSFER_OPTIONS \
+	$RSYNC_RULES \
+	"$@"
+}
+
+LOG_OPTIONS=(--itemize-changes --progress --human-readable)
+TRANSFER_OPTIONS=(--partial --bwlimit=100)
+CHECK_OPTIONS=(--times)
+
+if test $# -gt 0;
+then
+# must contain the trailing /
+    for subdir
+    do
+	# note: I do append the "/" after ROOT
+	do_once --relative "$SOURCE_REPO/./$subdir"  $ROOT/
+    done
+else
+    do_once $SOURCE_REPO/   $ROOT/
+fi
+
+
+# options:
+# dry
+# careful -- slow & limit deletes & verbose
+# fast
