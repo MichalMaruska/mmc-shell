@@ -38,16 +38,24 @@ cat horizon.pre
 #cecho red "press enter ==>"
 # read a
 # This can fail
-time repo sync && \
-    cecho green -e "\noooooooooooooooooooo ** repo PASSED **\n"  || \
+
+sync_status=0
+if time repo sync; then
+    cecho green -e "\noooooooooooooooooooo ** repo PASSED **\n"
+else
+    sync_status=1
     cecho red -e   "\n#################### ** repo sync FAILED **\n"
+fi
 
 #cecho $STEP_COLOR "saving sym refs in horizon.post"
 #repo-repair -t horizon.post horizon.pre
 
-repo-restore.awk < horizon.pre && \
-    cecho green -e "\noooooooooooooooooooo ** rebase PASSED **\n"  || \
+if repo-restore.awk < horizon.pre;
+then
+    cecho green -e "\noooooooooooooooooooo ** rebase PASSED **\n"
+else
     {cecho red -e   "\n#################### ** rebase FAILED **\n"; exit 1}
+fi
 
 
 
@@ -75,3 +83,6 @@ if test -e $start_git_heads;
     # --no-pager
     repo-diff $start_git_heads git-heads.txt
 fi
+
+exit $sync_status
+
