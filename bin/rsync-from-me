@@ -77,23 +77,62 @@ ROOT=$(pwd)
 
 do_once()
 {
+    set -x
     time rsync --exclude-from=$ROOT/.rsync-ignore \
-	$LOG_OPTIONS $CHECK_OPTIONS \
+	$GLOBAL_OPTIONS \
 	--recursive --archive \
-	--delete --delete-excluded --max-delete 100 \
+	 \
 	$TRANSFER_OPTIONS \
 	$RSYNC_RULES \
 	"$@"
+    set +x
 }
 
 LOG_OPTIONS=(--itemize-changes --progress --human-readable)
 TRANSFER_OPTIONS=(--partial --bwlimit=100)
 CHECK_OPTIONS=(--times)
+DELETE_OPTIONS_UNSAFE=(--delete --delete-excluded)
+
+DELETE_OPTIONS=$DELETE_OPTIONS_UNSAFE
+typeset -a DELETE_OPTIONS
+DELETE_OPTIONS+=(--max-delete 100)
+
+
+
+GLOBAL_OPTIONS=()
+while getopts :vnfsd OPT; do
+    case $OPT in
+	v|+v) # verbose
+	    GLOBAL_OPTIONS+=($LOG_OPTIONS)
+	    ;;
+	n|+n)
+	    GLOBAL_OPTIONS+=(--dry-run)
+	    ;;
+	d)
+	    DELETE_OPTIONS=($DELETE_OPTIONS_UNSAFE)
+	    ;;
+	f|+f)
+	    GLOBAL_OPTIONS+=($TRANSFER_OPTIONS)
+	    ;;
+	s)			# don't check time, but size.
+	    GLOBAL_OPTIONS+=(--size-only)
+	    ;;
+	*)
+	    print "usage: ${0##*/} [+-vnf] [--] ARGS..."
+	    exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+GLOBAL_OPTIONS+=($DELETE_OPTIONS)
+
 
 if test $# -gt 0;
 then
 # must contain the trailing /
     for subdir
+    # in $@
     do
 	# note: I do append the "/" after ROOT
 	do_once --relative "$SOURCE_REPO/./$subdir"  $ROOT/
