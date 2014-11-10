@@ -11,7 +11,7 @@ keep_graph_file=no
 usage()
 {
     cat <<EOF
-usage: ${0##*/} [+-kpj] [-F format] [--] ARGS...
+usage: ${0##*/} [+-kpj] [-F format] [--] {file}
 -h help
 -d debug/trace
 -p PNG
@@ -63,8 +63,11 @@ echo "fontsize=24;" >> $temp
 # either from stdin or a file
 if [ $# = 1 ];then
     cat $1 >> $temp
-else
+else if [ $# = 0 ]; then
     cat >> $temp
+else
+    usage >&2
+    exit 1
 fi
 
 echo "}" >> $temp
