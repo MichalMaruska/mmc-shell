@@ -6,12 +6,12 @@
 ## `Defaults'
 branch=HEAD
 push=yes
+remote=maruska
+
 
 remotes=$(git remote)
 if [ ${#remotes} = 1 ]; then
     remote=${remotes[1]}
-else
-    remote=maruska
 fi
 
 
@@ -97,7 +97,7 @@ done
 # remote or --all
 # git fetch $remote
 
-git fetch --all --quiet
+git fetch ${remote-"--all"} --quiet
 # git log --oneline  ORIG_HEAD..HEAD --
 
 git status --short
