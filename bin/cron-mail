@@ -1,13 +1,32 @@
 #! /usr/bin/zsh -feu
 
-# Usage:  $0 [-m OK] cmd args
-#
-# invokes "CMD args", redirecting its output (also stderr!)
-# then sends an email.
-# if the status was 0,  email starts with OK, otherwise FAIL.
+usage()
+{
+    cat <<EOF
+Usage:  $0 [-m OK] cmd args
 
-# email address?
-EMAIL=Michal.Maruska@tomtom.com
+ invokes "CMD args", redirecting its output (also stderr!)
+ then sends an email.
+ if the status was 0,  email starts with OK, otherwise FAIL.
+EOF
+}
+
+# fallback
+: ${EMAIL=Michal.Maruska@tomtom.com}
+while getopts :h OPT; do
+    case $OPT in
+	h|+h)
+	    usage
+	    exit 0
+	    ;;
+	*)
+	    usage >&2
+	    exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
 
 CMD=`shift`
 
