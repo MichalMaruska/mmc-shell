@@ -1,9 +1,30 @@
 #! /bin/zsh -feu
 
-# Compare Git repository which carries a source debian package
-# with what is released as a debian package.
+# Compare
+#  o  Git repository which carries a source debian package
+# with
+#  o  available debian package version.
+usage()
+{
+    print "usage: ${0##*/} [+-h] [--] dir ..."
+    # enters dir and compares its debian/changelog with what is installed (dpkg -l)
+}
 
 # fixme: must be invoked inside DIR.
+while getopts :h OPT; do
+    case $OPT in
+	h|+h)
+	    usage
+	    exit 0
+	    ;;
+	*)
+	    usage
+	    exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
 DIR=$1
 last_release_tag=$(git describe --tags HEAD 2>/dev/null)
 
