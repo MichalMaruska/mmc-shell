@@ -114,18 +114,14 @@ EOF
 LOG_OPTIONS=(--itemize-changes --human-readable)
 TRANSFER_OPTIONS=(--partial --bwlimit=100)
 CHECK_OPTIONS=(--times)
-DELETE_OPTIONS_UNSAFE=(--delete --delete-excluded)
 
-DELETE_OPTIONS=$DELETE_OPTIONS_UNSAFE
-typeset -a DELETE_OPTIONS
-DELETE_OPTIONS+=(--max-delete 100)
-
-
+delete_level=0
 
 GLOBAL_OPTIONS=(--hard-links)
 interactive="yes"
 
-
+# todo: delete=no
+# no,limit,yes
 cmd_options=$(getopt --name $0 --shell bash \
  	      --longoptions hide-progress,verbose,dry,size-only,delete \
  	      --options ivnfsd -- "$@") || { usage && exit 1 }
@@ -145,7 +141,7 @@ while (( $# > 0 )) do
 	    GLOBAL_OPTIONS+=(--dry-run)
 	    ;;
 	-d | --delete )
-	    DELETE_OPTIONS=($DELETE_OPTIONS_UNSAFE)
+	    ((delete_level+=1))
 	    ;;
 	-f)
 	    GLOBAL_OPTIONS+=($TRANSFER_OPTIONS)
@@ -165,6 +161,22 @@ while (( $# > 0 )) do
     shift
 done
 
+
+typeset -a DELETE_OPTIONS
+DELETE_OPTIONS=()
+
+if [ $delete_level -gt 0 ]; then
+    DELETE_OPTIONS=(--delete --delete-excluded)
+
+    if [ $delete_level -gt 1 ]; then
+	DELETE_OPTIONS+=($DELETE_OPTIONS_UNSAFE)
+    else
+	DELETE_OPTIONS+=(--max-delete 100)
+    fi
+fi
+
+
+GLOBAL_OPTIONS+=($DELETE_OPTIONS)
 
 if [ $interactive = "yes" ]; then
    LOG_OPTIONS+=(--progress)
