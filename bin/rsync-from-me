@@ -81,10 +81,12 @@ if [ -z "${RSYNC_RULES-}" ]; then
 fi
 
 ROOT=$(pwd)
+VERBOSE=n
 
 do_rsync()
 {
-    set -x
+    if [ $VERBOSE = y ]; then set -x;fi
+
     time rsync --exclude-from=$ROOT/.rsync-ignore \
 	$GLOBAL_OPTIONS \
 	--recursive --archive \
@@ -92,7 +94,8 @@ do_rsync()
 	$TRANSFER_OPTIONS \
 	$RSYNC_RULES \
 	"$@"
-    set +x
+
+    if [ $VERBOSE = y ]; then set +x;fi
 }
 
 unsetopt FUNCTION_ARGZERO
@@ -136,6 +139,7 @@ while (( $# > 0 )) do
 	      ;;
 	-v | --verbose ) # verbose
 	    GLOBAL_OPTIONS+=($LOG_OPTIONS)
+	    VERBOSE=y
 	    ;;
 	-n| +n)
 	    GLOBAL_OPTIONS+=(--dry-run)
