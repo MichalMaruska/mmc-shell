@@ -59,8 +59,15 @@ die()
     exit 1;
 }
 
+if getopt -T; then # should test (( $? = -4 ))
+    echo "incompatible  getopt(1) installed. Abort"
+    exit -1
+fi
+
+
+
 if ! [ -e .rsync.env -a -e .rsync-ignore ]; then
-    die "missing env file in $(pwd)"
+    die "missing .rsync.env (or .rsync-ignore) file in $(pwd)"
 fi
 
 source .rsync.env
@@ -75,7 +82,7 @@ fi
 
 ROOT=$(pwd)
 
-do_once()
+do_rsync()
 {
     set -x
     time rsync --exclude-from=$ROOT/.rsync-ignore \
@@ -88,7 +95,20 @@ do_once()
     set +x
 }
 
-LOG_OPTIONS=(--itemize-changes --progress --human-readable)
+unsetopt FUNCTION_ARGZERO
+usage()
+{
+    cat >&2 <<EOF
+usage: ${0##*/} [+-i] [--]  dir...
+-i --hide-progress   don't show per-file progress-bar
+-d --delete          delete also
+-s --size-only       look at size, not time. (fixme: or --content?)
+-v --verbose
+-n --dry
+EOF
+}
+
+LOG_OPTIONS=(--itemize-changes --human-readable)
 TRANSFER_OPTIONS=(--partial --bwlimit=100)
 CHECK_OPTIONS=(--times)
 DELETE_OPTIONS_UNSAFE=(--delete --delete-excluded)
@@ -100,34 +120,55 @@ DELETE_OPTIONS+=(--max-delete 100)
 
 
 GLOBAL_OPTIONS=()
-while getopts :vnfsd OPT; do
-    case $OPT in
-	v|+v) # verbose
+interactive="yes"
+
+
+cmd_options=$(getopt --name $0 --shell bash \
+ 	      --longoptions hide-progress,verbose,dry,size-only,delete \
+ 	      --options ivnfsd -- "$@") || { usage && exit 1 }
+eval set -- "$cmd_options"
+
+while (( $# > 0 )) do
+    case $1 in
+	#process_rest "$@"
+	-i | --hide-progress )
+	      interactive=no
+	      ;;
+	-v | --verbose ) # verbose
 	    GLOBAL_OPTIONS+=($LOG_OPTIONS)
 	    ;;
-	n|+n)
+	-n| +n)
 	    GLOBAL_OPTIONS+=(--dry-run)
 	    ;;
-	d)
+	-d | --delete )
 	    DELETE_OPTIONS=($DELETE_OPTIONS_UNSAFE)
 	    ;;
-	f|+f)
+	-f)
 	    GLOBAL_OPTIONS+=($TRANSFER_OPTIONS)
 	    ;;
-	s)			# don't check time, but size.
+	-s | --size-only )			# don't check time, but size.
 	    GLOBAL_OPTIONS+=(--size-only)
 	    ;;
+	--)
+	    shift
+	    break
+	    ;;
 	*)
-	    print "usage: ${0##*/} [+-vnf] [--] ARGS..."
+	    echo $1>&2
+	    usage
 	    exit 2
     esac
+    shift
 done
-shift OPTIND-1
-OPTIND=1
-
-GLOBAL_OPTIONS+=($DELETE_OPTIONS)
 
 
+if [ $interactive = "yes" ]; then
+   LOG_OPTIONS+=(--progress)
+fi
+
+# if [ $1 = '--' ]; then shift;fi
+
+# skip over "--"
 if test $# -gt 0;
 then
 # must contain the trailing /
@@ -135,10 +176,10 @@ then
     # in $@
     do
 	# note: I do append the "/" after ROOT
-	do_once --relative "$SOURCE_REPO/./$subdir"  $ROOT/
+	do_rsync --relative "$SOURCE_REPO/./$subdir"  $ROOT/
     done
 else
-    do_once $SOURCE_REPO/   $ROOT/
+    do_rsync $SOURCE_REPO/   $ROOT/
 fi
 
 
