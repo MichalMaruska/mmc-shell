@@ -1,3 +1,19 @@
+mmc-shell (2.41) release; urgency=low
+
+  * repo-sync: drop && || mess, and don't ignore failure during the sync stage
+  * cron-mail: usage & getopts
+  * git-fetch-compare: custom remote, and a default one.
+  * draw-tsort-graph: support reading from stdin.
+  * compare-git-deb: usage() & comment
+  * new command: rsync-from-me
+  * Use DELETE_OPTIONS to accumulate all LOG_OPTIONS etc.
+  * getopts -> getopt & fix usage() for zsh.
+  * rsync-from-me: verbose option
+  * rsync-from-me: detect hard links.
+  * rsync-from-me: rework the --delete option -- levels.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 19 Nov 2014 12:41:06 +0100
+
 mmc-shell (2.39) release; urgency=low
 
   * improve logging of errors & divide the log by git dir.
