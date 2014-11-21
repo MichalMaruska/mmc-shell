@@ -1,20 +1,17 @@
 #! /usr/bin/perl
 
 # Rewrite the debian/control to _bind_ all the _binary_ packages to
-# certain API version.
-# And add it as a provider for virtual package.
+# certain API version(s) of dependencies.
+# And add it as a provider for `virtual' package.
+
+# implementation: pkg. name gauche-pg will be  gauche-API-pg-API
+
 
 # Usage:
-# replace-gauche-string.pl debian/control.in $GAUCHE_VERSION > debian/control
+# replace-gauche-string.pl debian/control.in > debian/control
 
 # todo:
 # replace the dependency on gauche with  gauche-API!
-
-
-# todo: if only 1, we need *.install file. Might provide one.
-# but then  debian/rules  need the option to dh-install.
-# fixme!  should NOT
-
 
 use strict;
 use feature qw(switch);
