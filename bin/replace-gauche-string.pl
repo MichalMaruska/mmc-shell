@@ -28,28 +28,6 @@ Getopt::Mixed::init( @options);
 
 my $debug = 0;
 
-# Given a pkg name, convert the debian/*.install and  debian/control
-# to change the pkg name to an ABI-bound one.
-
-sub create_virtual_package {
-    my ($pgk_name,$abi)=(@_);
-    # print "called " . $name . "\n";
-
-    my $new_package= Dpkg::Control->new(type => CTRL_INFO_PKG);
-
-    $new_package->{'Package'}=$pgk_name;
-    $new_package->{'Depends'}=$abi;
-    $new_package->{'Architecture'}="all";
-    $new_package->{'Description'}=
-	"Package to provide one candidate of multi-api-version package.";
-    if ($debug) {
-	print STDERR "new virtual package\n";
-	$new_package->output(\*STDERR);
-	print STDERR "\n";
-    }
-    return $new_package;
-}
-
 
 # this assumes the CWD is debian/..
 sub rename_install_file{
@@ -63,20 +41,13 @@ sub rename_install_file{
     }
 }
 
-my @new=();
+sub rename_binary_package {
+    my ($pkg, $original_name, $versioned_name) = (@_);
 
-# todo: pass the @new array:
-sub bind_package_to_version {
-    my ($pkg, $name, $new_name) = (@_);
+    $pkg->{Package} = $versioned_name;
+    rename_install_file($original_name, $versioned_name);
 
-    # rename
-    $pkg->{Package} = $new_name;
-    # mmc: necessary?
-    # $_->{Provides} = $pkg
-
-    rename_install_file($name, $new_name);
-    # add a wrapper:
-    push @new, create_virtual_package($name, $new_name);
+    $_->{Provides} = $original_name;
 }
 
 
@@ -234,11 +205,6 @@ foreach $_ ($info->get_packages())
 	# print $_->{Package}, "\n";
     }
 }
-
-foreach $_ (@new) {
-    push @{$info->{packages}}, $_;
-}
-
 
 
 # print out the debian/control
