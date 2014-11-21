@@ -100,20 +100,7 @@ sub package_is_versioned{
 		return ($pkg->{Architecture} ne "all");
 	    }
 	}
-	# todo:
-	# Build-dep:  fix the ABI of any binary package:
-	#   this is because I can describe what is needed.
-	#   think:  gauche-dev  & gauche-gtk ... they have to be
-	#   the SAME ABI version. i.e. gauche-gtk must be that of
-	#   ABI specified by gauche-dev.
-
-
-	    # scan the packages & create new ones.
-
-	    # look in
-	    # find the package's architecture.
-	    # or just ask dpkg?
-	    }
+    }
 }
 
 
