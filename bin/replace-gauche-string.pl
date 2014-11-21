@@ -63,36 +63,37 @@ sub insert_version_string {
 }
 
 
-# return true iff the package is Architecture NOT all.
-sub package_is_binary{
+# todo: in a separate file: this consults all of my packages in Git.
+# return true iff the package is architecture-dependent, i.e. not All.
+sub package_is_versioned{
     my ($name) = (@_);
 
-    #optimization
+    # fixme: this comes from Depends, and contains these subst. variables:
+    # optimization
     if ($name eq '${shlibs:Depends}' || $name eq '${misc:Depends}') {
 	return;
     }
-
-    # pkg -> source_pkg  how to? no way?
-    # just a hint. otherwise some pre-indexing.
-    my @debian_dirs = glob '~/repo/gauche/*/debian/';
     print STDERR "looking for package $name\n" if ($debug);
-    #if (-f "~/repo/gauche/$name/debian/control.in") {
-    # "~/repo/gauche/$name/debian/control.in"
-    my $d;
-    foreach $d (@debian_dirs) {
-	my $control_file;
 
-	if (-f "$d/control.in") {
-	    $control_file="$d/control.in";
-	} elsif (-f "$d/control") {
-	    $control_file="$d/control";
+    # how to find the source pkg. name, and the directory?
+    # just a hint. otherwise some pre-indexing.
+    my @debian_dirs = glob '~/repo/gauche/*/debian';
+
+    my $dir;
+    foreach $dir (@debian_dirs) {
+	my $control_file;
+	# check that it's a directory indeed.
+	# if ! -d $dir; {break;}
+	if (-f "$dir/control.in") {
+	    # todo: generate control? I will need a rule ...
+	    $control_file="$dir/control.in";
+	} elsif (-f "$dir/control") {
+	    $control_file="$dir/control";
 	} else {
 	    break;
 	}
 
-
-	# Parse:
-	# print STDERR "testing $control_file\n";
+	print STDERR "testing $control_file\n" if ($debug);
 
 	my $info=Dpkg::Control::Info->new($control_file);
 	my $pkg;
@@ -138,7 +139,7 @@ sub bind_pkg_deps {
 	    my $new="$_-$abi";
 	    print STDERR "changing dependency: $_ -> $new\n" if ($debug);
 	    push (@newdeps, $new);
-	} elsif (package_is_binary($_)){
+	} elsif (package_is_versioned($_)){
 	    # fixme: this should invoke recursion!  bug?
 	    my $new="$_-$abi";
 	    print STDERR "changing dependency: $_ -> $new\n" if ($debug);
