@@ -131,6 +131,19 @@ sub adjust_pkg_dependencies {
     $pkg->{Depends} = join (", ", @newdeps);
 }
 
+# todo:
+# Build-dep:  fix the ABI of any binary package:
+#   this is because I can describe what is needed.
+#   think:  gauche-dev  & gauche-gtk ... they have to be
+#   the SAME ABI version. i.e. gauche-gtk must be that of
+#   ABI specified by gauche-dev.
+
+# scan the packages & create new ones.
+
+# look in
+# find the package's architecture.
+# or just ask dpkg?
+
 
 
 # todo:
@@ -223,3 +236,17 @@ foreach $_ ($info->get_packages())
 $info->output(\*STDOUT);
 
 exit 0;
+
+# todo:
+# every dependency on A, B .. i.e. more than 1
+# I need to require a virtual package.
+# which will have to be provided by A-B-api Provides A-B.
+#
+# so  given A, B api -> emit such a fake package!
+# A,B,....C & api -> Depends on A-api, B-api ....
+
+# I want to scan all those packages & (re) build them!
+# order?
+# by build deps!
+
+# A -> B
