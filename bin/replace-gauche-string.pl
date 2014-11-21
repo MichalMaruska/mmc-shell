@@ -51,6 +51,16 @@ sub rename_binary_package {
 }
 
 
+# return this modification: ....xxx....  -> ....xxx-ver....
+# xxx is separated by non-alphanumeric ?
+sub insert_version_string {
+    my ($pkg_name, $api, $version) = @_;
+    my $quoted_api= quotemeta $api;
+    #$pkg_name =~ s/\Q$api-/$api-$version-/r;
+    $pkg_name =~ s/\b$quoted_api\b/$api-$version/; # r
+    if ($debug) { print STDERR "replacing $api with $api-$version -> $pkg_name\n";}
+    return $pkg_name;
+}
 
 
 # return true iff the package is Architecture NOT all.
