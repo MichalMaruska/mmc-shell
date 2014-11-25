@@ -24,7 +24,8 @@ use Getopt::Mixed "nextOption";
 my $debug = 0;
 
 
-# this assumes the CWD is debian/..
+
+# this assumes the CWD is debian/.. I could have a $dir parameter!
 sub rename_install_file{
     my ($pkg, $newpkg) = (@_);
 
@@ -36,6 +37,7 @@ sub rename_install_file{
     }
 }
 
+# this updates the data & filename
 sub rename_binary_package {
     my ($pkg, $original_name, $versioned_name) = (@_);
 
@@ -102,8 +104,9 @@ sub package_is_versioned{
 }
 
 
-# in $pkg, replace the dependencies on $name with $name-$abi:
+# In $pkg, replace the `dependencies' on $name with $name-$abi:
 # similar for other...  if the dependency is another api-bound
+# note: invoke recursively?
 # we need the _same_ version.
 # Example: gauche-pg-gtk
 # needs    gauche-ABI-gtk
