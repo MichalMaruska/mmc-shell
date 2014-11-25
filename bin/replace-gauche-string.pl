@@ -20,8 +20,6 @@ use Dpkg::Control::Info;
 use Dpkg::Control;
 
 use Getopt::Mixed "nextOption";
-my @options=("help verbose debug>verbose d>verbose h>help v>verbose");
-Getopt::Mixed::init( @options);
 
 my $debug = 0;
 
@@ -138,11 +136,33 @@ sub bind_pkg_deps {
 
 
 
-#### CMD line processsing:
-my ($option, $value, $pretty);
-while (($option, $value, $pretty) = nextOption()) {
+# todo:
+# Build-dep:  fix the ABI of any binary package:
+#   this is because I can describe what is needed.
+#   think:  gauche-dev  & gauche-gtk ... they have to be
+#   the SAME ABI version. i.e. gauche-gtk must be that of
+#   ABI specified by gauche-dev.
 
-    if ($option eq "help") {
+my %versioned_apis = (
+    "gauche" => "0",
+	"pg" => "13",
+);
+
+#### CMD line processsing:
+my @options=("help verbose api=s version=s debug>verbose d>verbose h>help v>verbose a>api v>version");
+Getopt::Mixed::init( @options);
+
+my ($option, $value, $pretty);
+my $api;
+while (($option, $value, $pretty) = nextOption()) {
+    if ($option eq "api") {
+    ## --api gauche-0.9.5-b
+	$api = $value;
+    }
+    elsif ($option eq "version") {
+	$versioned_apis{$api} = $value;
+    }
+    elsif ($option eq "help") {
 	print STDERR "Help!\n";
     } elsif ($option eq "verbose") {
 	# print STDERR "I'll be verbose!\n";
@@ -156,11 +176,14 @@ Getopt::Mixed::cleanup();
 my $file=shift;
 # I could default to "./debian/control";
 
-# Could accept as a param:
-my $abi_version=`gauche-config -V|sed -e 's/_/-/'`;
-chomp $abi_version;
-# print STDERR $abi_version;
-
+# default values:
+if ($versioned_apis{gauche} eq 0) {
+    # Could accept as a param:
+    my $abi_version=`gauche-config -V|sed -e 's/_/-/'`;
+    chomp $abi_version;
+    # print STDERR $abi_version;
+    $versioned_apis{gauche} = $abi_version;
+}
 my $name = "gauche";
 
 
@@ -175,13 +198,6 @@ unless  (-f $file) {
 # Parse:
 my $info=Dpkg::Control::Info->new($file);
 
-
-# todo:
-# Build-dep:  fix the ABI of any binary package:
-#   this is because I can describe what is needed.
-#   think:  gauche-dev  & gauche-gtk ... they have to be
-#   the SAME ABI version. i.e. gauche-gtk must be that of
-#   ABI specified by gauche-dev.
 
 
 # scan the packages & create new ones.
