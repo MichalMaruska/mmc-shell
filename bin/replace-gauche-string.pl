@@ -108,30 +108,27 @@ sub package_is_versioned{
 # Example: gauche-pg-gtk
 # needs    gauche-ABI-gtk
 # and      gauche-ABI-pg
-sub bind_pkg_deps {
-    my ($pkg, $name, $abi) = (@_);
+# this is inverse of how it should be done.
+# So instead of building this mapping when a pkg is built,
+# we *guess* it.
+sub adjust_pkg_dependencies {
+    my ($pkg, %versioned_apis) = (@_);
+
     my @deps = split(', *', $pkg->{Depends});
+    # this will contain the new list:
     my @newdeps = ();
 
     foreach $_ (@deps) {
 	# print STDERR "Examining the dependency on $_\n";
-
-	if ($_ eq $name) {
-	    # Gauche itself.
-	    my $new="$_-$abi";
-	    print STDERR "changing dependency: $_ -> $new\n" if ($debug);
-	    push (@newdeps, $new);
-	} elsif (package_is_versioned($_)){
-	    # fixme: this should invoke recursion!  bug?
-	    my $new="$_-$abi";
-	    print STDERR "changing dependency: $_ -> $new\n" if ($debug);
-	    push (@newdeps, $new);
-	} else {
-	    push (@newdeps, $_);
+	# todo: parse dep to get pkg_name
+	my $new_pkg_name;
+	while (my ($key, $version) = each(%versioned_apis) ) {
+	    $new_pkg_name = insert_version_string($_, $key, $version);
 	}
+	push (@newdeps, $new_pkg_name);
     }
     # rewrite:
-    $pkg->{Depends}= join (", ", @newdeps);
+    $pkg->{Depends} = join (", ", @newdeps);
 }
 
 
@@ -204,14 +201,18 @@ my $info=Dpkg::Control::Info->new($file);
 foreach $_ ($info->get_packages())
 {
     if ($_->{Architecture} ne "all") {
-	# any, i386, amd64, arm ...
-	my $pkg_name=$_->{Package};
+	# Assumption: The api version applies only to native code.
+	my $pkg_name = $_->{Package};
 
-	# gauche-pg will be  gauche-API-pg
 	# replace `name' with `name_api'
-	my $new_pkg_name = $pkg_name =~ s/\Q$name-/$name-$abi_version-/r;
-	bind_package_to_version($_, $pkg_name, $new_pkg_name);
-	bind_pkg_deps($_, $name, $abi_version);
+	my $new_pkg_name = $pkg_name;
+
+	while (my ($key, $version) = each(%versioned_apis) ) {
+	    $new_pkg_name = insert_version_string($new_pkg_name, $key, $version);
+	}
+	print STDERR "fixed-api package: $new_pkg_name\n";
+	rename_binary_package($_, $pkg_name, $new_pkg_name);
+	adjust_pkg_dependencies($_, %versioned_apis);
 	# exchange & add
 	# print $_->{Package}, "\n";
     }
