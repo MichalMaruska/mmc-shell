@@ -80,13 +80,12 @@ if [ -z "${RSYNC_RULES-}" ]; then
     die "the env file does not define the RSYNC_RULES"
 fi
 
-ROOT=$(pwd)
-
 do_rsync()
 {
     if [ $ECHO_RSYNC_COMMAND = y ]; then set -x;fi
 
-    time rsync --exclude-from=$ROOT/.rsync-ignore \
+    # fixme: choose the local from $ROOT or $SOURCE_REPO
+    time rsync --exclude-from=./.rsync-ignore \
 	$GLOBAL_OPTIONS \
 	--recursive --archive \
 	 \
@@ -125,9 +124,11 @@ interactive="yes"
 # todo: delete=no
 # no,limit,yes
 cmd_options=$(getopt --name $0 --shell bash \
- 	      --longoptions hide-progress,verbose,dry,size-only,delete \
+ 	      --longoptions hide-progress,verbose,dry,size-only,delete,source: \
  	      --options ivnfsd -- "$@") || { usage && exit 1 }
 eval set -- "$cmd_options"
+
+ROOT=$(pwd)
 
 while (( $# > 0 )) do
     case $1 in
@@ -155,6 +156,10 @@ while (( $# > 0 )) do
 	    shift
 	    break
 	    ;;
+	--source )
+	    SOURCE_REPO=$2
+	    shift
+	    ;;
 	*)
 	    echo $1>&2
 	    usage
@@ -162,7 +167,6 @@ while (( $# > 0 )) do
     esac
     shift
 done
-
 
 typeset -a DELETE_OPTIONS
 DELETE_OPTIONS=()
@@ -184,9 +188,7 @@ if [ $interactive = "yes" ]; then
    LOG_OPTIONS+=(--progress)
 fi
 
-# if [ $1 = '--' ]; then shift;fi
 
-# skip over "--"
 if test $# -gt 0;
 then
 # must contain the trailing /
