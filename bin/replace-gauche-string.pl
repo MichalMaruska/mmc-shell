@@ -124,15 +124,20 @@ sub adjust_pkg_dependencies {
     foreach $_ (@deps) {
 	# print STDERR "Examining the dependency on $_\n";
 	# todo: parse dep to get pkg_name
-	my $new_pkg_name;
-	while (my ($key, $version) = each(%versioned_apis) ) {
-	    $new_pkg_name = insert_version_string($_, $key, $version);
+	if (package_is_versioned($_)) {
+	    my $new_pkg_name;
+	    $new_pkg_name=$_;
+	    while (my ($key, $version) = each(%versioned_apis) ) {
+		$new_pkg_name = insert_version_string($new_pkg_name, $key, $version);
+	    }
+	    push (@newdeps, $new_pkg_name);
+	} else {
+	    push (@newdeps, $_);
 	}
-	push (@newdeps, $new_pkg_name);
     }
-    # rewrite:
-    $pkg->{Depends} = join (", ", @newdeps);
-}
+	# rewrite:
+	$pkg->{Depends} = join (", ", @newdeps);
+    }
 
 # todo:
 # Build-dep:  fix the ABI of any binary package:
