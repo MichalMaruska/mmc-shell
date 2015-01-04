@@ -63,7 +63,7 @@ echo "fontsize=24;" >> $temp
 # either from stdin or a file
 if [ $# = 1 ];then
     cat $1 >> $temp
-else if [ $# = 0 ]; then
+elif [ $# = 0 ]; then
     cat >> $temp
 else
     usage >&2
