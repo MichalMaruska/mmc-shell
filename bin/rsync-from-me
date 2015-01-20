@@ -177,7 +177,7 @@ if [ $delete_level -gt 0 ]; then
     DELETE_OPTIONS=(--delete --delete-excluded)
 
     if [ $delete_level -gt 1 ]; then
-	DELETE_OPTIONS+=($DELETE_OPTIONS_UNSAFE)
+	# DELETE_OPTIONS+=($DELETE_OPTIONS_UNSAFE)
     else
 	DELETE_OPTIONS+=(--max-delete 100)
     fi
