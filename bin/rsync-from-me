@@ -112,9 +112,10 @@ EOF
 
 ECHO_RSYNC_COMMAND=n
 
-TRANSFER_OPTIONS=(--partial --bwlimit=100)
 LOG_OPTIONS=()
 LOG_OPTIONS_RO=(--itemize-changes --human-readable)
+TRANSFER_OPTIONS=(--partial)
+# too slow: --bwlimit=100
 CHECK_OPTIONS=(--times)
 
 delete_level=0
