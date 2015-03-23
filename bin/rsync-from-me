@@ -112,8 +112,9 @@ EOF
 
 ECHO_RSYNC_COMMAND=n
 
-LOG_OPTIONS=(--itemize-changes --human-readable)
 TRANSFER_OPTIONS=(--partial --bwlimit=100)
+LOG_OPTIONS=()
+LOG_OPTIONS_RO=(--itemize-changes --human-readable)
 CHECK_OPTIONS=(--times)
 
 delete_level=0
@@ -137,11 +138,12 @@ while (( $# > 0 )) do
 	      interactive=no
 	      ;;
 	-v | --verbose ) # verbose
-	    GLOBAL_OPTIONS+=($LOG_OPTIONS)
+	    LOG_OPTIONS=($LOG_OPTIONS_RO)
 	    ECHO_RSYNC_COMMAND=y
 	    ;;
 	-n| +n)
 	    GLOBAL_OPTIONS+=(--dry-run)
+	    LOG_OPTIONS=($LOG_OPTIONS_RO)
 	    ;;
 	-d | --delete )
 	    ((delete_level+=1))
@@ -188,6 +190,7 @@ if [ $interactive = "yes" ]; then
    LOG_OPTIONS+=(--progress)
 fi
 
+GLOBAL_OPTIONS+=($LOG_OPTIONS)
 
 if test $# -gt 0;
 then
