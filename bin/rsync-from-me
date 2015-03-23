@@ -205,6 +205,10 @@ else
     do_rsync $SOURCE_REPO/   $ROOT/
 fi
 
+if [ $? = 25 ]; then
+    cecho red "the --max-delete limit stopped deletions" >&2
+fi
+
 
 # options:
 # dry
