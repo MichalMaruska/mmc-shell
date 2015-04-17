@@ -20,7 +20,7 @@
 
 # there are 2 grades of ignoring files:
 # 1/ make sure it's not on the build host -- actively remove it
-# 2/ ignore it. -- this has the annoing effect of reporting parent
+# 2/ ignore it. -- this has the annoying effect of reporting parent
 #   dirs as non-removable as non-empty.
 
 
