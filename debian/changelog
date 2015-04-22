@@ -1,3 +1,29 @@
+mmc-shell (2.42) release; urgency=medium
+
+  * rewrite in Perl: replace-gauche-string.pl
+  * replace-gauche-string.pl: rewrite Dependencies, document.
+  * replace-gauche-string: remove the shell torzo. And get the API version automatically.
+  * Drop the creation of Virtual package -- nonsense. Conflict!
+  * formalize insert_version_string()
+  * package_is_binary -> package_is_versioned
+  * comments
+  * sq: dropped comment
+  * the hash from cmdline options use %versioned_apis hash!
+  * adjust_pkg_dependencies: use the hash bind_pkg_deps -> adjust_pkg_dependencies + comment call the new functions: adjust_pkg_dependencies rename_binary_package, and use the hash
+  * todo comment
+  * comments
+  * better verbose variable
+  * rsync-  cleanup. No way it can be invoked in push mode -- the config files are at the "mirror", target. So, must be invoked at root, since args are the subdirs to be synced.
+  * log_options, is composet for different options (-n). For -n (dry) at least verbose
+  * Fix English (comment)
+  * sq DELETE_OPTIONS_UNSAFE
+  * report in color the use of all delete slots.
+  * drop the bandwith limit -- too slow.
+  * fix adjust_pkg_dependencies
+  * fix the elif vs else if, the latter needs another, 1 more, "fi".
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 22 Apr 2015 14:01:31 +0200
+
 mmc-shell (2.41) release; urgency=low
 
   * repo-sync: drop && || mess, and don't ignore failure during the sync stage
