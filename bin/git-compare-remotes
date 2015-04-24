@@ -1,0 +1,99 @@
+#!/bin/zsh -eu
+
+# usage:  $0 branch remote
+
+if [ $# -lt 2 ]; then
+    exit 1
+fi
+
+branch=$1
+remote=$2
+REMOTE=remotes/$remote/master
+
+git_ref_exists()
+{
+    [ -e .git/refs/$1 ]
+}
+
+# return 1 if A < B
+# 0 if  A=B
+# 1 less
+# 2 more
+# 3  incomparable
+#
+# 4 error?
+compare_commits()
+{
+    local first=$(git log $1 --max-count=1 --format="%H")
+    local second=$(git log $2 --max-count=1 --format="%H")
+    if [ -z "$first" -o -z "$second" ]; then
+	return 4
+    fi
+    if [ $first = $second ]; then
+	return 0;
+    fi
+
+    common=$(git merge-base $1 $2)
+    if [ $common = $second ]; then
+	return 1;
+    elif [ $common = $first ]; then
+	return 2;
+	# -1 is nonsense if ever a standalone,
+	# but it got delivered as -1 as function!
+    else
+	return 3
+    fi
+}
+
+
+
+set +e
+# could compare with FETCH_HEAD
+compare_commits $branch remotes/$remote/master;
+cmp=$?
+set -e
+
+
+# # fixme: from where I have just fetched!
+
+# remotes=$(git remote)
+# if [ ${#remotes} = 1 ]
+# then
+#     REMOTE=remotes/${remotes[1]}/master
+# elif git_ref_exists remotes/origin/master;
+# then
+#     REMOTE=remotes/origin/master
+# elif git_ref_exists remotes/maruska/master
+# then
+#     REMOTE=remotes/maruska/master
+# else
+#     REMOTE=remotes/m/master
+# fi
+# # REMOTE=FETCH_HEAD
+
+
+case $cmp in
+    0)
+	cecho bold "same"
+	;;
+    1)
+	cecho green "HEAD ahead of $REMOTE"
+	git diff --shortstat  $REMOTE
+	git log --oneline $REMOTE..HEAD --
+	;;
+    2)
+	cecho hiyellow "local is behind"
+	git log --oneline HEAD..$REMOTE --
+	;;
+    4)
+	echo "error in comparing $branch & FETCHMAIL"
+	;;
+    3)
+	echo "diverged"
+	;;
+    *)
+	echo "error while comparing: $cmp"
+esac
+
+
+exit 0

@@ -6,48 +6,19 @@
 ## `Defaults'
 branch=HEAD
 push=yes
-remote=maruska
+remote=
+# all
 
 
-remotes=$(git remote)
-if [ ${#remotes} = 1 ]; then
-    remote=${remotes[1]}
-fi
+# remotes=$(git remote)
+# if [ ${#remotes} = 1 ]; then
+#     remote=${remotes[1]}
+# fi
 
 
 hash_of()
 {
     git log $1 --max-count=1 --format="%H"
-}
-
-# return 1 if A < B
-# 0 if  A=B
-# 1 less
-# 2 more
-# 3  incomparable
-#
-# 4 error?
-compare_commits()
-{
-    local first=$(git log $1 --max-count=1 --format="%H")
-    local second=$(git log $2 --max-count=1 --format="%H")
-    if [ -z "$first" -o -z "$second" ]; then
-	return 4
-    fi
-    if [ $first = $second ]; then
-	return 0;
-    fi
-
-    common=$(git merge-base $1 $2)
-    if [ $common = $second ]; then
-	return 1;
-    elif [ $common = $first ]; then
-	return 2;
-	# -1 is nonsense if ever a standalone,
-	# but it got delivered as -1 as function!
-    else
-	return 3
-    fi
 }
 
 usage()
@@ -94,76 +65,37 @@ while (( $# > 0 )); do
 done
 
 
+
 # remote or --all
 # git fetch $remote
 
-git fetch ${remote-"--all"} --quiet
+if [ -z ${remote} ];
+then
+    git fetch "--all" --quiet
+    git status --short
+else
+    typeset -a remotes
+    remotes=($(git remote))
+    #echo $remotes vs $remote
+    #echo ${remote:|remotes}
+    if [ -z "${remote:|remotes}" ]; then
+	cecho cyan "$(pwd)"
+	# set -x
+	git fetch ${remote} --quiet
+	~/repo/mmc-shell/bin/git-compare-remotes master $remote
+    fi
+fi
 # git log --oneline  ORIG_HEAD..HEAD --
 
-git status --short
 
-set +e
-# could compare with FETCH_HEAD
-compare_commits $branch remotes/$remote/master;
-cmp=$?
-set -e
+# if [ ! $push = no -a $cmp = 1 ];
+# then
+#     # if maruska -> --mirror
 
-git_ref_exists()
-{
-    [ -e .git/refs/$1 ]
-}
+#     # push   .. as configured
+#     # push : .. corresponding
+#     #
+#     cecho yellow  "git push master"
+# #    echo git push $remote master
+# fi
 
-# fixme: from where I have just fetched!
-
-remotes=$(git remote)
-if [ ${#remotes} = 1 ]
-then
-    REMOTE=remotes/${remotes[1]}/master
-elif git_ref_exists remotes/origin/master;
-then
-    REMOTE=remotes/origin/master
-elif git_ref_exists remotes/maruska/master
-then
-    REMOTE=remotes/maruska/master
-else
-    REMOTE=remotes/m/master
-fi
-# REMOTE=FETCH_HEAD
-
-
-case $cmp in
-    0)
-	cecho bold "same"
-	;;
-    1)
-	cecho green "HEAD ahead of $REMOTE"
-	git diff --shortstat  $REMOTE
-	git log --oneline $REMOTE..HEAD --
-	;;
-    2)
-	cecho hiyellow "local is behind"
-	git log --oneline HEAD..$REMOTE --
-	;;
-    4)
-	echo "error in comparing $branch & FETCHMAIL"
-	;;
-    3)
-	echo "diverged"
-	;;
-    *)
-	echo "error while comparing: $cmp"
-esac
-
-if [ ! $push = no -a $cmp = 1 ];
-then
-    # if maruska -> --mirror
-
-    # push   .. as configured
-    # push : .. corresponding
-    #
-    cecho yellow  "git push master"
-#    echo git push $remote master
-fi
-
-
-exit 0
