@@ -12,7 +12,7 @@ EOF
 }
 
 # fallback
-: ${EMAIL=Michal.Maruska@tomtom.com}
+: ${MAILTO=Michal.Maruska@tomtom.com}
 while getopts :h OPT; do
     case $OPT in
 	h|+h)
@@ -51,6 +51,6 @@ fi
 
 # stderr during this command is not controlled:
 # and it might invoke gnome-keyring.
-mail -s $subject $EMAIL < $TEMP
+mail -s $subject $MAILTO < $TEMP
 
 rm $TEMP
