@@ -28,9 +28,28 @@ save_horizon_and_heads()
 
 }
 
+use_pre_horizont=n
+while getopts :s OPT; do
+    case $OPT in
+	s|+s)
+	    use_pre_horizont=y
+	    ;;
+	*)
+	    print "usage: ${0##*/} [+-s} [--] ARGS..."
+	    exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+
 
 start_git_heads=git-heads.txt-$(date +%d-%H)
-save_horizon_and_heads $start_git_heads horizon.pre
+if [ ! $use_pre_horizont = "y" ]; then
+    save_horizon_and_heads $start_git_heads horizon.pre
+else
+    test -r horizon.pre
+fi
 
 cecho blue "Here the sym-ref horizon:"
 cat horizon.pre
