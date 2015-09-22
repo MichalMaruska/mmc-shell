@@ -35,7 +35,7 @@ echo -n "$(cat .git/HEAD)"
 
 if test $stash = y;
 then
-    msg="pre repo-sync"
+    msg="pre repo-sync $(date +%m-%d)"
     sha=$(git stash create "$msg")
 
     if [ -n "$sha" ];
