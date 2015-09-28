@@ -27,10 +27,8 @@ done
 shift OPTIND-1
 OPTIND=1
 
-
-CMD=`shift`
-
-TEMP=$(mktemp $CMD.XXXX)
+CMD=$1; shift
+TEMP=$(mktemp $CMD.XXXX.log)
 
 # how to suppress the exit-on-failure here?
 if $CMD "$@" &> $TEMP;
