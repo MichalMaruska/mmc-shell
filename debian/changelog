@@ -1,3 +1,12 @@
+mmc-shell (2.44) release; urgency=medium
+
+  * Differentiate the stash name with current date.
+  * for-each-git-dir: wait between invocations, optionally.
+  * cron-mail: stop relying on shift printing $0 -- it does not.
+  * cron-mail: don't assume MAILTO is defined.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 01 Oct 2015 16:39:02 +0200
+
 mmc-shell (2.43) release; urgency=medium
 
   * new: move the compare part out of git-fetch-compare.
