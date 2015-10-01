@@ -11,8 +11,8 @@ Usage:  $0 [-m OK] cmd args
 EOF
 }
 
-# fallback
-: ${MAILTO=Michal.Maruska@tomtom.com}
+# fallback (if empty)
+: ${MAILTO:=Michal.Maruska@tomtom.com}
 while getopts :h OPT; do
     case $OPT in
 	h|+h)
