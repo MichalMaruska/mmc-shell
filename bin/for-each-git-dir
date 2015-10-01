@@ -22,6 +22,7 @@ Usage $0 [-s] [-d]
 --debug  | -d  debug ...
 --pass   | -p  pass the relative path as first argument.
 --help   | -h
+--wait   | -w  wait 3 seconds between
 EOF
 }
 
@@ -38,9 +39,9 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
     args=()
     # default
     FOR_EACH_DIR_CHILD=2
-
+    AFTER=()
     cmd_options=$(getopt --name $0 --shell bash \
-	--longoptions pass,debug,help --options pdh \
+	--longoptions pass,debug,help,wait --options pdhw \
 	-- "$@" ) || { usage && exit 1 }
     eval set -- "$cmd_options"
 
@@ -56,6 +57,9 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
 		usage
 		exit 0
 		;;
+	    --wait| -w)
+		AFTER=(-exec sleep 3 \;)
+		;;
 	    --)
 		shift
 		break;
@@ -66,8 +70,11 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
 
     # skip  .repo
     export FOR_EACH_BASE_DIR=$(pwd)
-    find . -name .repo -prune -o -type d -name .git $print_args \
-	 -exec $0 \{\} $args "$@" \;
+    find . -name .repo -prune \
+	 -o \
+	 -type d -name .git $print_args \
+	 -exec $0 \{\} $args "$@" \; $AFTER -prune
+# todo -execdir
 
 else
     # return from the .git
