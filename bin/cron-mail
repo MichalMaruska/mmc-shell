@@ -3,21 +3,24 @@
 usage()
 {
     cat <<EOF
-Usage:  $0 [-m OK] cmd args
+Usage:  $0 [-s subject] cmd args
 
  invokes "CMD args", redirecting its output (also stderr!)
  then sends an email.
- if the status was 0,  email starts with OK, otherwise FAIL.
+ if the status was 0,  email starts with "OK subject", otherwise "FAIL subject".
 EOF
 }
 
 # fallback (if empty)
 : ${MAILTO:=Michal.Maruska@tomtom.com}
-while getopts :h OPT; do
+while getopts :hs: OPT; do
     case $OPT in
 	h|+h)
 	    usage
 	    exit 0
+	    ;;
+	s)
+	    subject=$OPTARG
 	    ;;
 	*)
 	    usage >&2
@@ -39,12 +42,15 @@ else
 #    echo "this way $result"
 fi
 
+# default/fall-back value
+: ${subject=$CMD}
+
 
 if [ $result = 0 ];
 then
-    subject="OK $CMD"
+    subject="OK $subject"
 else
-    subject="FAIL $CMD"
+    subject="FAIL $subject"
 fi
 
 # stderr during this command is not controlled:
