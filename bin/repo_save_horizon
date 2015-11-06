@@ -2,13 +2,14 @@
 
 # This should `save' the current-branches -- the `horizon'
 # which could be checked after the -- uncontrolled sync.
+set -o pipefail
 
 
 # protocol:
 #  info in 2 lines:
 # dir
 # ref/sha1
-repo forall -c repo-save-head  "$@" |\
+repo forall --verbose --command repo-save-head  "$@" |\
     awk 'BEGIN {getline;dir=$0};
 /^ref: (.+)$/ {printf "%s\t%s", dir, $2;
 if ($3 != "") {printf "\t%s",$3;};
