@@ -1,3 +1,9 @@
+mmc-shell (2.46) release; urgency=medium
+
+  * fix: don't hide a failure in subprocess
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 06 Nov 2015 14:57:09 +0100
+
 mmc-shell (2.45) release; urgency=medium
 
   * mp3bits: use grep --text when I know what to expect.
