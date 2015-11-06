@@ -20,9 +20,12 @@ save_horizon_and_heads()
     {
     #pid1=$tmpsess
 	cecho $STEP_COLOR "saving sym refs in horizon.pre"
-	(repo_save_horizon > $horizon_file || rm -f $horizon_file) &
+	# bug!
+	repo_save_horizon > $horizon_file || rm -fv $horizon_file
+	# ) &
+	# echo $jobstates
     #pid2=$tmpsess
-	wait
+	# wait
     #$pid1 $pid2
     }
 
