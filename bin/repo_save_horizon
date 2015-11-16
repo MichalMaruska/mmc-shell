@@ -9,7 +9,7 @@ set -o pipefail
 #  info in 2 lines:
 # dir
 # ref/sha1
-repo forall --verbose --command repo-save-head  "$@" |\
+repo forall -p --verbose --command repo-save-head  "$@" |\
     awk 'BEGIN {getline;dir=$0};
 /^ref: (.+)$/ {printf "%s\t%s", dir, $2;
 if ($3 != "") {printf "\t%s",$3;};

@@ -62,7 +62,7 @@ cat horizon.pre
 # This can fail
 
 sync_status=0
-if time repo sync; then
+if time repo --trace sync; then
     cecho green -e "\noooooooooooooooooooo ** repo PASSED **\n"
 else
     sync_status=1
