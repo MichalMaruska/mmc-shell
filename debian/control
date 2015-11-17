@@ -9,5 +9,5 @@ Package: mmc-shell
 Architecture: all
 Depends: ${misc:Depends}, zsh
 Conflicts: tt-tools (<< 1.13)
-Recommends: mp3info, mpg123
+Recommends: mp3info, mpg123,gst123
 Description: collection of shell scripts
