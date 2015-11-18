@@ -55,6 +55,6 @@ fi
 
 # stderr during this command is not controlled:
 # and it might invoke gnome-keyring.
-mail -s $subject $MAILTO < $TEMP
+mail -r "<CRON-DAEMON>" -s $subject -a "X-sender: cron-daemon" $MAILTO < $TEMP
 
 rm $TEMP
