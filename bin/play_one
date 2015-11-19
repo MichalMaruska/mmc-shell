@@ -56,6 +56,9 @@ function play_one ()
 		flac --silent --decode --stdout $1 | aplay  -q  -
 	    fi
 	    ;;
+	*tif|*png|*txt)
+	    # skip those
+	    ;;
 	*)
 	    mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null
 	    ;;
