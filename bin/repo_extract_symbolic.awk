@@ -1,18 +1,18 @@
 #! /usr/bin/gawk -f
 
-BEGIN {FS="	";
-        getline;dir=$0}
+BEGIN {FS="	";}
 
 # I need TABS as delimiters
 # the input is:
-# sha TAB ref: .... TAB sha-of-stash
+# dir TAB sha TAB ref: .... TAB sha-of-stash
+# sort-of a grep
 /ref: ([^	]*)/ {
-        printf "%s\t%s", dir, $2;
-        if ($3 != "") {printf "\t%s",$3;};
+        printf "%s\t%s",$1, $3;
+        if ($4 != "") {printf "\t%s",$4;};
 
         printf "\n";
 }
 
 # This is not correct: sometimes it's the SHA1 not dirname!
-{getline; dir=$0}
+# {getline; dir=$0}
 

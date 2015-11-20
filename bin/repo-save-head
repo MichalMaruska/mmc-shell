@@ -40,13 +40,11 @@ shift OPTIND-1
 OPTIND=1
 
 # ====
-pwd
-
-
 # fixme:
 symbolic=$(cat .git/HEAD)
 sha=$(git rev-parse HEAD)
-echo -n "$sha"
+# fixme: not pwd, just RELATIVE path!
+echo -n "`pwd`\t$sha"
 
 set +e
 #=$(expr match "$symbolic"  '^(rev: .+)$')
