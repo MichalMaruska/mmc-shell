@@ -1,3 +1,21 @@
+mmc-shell (3.0) release; urgency=medium
+
+  * fail on "repo forall"
+  * Play flac even without mplayer.
+  * play mp4
+  * play: skip image files explicitly.
+  * run repo(1) with verbose/tracing on.
+  * Mark the cron-originated email as such.
+  * POSIX_ARGZERO
+  * Make git-heads faster (faster HEAD resolving to sha1)
+  * Keep the full horizont as a version-of-day.
+  * repo-sync: verbose option
+  * fix: the archived horizont.pre name
+  * fix the "horizont" name.
+  * rename
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 20 Nov 2015 15:13:34 +0100
+
 mmc-shell (2.46) release; urgency=medium
 
   * fix: don't hide a failure in subprocess
