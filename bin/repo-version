@@ -13,12 +13,18 @@ cut --fields "1-2" --delimiter '	' --output-delimiter '	' $TMP | sort > $pure
 
 cut --fields "1-2" --delimiter '	' --output-delimiter '	' horizont.$day | sort > horizont.$day.pure
 
-
+version=$day
 if ! diff --brief horizont.$day.pure $pure > /dev/null
    then
-       join -t '	' horizont.$day.pure $pure |
-	   awk 'BEGIN {join="";FS="	"}; {if ($2 != $3) {printf("%s%s:%s",join,$1,substr($3,0,6)); join="-"} } END {printf("\n");}'
+       diff=$(join -t '	' horizont.$day.pure $pure |
+	   awk 'BEGIN {join="";FS="	"}; {if ($2 != $3) {printf("%s%s:%s",join,$1,substr($3,0,6)); join="-"} } END
+{printf("\n");}')
+       if [ -n "$diff" ]; then
+	      version+="+$diff"
+       fi
 fi
+
+echo $version
 
 # comm --output-delimiter '	' -3 horizont.$day.pure $pure | awk
 
