@@ -4,7 +4,7 @@
 # It's assumed they know how to rebase. ( git-rebase-* cmds)
 
 STEP_COLOR=green
-
+VERBOSE=no
 
 save_horizon_and_heads()
 {
@@ -68,7 +68,11 @@ ln horizon.pre horizon.pre.$day_suffix.pre
 # This can fail
 
 sync_status=0
-if time repo --trace sync; then
+ARGS=()
+if [ $VERBOSE = yes ]; then
+    ARGS+=(--trace)
+fi
+if time repo $ARGS sync; then
     cecho green -e "\noooooooooooooooooooo ** repo PASSED **\n"
 else
     sync_status=1
