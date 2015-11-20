@@ -98,8 +98,8 @@ fi
 #todo: this is useless if the `rebase' failed:
 # show changelog
 cecho $STEP_COLOR "saving sha1-s in git-heads.txt."
-repo forall -c 'echo $REPO_PATH `git log --format="format:%H" --max-count=1`' > git-heads.txt
-
+# repo forall -c 'echo $REPO_PATH `git log --format="format:%H" --max-count=1`' > git-heads.txt
+repo forall -c 'echo $REPO_PATH `git rev-parse HEAD`' > git-heads.txt
 if test -e $start_git_heads;
     then
     # --no-pager
