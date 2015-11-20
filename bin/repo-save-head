@@ -44,7 +44,8 @@ OPTIND=1
 symbolic=$(cat .git/HEAD)
 sha=$(git rev-parse HEAD)
 # fixme: not pwd, just RELATIVE path!
-echo -n "`pwd`\t$sha"
+: ${REPO_PATH=`pwd`}
+echo -n "$REPO_PATH\t$sha"
 
 set +e
 #=$(expr match "$symbolic"  '^(rev: .+)$')
