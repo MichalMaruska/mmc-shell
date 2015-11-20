@@ -6,10 +6,10 @@
 STEP_COLOR=green
 VERBOSE=no
 
-save_horizon_and_heads()
+save_horizont_and_heads()
 {
     start_git_heads=$1
-    horizon_file=$2
+    horizont_file=$2
     # we reused previously created git-heads.txt file.
 # cecho $STEP_COLOR "saving sha1-s in git-heads.txt ... in background"
 # don't fail if the file is missing:
@@ -19,11 +19,11 @@ save_horizon_and_heads()
 
     {
     #pid1=$tmpsess
-	cecho $STEP_COLOR "saving sym refs in horizon.pre"
+	cecho $STEP_COLOR "saving sym refs in $horizont_file"
 	# bug!
-	# tee $horizon_file
-	repo_save_horizon > full_horizont
-	repo_extract_symbolic.awk < full_horizont > $horizon_file || rm -fv $horizon_file
+	# tee $horizont_file
+	repo_save_horizont > full_horizont
+	repo_extract_symbolic.awk < full_horizont > $horizont_file || rm -fv $horizont_file
 	# ) &
 	# echo $jobstates
     #pid2=$tmpsess
@@ -52,16 +52,16 @@ day_suffix=$(date +%m-%d)
 
 start_git_heads=git-heads.txt-$day_suffix
 if [ ! $use_pre_horizont = "y" ]; then
-    save_horizon_and_heads $start_git_heads horizon.pre
+    save_horizont_and_heads $start_git_heads horizont.pre
 else
-    test -r horizon.pre
+    test -r horizont.pre
 fi
 
-cecho blue "Here the sym-ref horizon:"
-cat horizon.pre
+cecho blue "Here the sym-ref horizont:"
+cat horizont.pre
 # mkdir -p horizonts
-#    horizonts/horizon.pre.$day_suffix.pre
-ln horizon.pre horizon.pre.$day_suffix
+#    horizonts/horizont.pre.$day_suffix.pre
+ln horizont.pre horizont.pre.$day_suffix
 
 # the version is "day_suffix"
 
@@ -81,10 +81,11 @@ else
     cecho red -e   "\n#################### ** repo sync FAILED **\n"
 fi
 
-#cecho $STEP_COLOR "saving sym refs in horizon.post"
-#repo-repair -t horizon.post horizon.pre
+#cecho $STEP_COLOR "saving sym refs in horizont.post"
+#repo-repair -t horizont.post horizont.pre
 
-if repo-restore.awk < horizon.pre;
+## todo: review & adapt:
+if repo-restore.awk < horizont.pre;
 then
     cecho green -e "\noooooooooooooooooooo ** rebase PASSED **\n"
 else
@@ -96,14 +97,14 @@ fi
 # fixme: no point in stashing again!
 cecho cyan "Check any difference"
 # todo --dont-stash
-repo_save_horizon -s > horizon.$day_suffix
-repo_extract_symbolic.awk horizon.$day_suffix > horizon.restored
+repo_save_horizont -s > horizont.$day_suffix
+repo_extract_symbolic.awk horizont.$day_suffix > horizont.restored
 
 
 # can this fail?
 if false;
 then
-    repo_restore_horizon -d horizon.pre horizon.restored && \
+    repo_restore_horizont -d horizont.pre horizont.restored && \
     cecho green -e "\noooooooooooooooooooo ** rebase PASSED **\n"  || \
     cecho red -e   "\n#################### ** rebase FAILED **\n"
 fi
