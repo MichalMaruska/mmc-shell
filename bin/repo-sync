@@ -52,16 +52,16 @@ day_suffix=$(date +%m-%d)
 
 start_git_heads=git-heads.txt-$day_suffix
 if [ $reuse_pre_horizont = "n" ]; then
-    save_horizont_and_heads $start_git_heads horizont.pre
+    save_horizont_and_heads $start_git_heads horizont.pre.$day_suffix
 else
-    test -r horizont.pre
+    test -r horizont.pre.$day_suffix
 fi
 
 cecho blue "Here the sym-ref horizont:"
-cat horizont.pre
+cat horizont.pre.$day_suffix
 # mkdir -p horizonts
 #    horizonts/horizont.pre.$day_suffix.pre
-ln horizont.pre horizont.pre.$day_suffix
+ln --force --symbolic horizont.pre.$day_suffix horizont.pre
 
 # the version is "day_suffix"
 
