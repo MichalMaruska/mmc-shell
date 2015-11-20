@@ -3,13 +3,13 @@
 # In directory @dir, assumed git,
 # checks-out @head, possibly rebasing it by `git-rebase-poset'
 
-unsetopt FUNCTION_ARGZERO
-
 usage()
 {
+setopt POSIX_ARGZERO
     cat <<EOF
 usage: ${0##*/} DIR HEAD
 EOF
+unsetopt POSIX_ARGZERO
 }
 
 
