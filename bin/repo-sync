@@ -22,7 +22,7 @@ save_horizont_and_heads()
 	cecho $STEP_COLOR "saving sym refs in $horizont_file"
 	# bug!
 	# tee $horizont_file
-	repo_save_horizont > full_horizont
+	repo_save_horizont |sort > full_horizont
 	repo_extract_symbolic.awk < full_horizont > $horizont_file || rm -fv $horizont_file
 	# ) &
 	# echo $jobstates
@@ -97,7 +97,7 @@ fi
 # fixme: no point in stashing again!
 cecho cyan "Check any difference"
 # todo --dont-stash
-repo_save_horizont -s > horizont.$day_suffix
+repo_save_horizont -s |sort > horizont.$day_suffix
 repo_extract_symbolic.awk horizont.$day_suffix > horizont.restored
 
 
