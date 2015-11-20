@@ -21,7 +21,9 @@ save_horizon_and_heads()
     #pid1=$tmpsess
 	cecho $STEP_COLOR "saving sym refs in horizon.pre"
 	# bug!
-	repo_save_horizon > $horizon_file || rm -fv $horizon_file
+	# tee $horizon_file
+	repo_save_horizon > full_horizont
+	repo_extract_symbolic.awk < full_horizont > $horizon_file || rm -fv $horizon_file
 	# ) &
 	# echo $jobstates
     #pid2=$tmpsess
@@ -46,8 +48,9 @@ shift OPTIND-1
 OPTIND=1
 
 
+day_suffix=$(date +%m-%d)
 
-start_git_heads=git-heads.txt-$(date +%d-%H)
+start_git_heads=git-heads.txt-$day_suffix
 if [ ! $use_pre_horizont = "y" ]; then
     save_horizon_and_heads $start_git_heads horizon.pre
 else
@@ -56,6 +59,9 @@ fi
 
 cecho blue "Here the sym-ref horizon:"
 cat horizon.pre
+ln horizon.pre horizon.pre.$day_suffix.pre
+
+# the version is "day_suffix"
 
 #cecho red "press enter ==>"
 # read a
@@ -84,7 +90,8 @@ fi
 # fixme: no point in stashing again!
 cecho cyan "Check any difference"
 # todo --dont-stash
-repo_save_horizon -s > horizon.restored
+repo_save_horizon -s > horizon.$day_suffix
+repo_extract_symbolic.awk horizon.$day_suffix > horizon.restored
 
 
 # can this fail?

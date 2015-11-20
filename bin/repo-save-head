@@ -1,9 +1,19 @@
 #!/usr/bin/zsh -feu
 
-# output the HEAD sha. possibly also a stash SHA1
+# output:
+# --------------
+# dir
+# sha [ref] [stash]
+#-------------
+# the HEAD ref (either sha or symbolic ref).
+# Possibly also a stash SHA1 --
+# git stash -- "No local changes to save" does nothing then.
 # git-reset, unless
 
+# create stash too.
 stash=y
+
+# reset/clean the git repo:
 reset=y
 
 # git stash -m "pre-repo-sync"
@@ -29,13 +39,33 @@ done
 shift OPTIND-1
 OPTIND=1
 
-
+# ====
 pwd
-echo -n "$(cat .git/HEAD)"
+
+
+# fixme:
+symbolic=$(cat .git/HEAD)
+sha=$(git rev-parse HEAD)
+echo -n "$sha"
+
+set +e
+#=$(expr match "$symbolic"  '^(rev: .+)$')
+matched=$(expr match "$symbolic"  '^ref: .*$')
+#&> /dev/null
+# res=$?
+if [ $matched -gt 1 ]; then
+    echo -n  "\t$symbolic"; #${a#ref: };
+else
+    :
+fi
+set -e
+
+
 
 if test $stash = y;
 then
     msg="pre repo-sync $(date +%m-%d)"
+    # fixme: what if this fails?
     sha=$(git stash create "$msg")
 
     if [ -n "$sha" ];
