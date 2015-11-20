@@ -39,7 +39,11 @@ function play_one ()
 	*.flv | *.mp4 | *.m4a)
 	    cecho green "$1"
 	    #
-	    mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null
+	    if which mplayer > /dev/null ; then
+		mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null
+	    else
+		gst123 --novideo --quiet "$1"
+	    fi
 	    ;;
 
 	*.flac)
