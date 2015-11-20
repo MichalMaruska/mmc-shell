@@ -59,7 +59,9 @@ fi
 
 cecho blue "Here the sym-ref horizon:"
 cat horizon.pre
-ln horizon.pre horizon.pre.$day_suffix.pre
+# mkdir -p horizonts
+#    horizonts/horizon.pre.$day_suffix.pre
+ln horizon.pre horizon.pre.$day_suffix
 
 # the version is "day_suffix"
 
