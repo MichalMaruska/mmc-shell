@@ -1,0 +1,28 @@
+#!/bin/zsh -feu
+# set -x
+
+day=$(date +%m-%d)
+TMP=full_horizont
+pure=full_horizont.pure
+# produce once again:
+repo_save_horizont -s > $TMP
+
+# I can convert horizont into git-heads.txt: ... which is NOT sorted!
+
+cut --fields "1-2" --delimiter '	' --output-delimiter '	' $TMP | sort > $pure
+
+cut --fields "1-2" --delimiter '	' --output-delimiter '	' horizont.$day | sort > horizont.$day.pure
+
+
+if ! diff --brief horizont.$day.pure $pure > /dev/null
+   then
+       join -t '	' horizont.$day.pure $pure |
+	   awk 'BEGIN {join="";FS="	"}; {if ($2 != $3) {printf("%s%s:%s",join,$1,substr($3,0,6)); join="-"} } END {printf("\n");}'
+fi
+
+# comm --output-delimiter '	' -3 horizont.$day.pure $pure | awk
+
+# join
+# comm
+# make diff
+# cdiff full_horizont horizont.$day
