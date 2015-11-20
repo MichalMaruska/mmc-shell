@@ -33,11 +33,11 @@ save_horizont_and_heads()
 
 }
 
-use_pre_horizont=n
+reuse_pre_horizont=n
 while getopts :s OPT; do
     case $OPT in
 	s|+s)
-	    use_pre_horizont=y
+	    reuse_pre_horizont=y
 	    ;;
 	*)
 	    print "usage: ${0##*/} [+-s} [--] ARGS..."
@@ -51,7 +51,7 @@ OPTIND=1
 day_suffix=$(date +%m-%d)
 
 start_git_heads=git-heads.txt-$day_suffix
-if [ ! $use_pre_horizont = "y" ]; then
+if [ $reuse_pre_horizont = "n" ]; then
     save_horizont_and_heads $start_git_heads horizont.pre
 else
     test -r horizont.pre
