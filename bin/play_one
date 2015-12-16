@@ -1,5 +1,10 @@
 #! /bin/zsh -f
 
+function play_mplayer()
+{
+    mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null
+}
+
 function play_one ()
 {
     # cecho  red "play $1:"
@@ -40,7 +45,7 @@ function play_one ()
 	    cecho green "$1"
 	    #
 	    if which mplayer > /dev/null ; then
-		mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null
+		play_mplayer $1
 	    else
 		gst123 --novideo --quiet "$1"
 	    fi
@@ -49,7 +54,7 @@ function play_one ()
 	*.flac)
 	    cecho green "$1"
 	    if which mplayer > /dev/null ; then
-		mplayer -really-quiet -ao pulse,alsa "$1" </dev/null
+		play_mplayer $1
 	    else
 		# gst123 --quiet $1 &> /dev/null </dev/null
 		# gst123 insists on having the console (being in foregroung).
@@ -60,7 +65,9 @@ function play_one ()
 	    # skip those
 	    ;;
 	*)
-	    mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null
+	    # especially when a symlink to mp3:
+	    mpg123 --gapless ${playdsp+-a $playdsp} --aggressive -q  "$1"
+	    # play_mplayer $1
 	    ;;
     esac
 }
