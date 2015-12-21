@@ -5,6 +5,10 @@ function play_mplayer()
     mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null
 }
 
+MPG123=(mpg123-pulse --gapless ${playdsp+-a $playdsp} --aggressive -q)
+MPG321=(mpg321 --aggressive -q -b 10000)
+
+
 function play_one ()
 {
     # cecho  red "play $1:"
@@ -12,11 +16,11 @@ function play_one ()
 	*.mpg)
         # mpg123 -b 10000 "$1" ;;
 	    cecho green $1
-	    mpg321 --aggressive -q -b 10000 "$1"
+	    $MPG123 "$1"
 	    ;;
 	*.mp2)
 	    cecho green $1
-            mpg321 --aggressive -q -b 10000  "$1" ;;
+            $MPG123  "$1" ;;
 
 	 *.xmms.mp3)
 	    echo xmms  --play ${1}
@@ -32,14 +36,12 @@ function play_one ()
 
        # -b 10000    ... fails silently!
        # fixme: this is oss, not ALSA!
-            mpg123 --gapless ${playdsp+-a $playdsp} --aggressive -q  "$1"
+            $MPG123  "$1"
 	    ;;
 
 	*.ogg)
 	    cecho green "$1"
 	    ogg123 --quiet  "$1";;
-
-
 
 	*.flv | *.mp4 | *.m4a)
 	    cecho green "$1"
@@ -66,7 +68,7 @@ function play_one ()
 	    ;;
 	*)
 	    # especially when a symlink to mp3:
-	    mpg123 --gapless ${playdsp+-a $playdsp} --aggressive -q  "$1"
+	    $MPG123 "$1"
 	    # play_mplayer $1
 	    ;;
     esac
