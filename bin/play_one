@@ -74,6 +74,33 @@ function play_one ()
     esac
 }
 
+usage()
+{
+print "usage: ${0##*/} [+-va} [--] ARGS..."
+}
+
+alsa=n
+while getopts :vah OPT; do
+    case $OPT in
+	v|+v)
+	    set -x
+	    ;;
+	a|+a)
+	    alsa=y
+	    MPG123=(mpg123-alsa --gapless ${playdsp+-a $playdsp} --aggressive -q)
+	    ;;
+	h)
+	    usage
+	    exit 0
+	    ;;
+	*)
+	    usage
+	    exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
 for file in "$@"; do
     play_one $file
 done
