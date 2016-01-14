@@ -16,14 +16,18 @@ export FOR_EACH_DIR_CHILD
 
 usage()
 {
+setopt POSIX_ARGZERO
     cat <<EOF
-Usage $0 [-s] [-d]
+Usage $0 [-s] [-d] cmd ....
 
 --debug  | -d  debug ...
 --pass   | -p  pass the relative path as first argument.
 --help   | -h
 --wait   | -w  wait 3 seconds between
 EOF
+
+# fixme:
+unsetopt POSIX_ARGZERO
 }
 
 
@@ -68,6 +72,9 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
     done
 
 
+    if [ $# = 0 ]; then
+	usage; exit 1
+    fi
     # skip  .repo
     export FOR_EACH_BASE_DIR=$(pwd)
     find . -name .repo -prune \
