@@ -43,7 +43,7 @@ function play_one ()
 	    cecho green "$1"
 	    ogg123 --quiet  "$1";;
 
-	*.flv | *.mp4 | *.m4a)
+	*.flv | *.mp4 | *.m4a | *.wma )
 	    cecho green "$1"
 	    #
 	    if which mplayer > /dev/null ; then
@@ -63,7 +63,7 @@ function play_one ()
 		flac --silent --decode --stdout $1 | aplay  -q  -
 	    fi
 	    ;;
-	*tif|*png|*txt)
+	*tif|*png|*txt|*jpg)
 	    # skip those
 	    ;;
 	*)
