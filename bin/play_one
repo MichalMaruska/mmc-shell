@@ -8,6 +8,37 @@ function play_mplayer()
 MPG123=(mpg123-pulse --gapless ${playdsp+-a $playdsp} --aggressive -q)
 MPG321=(mpg321 --aggressive -q -b 10000)
 
+usage()
+{
+print "usage: ${0##*/} [+-va} [--] ARGS..."
+}
+
+alsa=n
+while getopts :vahp OPT; do
+    case $OPT in
+	v|+v)
+	    set -x
+	    ;;
+	a|+a)
+	    alsa=y
+	    MPG123=(mpg123-alsa --gapless ${playdsp+-a $playdsp} --aggressive -q)
+	    ;;
+	p)
+	    pulse=y
+	    MPG123=(mpg123-pulse --gapless ${playdsp+-a $playdsp} --aggressive -q)
+	    ;;
+	h)
+	    usage
+	    exit 0
+	    ;;
+	*)
+	    usage
+	    exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
 
 function play_one ()
 {
@@ -74,32 +105,7 @@ function play_one ()
     esac
 }
 
-usage()
-{
-print "usage: ${0##*/} [+-va} [--] ARGS..."
-}
 
-alsa=n
-while getopts :vah OPT; do
-    case $OPT in
-	v|+v)
-	    set -x
-	    ;;
-	a|+a)
-	    alsa=y
-	    MPG123=(mpg123-alsa --gapless ${playdsp+-a $playdsp} --aggressive -q)
-	    ;;
-	h)
-	    usage
-	    exit 0
-	    ;;
-	*)
-	    usage
-	    exit 2
-    esac
-done
-shift OPTIND-1
-OPTIND=1
 
 for file in "$@"; do
     play_one $file
