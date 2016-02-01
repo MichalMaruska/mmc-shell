@@ -5,8 +5,15 @@ function play_mplayer()
     mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null
 }
 
-MPG123=(mpg123-pulse --gapless ${playdsp+-a $playdsp} --aggressive -q)
-MPG321=(mpg321 --aggressive -q -b 10000)
+
+if pulseaudio --check; then
+    MPG123=(mpg123-pulse --gapless ${playdsp+-a $playdsp} --aggressive -q)
+elif which mpg321; then
+    # -b 10000
+    MPG123=(mpg321 --aggressive -q)
+fi
+
+
 
 usage()
 {
