@@ -16,11 +16,16 @@ EOF
 # or SENDER
 : ${MAILFROM:=Michal.Maruska@tomtom.com}
 # <CRON-DAEMON>"
-while getopts :hs: OPT; do
+
+debug=n
+while getopts :dhs: OPT; do
     case $OPT in
 	h|+h)
 	    usage
 	    exit 0
+	    ;;
+	d)
+	    debug=y
 	    ;;
 	s)
 	    subject=$OPTARG
@@ -60,4 +65,10 @@ fi
 # and it might invoke gnome-keyring.
 mail -r "$MAILFROM" -s $subject -a "X-sender: cron-daemon" $MAILTO < $TEMP
 
-rm $TEMP
+# need to find out why no mail arrived.
+if [ $debug = y ]; then
+    echo $TEMP
+else
+    rm $TEMP
+fi
+
