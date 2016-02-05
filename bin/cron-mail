@@ -13,6 +13,9 @@ EOF
 
 # fallback (if empty)
 : ${MAILTO:=Michal.Maruska@tomtom.com}
+# or SENDER
+: ${MAILFROM:=Michal.Maruska@tomtom.com}
+# <CRON-DAEMON>"
 while getopts :hs: OPT; do
     case $OPT in
 	h|+h)
@@ -55,6 +58,6 @@ fi
 
 # stderr during this command is not controlled:
 # and it might invoke gnome-keyring.
-mail -r "<CRON-DAEMON>" -s $subject -a "X-sender: cron-daemon" $MAILTO < $TEMP
+mail -r "$MAILFROM" -s $subject -a "X-sender: cron-daemon" $MAILTO < $TEMP
 
 rm $TEMP
