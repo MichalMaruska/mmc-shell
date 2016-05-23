@@ -59,27 +59,6 @@ die()
     exit 1;
 }
 
-if getopt -T; then # should test (( $? = -4 ))
-    echo "incompatible  getopt(1) installed. Abort"
-    exit -1
-fi
-
-
-
-if ! [ -e .rsync.env -a -e .rsync-ignore ]; then
-    die "missing .rsync.env (or .rsync-ignore) file in $(pwd)"
-fi
-
-source .rsync.env
-
-# sanity check:
-if [ -z "${SOURCE_REPO-}" ]; then
-    die "the env file does not define the SOURCE_REPO"
-fi
-if [ -z "${RSYNC_RULES-}" ]; then
-    die "the env file does not define the RSYNC_RULES"
-fi
-
 do_rsync()
 {
     if [ $ECHO_RSYNC_COMMAND = y ]; then set -x;fi
@@ -99,7 +78,7 @@ do_rsync()
 unsetopt FUNCTION_ARGZERO
 usage()
 {
-    cat >&2 <<EOF
+    cat <<EOF
 usage: ${0##*/} [+-i] [--]  dir...
 -i --hide-progress   don't show per-file progress-bar
 -d --delete          delete also
@@ -108,6 +87,36 @@ usage: ${0##*/} [+-i] [--]  dir...
 -n --dry
 EOF
 }
+
+
+if getopt -T; then # should test (( $? = -4 ))
+    echo "incompatible  getopt(1) installed. Abort"
+
+    usage >&2
+    exit -1
+fi
+
+
+
+if ! [ -e .rsync.env -a -e .rsync-ignore ]; then
+    echo "missing .rsync.env (or .rsync-ignore) file in $(pwd)" >&2
+    usage >&2
+    exit 1
+fi
+
+source .rsync.env
+
+# sanity check:
+if [ -z "${SOURCE_REPO-}" ]; then
+    echo "the env file does not define the SOURCE_REPO" >&2
+    usage >&2
+    exit 1
+fi
+if [ -z "${RSYNC_RULES-}" ]; then
+    echo "the env file does not define the RSYNC_RULES" >&2
+    usage >&2
+    exit 1
+fi
 
 
 ECHO_RSYNC_COMMAND=n
