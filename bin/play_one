@@ -50,7 +50,7 @@ OPTIND=1
 function play_one ()
 {
     # cecho  red "play $1:"
-    case $1 in
+    case $(realpath $1) in
 	*.mpg)
         # mpg123 -b 10000 "$1" ;;
 	    cecho green $1
