@@ -1,3 +1,28 @@
+mmc-shell (3.1) release; urgency=medium
+
+  * fix the symlink creation
+  * sort the horizont.
+  * Format change: in ONE line.
+  * new repo-version
+  * keep relative paths
+  * formalize Mplayer, fallback to mpg123
+  * use Pulse-audio specific player. Formalize the mpg123/321 players.
+  * sq gst
+  * Compose the repo version with the diff-string.
+  * play_one: usage, option to verbose, direct-alsa
+  * for-each-git-dir: fix usage() and check arguments.
+  * play_one: wma w/o mplayer, ignore jpg.
+  * play_one: -p to use audiopulse
+  * detect pulse-audio automatically
+  * play webm .. explicitly by mplayer/gst123
+  * cron-mail: adapt FROM to be allowed in TT.
+  * cron-mail: -d to help debugging.
+  * cron-mail: improve usage() text
+  * rsync-from-me: (on error) always print out usage()
+  * Detect the audio file type by the real file name, not symlink.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Sun, 26 Jun 2016 19:11:47 +0200
+
 mmc-shell (3.0) release; urgency=medium
 
   * fail on "repo forall"
