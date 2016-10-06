@@ -6,11 +6,12 @@ function play_mplayer()
 }
 
 
-if pulseaudio --check; then
-    MPG123=(mpg123-pulse --gapless ${playdsp+-a $playdsp} --aggressive -q)
-elif which mpg321; then
+if which mpg321 > /dev/null; then
     # -b 10000
     MPG123=(mpg321 --aggressive -q)
+elif pulseaudio --check; then
+    # this suddenly requires staying in fg! and "space" to pause.
+    MPG123=(mpg123-pulse --gapless ${playdsp+-a $playdsp} --aggressive -q)
 fi
 
 
