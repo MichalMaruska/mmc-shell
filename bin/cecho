@@ -30,6 +30,9 @@ _COLORS[magenta]='\E[35m'
 _COLORS[cyan]='\E[36m'
 _COLORS[white]='\E[37m'
 _COLORS[bold]='\033[1m'
+
+_COLORS[orange]='\x1b[48;5;209m'
+# 209
 else
    declare -a _COLORS
    _COLORS=(
