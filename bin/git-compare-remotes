@@ -1,14 +1,15 @@
 #!/bin/zsh -eu
 
-# usage:  $0 branch remote
 
-if [ $# -lt 2 ]; then
-    exit 1
-fi
+usage()
+{
+cat <<EOF
+usage: ${0##*/} [+-h] [-q] [--]  branch remote
+-q  don't dump the commits
 
-branch=$1
-remote=$2
-REMOTE=remotes/$remote/master
+EOF
+}
+
 
 git_ref_exists()
 {
@@ -44,6 +45,32 @@ compare_commits()
 	return 3
     fi
 }
+
+verbose=y
+while getopts :hq OPT; do
+    case $OPT in
+	h|+h)
+	    usage
+	    exit 0
+	    ;;
+	q)
+	    verbose="n"
+	    ;;
+	*)
+	    usage >&2
+	    exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+if [ $# -lt 2 ]; then
+    exit 1
+fi
+
+branch=$1
+remote=$2
+REMOTE=remotes/$remote/master
 
 
 
