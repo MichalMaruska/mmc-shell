@@ -105,12 +105,16 @@ case $cmp in
 	;;
     1)
 	cecho green "HEAD ahead of $REMOTE"
-	git diff --shortstat  $REMOTE
-	git log --oneline $REMOTE..HEAD --
+	if [ $verbose = y ]; then
+	    git diff --shortstat  $REMOTE
+	    git log --oneline $REMOTE..HEAD --
+	fi
 	;;
     2)
 	cecho hiyellow "local is behind"
-	git log --oneline HEAD..$REMOTE --
+	if [ $verbose = y ]; then
+	    git log --oneline HEAD..$REMOTE --
+	fi
 	;;
     4)
 	echo "error in comparing $branch & FETCHMAIL"
