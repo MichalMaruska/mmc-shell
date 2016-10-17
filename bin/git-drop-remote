@@ -1,0 +1,43 @@
+#!/bin/zsh -feu
+
+# drop if present `remote' points at a `hostname'.
+# and replace by  ... mdell
+
+# fixme: tries to connect so tcp timeout needed.
+
+usage()
+{
+echo <<EOF
+usage: ${0##*/} [+-h]
+
+EOF
+}
+
+
+while getopts :h OPT; do
+    case $OPT in
+	h|+h)
+	    usage()
+	    exit
+	    ;;
+	*)
+	    usage
+	    exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+# mdell
+hostname="gitorious\\.org"
+remote=origin
+
+url=$(git remote get-url $remote)
+
+echo $url
+if expr match "$url" ".*@$hostname";
+then
+    set -x
+    git remote rm $remote
+    git-add-remote-sibling -d
+fi

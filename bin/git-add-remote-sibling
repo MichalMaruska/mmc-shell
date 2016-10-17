@@ -1,0 +1,79 @@
+#!/bin/zsh -eu
+
+# This is only about SSH-based git. not git:// urls!
+# Add as a `git remote host' maruskadell, with the path same as this one.
+
+usage()
+{
+    cat <<EOF
+usage: ${0##*/} [+-h] [-n URL] [-d]
+-d verbose
+-n ex. optiplex
+-u ex michal@optiplex
+EOF
+}
+
+#possible wrapped into echo(1). for a dry run.
+CMD=
+
+function get_remote_path()
+{
+    # Strip $HOME
+    local local_path=$(pwd)
+    local_path=${local_path#$HOME}
+
+    local remote_home=/home/michal
+
+    remote_path=$remote_home$local_path
+    echo $remote_path
+}
+
+remote_path=$remote_home$local_path
+
+if [ $(hostname) = "optiplex-maruska" ];
+then
+    : ${GIT_REMOTE_NAME:=e6440}
+    : ${GIT_URL:=michal@e6440}
+else
+    : ${GIT_REMOTE_NAME:=optiplex}
+    : ${GIT_URL:=michal@optiplex}
+fi
+
+override=n
+while getopts :hfvdn:u: OPT; do
+    case $OPT in
+	f)
+	    override=y
+	    ;;
+	d)
+	    # run_dry=y
+	    CMD=echo
+	    ;;
+	h|+h)
+	    usage
+	    exit 0
+	    ;;
+	u)
+	    GIT_URL=$OPTARG
+	    ;;
+	n|+n)
+	    GIT_REMOTE_NAME=$OPTARG
+	    ;;
+	*)
+	    usage >&2
+	    exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+if [ $# -gt 0 ]; then
+    usage
+    exit 1
+fi
+
+if [ $override = y ]; then
+    $CMD git remote set-url $GIT_REMOTE_NAME $GIT_URL:$remote_path
+else
+    $CMD git remote add $GIT_REMOTE_NAME $GIT_URL:$remote_path
+fi
