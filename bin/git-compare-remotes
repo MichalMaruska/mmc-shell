@@ -35,6 +35,8 @@ compare_commits()
     fi
 
     common=$(git merge-base $1 $2)
+    if [ $? != 0 ]; then return 4;fi
+
     if [ $common = $second ]; then
 	return 1;
     elif [ $common = $first ]; then
