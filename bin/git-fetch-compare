@@ -82,7 +82,7 @@ else
 	cecho cyan "$(pwd)"
 	# set -x
 	git fetch ${remote} --quiet
-	~/repo/mmc-shell/bin/git-compare-remotes master $remote
+	git-compare-remotes master $remote
     fi
 fi
 # git log --oneline  ORIG_HEAD..HEAD --
