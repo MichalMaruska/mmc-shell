@@ -23,6 +23,7 @@ hash_of()
 
 usage()
 {
+    setopt POSIX_ARGZERO
     cat <<EOF
 usage: ${0##*/} [+-f] [-r <remote>| -a]  [--] ARGS...
 -P | --pushto {remote}
@@ -34,7 +35,7 @@ EOF
 push=no
 
 # how can I have optional argument to ... ?
-cmd_options=$(getopt --name $0 --shell bash \
+cmd_options=$(getopt --name ${0##*/} --shell bash \
 	--longoptions push,pushto:,remote --options r:pP:h \
 	-- "$@" ) || { usage && exit 1 }
 
@@ -60,6 +61,14 @@ while (( $# > 0 )); do
 	    shift
 	    remote=$1
 	    ;;
+	--)
+	     shift
+	     break
+	     ;;
+	*)
+	    echo $1>&2
+	    usage
+	    exit 2
     esac
     shift
 done
