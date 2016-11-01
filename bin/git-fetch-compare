@@ -64,27 +64,40 @@ while (( $# > 0 )); do
     shift
 done
 
+if [ $# -ge 1 ]; then
+    remotes=($@)
+else
+    remotes=($remote)
+fi
 
+echo "will fetch from: $remotes"
 
 # remote or --all
 # git fetch $remote
+cecho cyan "$(pwd)"
 
-if [ -z ${remote} ];
+
+if [ -z "${remotes}" ];
 then
     git fetch "--all" --quiet
     git status --short
+    #typeset -a remotes
+    #remotes=($(git remote))
 else
-    typeset -a remotes
-    remotes=($(git remote))
+    foreach remote ($remotes) {
+	git fetch ${remote} --quiet
+    }
+fi
+
+# now show the diff:
     #echo $remotes vs $remote
     #echo ${remote:|remotes}
-    if [ -z "${remote:|remotes}" ]; then
-	cecho cyan "$(pwd)"
-	# set -x
-	git fetch ${remote} --quiet
-	git-compare-remotes master $remote
-    fi
-fi
+# if [ -z "${remote:|remotes}" ]; then
+	    # set -x
+
+foreach remote ($remotes) {
+    git-compare-remotes master $remote
+}
 # git log --oneline  ORIG_HEAD..HEAD --
 
 
