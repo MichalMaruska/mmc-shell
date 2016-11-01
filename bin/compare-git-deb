@@ -25,19 +25,24 @@ done
 shift OPTIND-1
 OPTIND=1
 
-DIR=$1
-last_release_tag=$(git describe --tags HEAD 2>/dev/null)
+if [ $# -gt 0 ]; then
+    DIR=$1
+else
+    DIR=.
+fi
 
+# cd $DIR;
+last_release_tag=$(cd $DIR; git describe --tags HEAD 2>/dev/null)
 
 
 # binary package, somehow representing the source package in that Git repo:
 # todo:
 
-deb_src_pkg=$(deb-pkg-name debian/control*)
+deb_src_pkg=$(deb-pkg-name $DIR/debian/control*)
 name=$deb_src_pkg
 
 
-deb_pkg=$(deb-pkg-binary-packages .)
+deb_pkg=$(deb-pkg-binary-packages $DIR)
 info=$(deb-pkg-installed-version $deb_pkg |tail -n 1)
 version=$info
 #(echo $info)
