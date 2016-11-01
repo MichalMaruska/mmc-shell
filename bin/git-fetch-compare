@@ -1,6 +1,6 @@
 #! /bin/zsh -feu
 
-## keep the local git repo up-to-date & report situation.
+## Keep the local git repo up-to-date & report situation.
 ## i.e. compare (local branch) head with a remote head.
 
 ## `Defaults'
@@ -14,12 +14,6 @@ remote=
 # if [ ${#remotes} = 1 ]; then
 #     remote=${remotes[1]}
 # fi
-
-
-hash_of()
-{
-    git log $1 --max-count=1 --format="%H"
-}
 
 usage()
 {
