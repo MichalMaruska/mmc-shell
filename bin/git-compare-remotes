@@ -28,39 +28,39 @@ compare_commits()
     local first=$(git log $1 --max-count=1 --format="%H")
     local second=$(git log $2 --max-count=1 --format="%H")
     if [ -z "$first" -o -z "$second" ]; then
-	return 4
+        return 4
     fi
     if [ $first = $second ]; then
-	return 0;
+        return 0;
     fi
 
     common=$(git merge-base $1 $2)
     if [ $? != 0 ]; then return 4;fi
 
     if [ $common = $second ]; then
-	return 1;
+        return 1;
     elif [ $common = $first ]; then
-	return 2;
-	# -1 is nonsense if ever a standalone,
-	# but it got delivered as -1 as function!
+        return 2;
+        # -1 is nonsense if ever a standalone,
+        # but it got delivered as -1 as function!
     else
-	return 3
+        return 3
     fi
 }
 
 verbose=y
 while getopts :hq OPT; do
     case $OPT in
-	h|+h)
-	    usage
-	    exit 0
-	    ;;
-	q)
-	    verbose="n"
-	    ;;
-	*)
-	    usage >&2
-	    exit 2
+        h|+h)
+            usage
+            exit 0
+            ;;
+        q)
+            verbose="n"
+            ;;
+        *)
+            usage >&2
+            exit 2
     esac
 done
 shift OPTIND-1
@@ -104,29 +104,29 @@ set -e
 
 case $cmp in
     0)
-	cecho bold "same"
-	;;
+        cecho bold "same"
+        ;;
     1)
-	cecho green "HEAD ahead of $REMOTE"
-	if [ $verbose = y ]; then
-	    git diff --shortstat  $REMOTE
-	    git log --oneline $REMOTE..HEAD --
-	fi
-	;;
+        cecho green "HEAD ahead of $REMOTE"
+        if [ $verbose = y ]; then
+            git diff --shortstat  $REMOTE
+            git log --oneline $REMOTE..HEAD --
+        fi
+        ;;
     2)
-	cecho hiyellow "local is behind"
-	if [ $verbose = y ]; then
-	    git log --oneline HEAD..$REMOTE --
-	fi
-	;;
+        cecho hiyellow "local is behind"
+        if [ $verbose = y ]; then
+            git log --oneline HEAD..$REMOTE --
+        fi
+        ;;
     4)
-	echo "error in comparing $branch & FETCHMAIL"
-	;;
+        echo "error in comparing $branch & FETCHMAIL"
+        ;;
     3)
-	echo "diverged"
-	;;
+        echo "diverged"
+        ;;
     *)
-	echo "error while comparing: $cmp"
+        echo "error while comparing: $cmp"
 esac
 
 
