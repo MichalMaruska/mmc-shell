@@ -3,6 +3,13 @@
 # invoke repo sync, and then restore the checked-out branches.
 # It's assumed they know how to rebase. ( git-rebase-* cmds)
 
+# files created:
+#  horizont.pre  horizont.pre.DATE ...w/ stash sha1-es
+#  horizont.DATE after.  no stashes !
+#  tmp: (full_horizont)
+
+# so what's the version then?
+
 STEP_COLOR=green
 VERBOSE=no
 
@@ -11,26 +18,15 @@ save_horizont_and_heads()
     start_git_heads=$1
     horizont_file=$2
     # we reused previously created git-heads.txt file.
-# cecho $STEP_COLOR "saving sha1-s in git-heads.txt ... in background"
-# don't fail if the file is missing:
+    # cecho $STEP_COLOR "saving sha1-s in git-heads.txt ... in background"
+    # don't fail if the file is missing:
     test -f git-heads.txt && mv -f git-heads.txt $start_git_heads
-# taken from gen_platform_zip:
 
-
-    {
-    #pid1=$tmpsess
-	cecho $STEP_COLOR "saving sym refs in $horizont_file"
-	# bug!
-	# tee $horizont_file
-	repo_save_horizont |sort > full_horizont
-	repo_extract_symbolic.awk < full_horizont > $horizont_file || rm -fv $horizont_file
-	# ) &
-	# echo $jobstates
-    #pid2=$tmpsess
-	# wait
-    #$pid1 $pid2
-    }
-
+    cecho $STEP_COLOR "saving sym refs in $horizont_file"
+    # bug!
+    # tee $horizont_file
+    repo_save_horizont |sort > full_horizont
+    repo_extract_symbolic.awk < full_horizont > $horizont_file || rm -fv $horizont_file
 }
 
 reuse_pre_horizont=n
