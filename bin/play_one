@@ -83,7 +83,7 @@ function play_one ()
 	    cecho green "$1"
 	    ogg123 --quiet  "$1";;
 
-	*.flv | *.mp4 | *.m4a | *.wma | *.webm )
+	*.flv | *.mp4 | *.m4a | *.wma | *.webm | *.ape )
 	    cecho green "$1"
 	    #
 	    if which mplayer > /dev/null ; then
