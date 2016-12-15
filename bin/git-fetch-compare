@@ -8,7 +8,7 @@ branch=HEAD
 push=yes
 remote=
 # all
-
+verbose=no
 
 # remotes=$(git remote)
 # if [ ${#remotes} = 1 ]; then
@@ -77,7 +77,7 @@ echo "will fetch from: $remotes"
 
 # remote or --all
 # git fetch $remote
-cecho cyan "$(pwd)"
+if [ $verbose = y ]; then cecho cyan "$(pwd)" ; fi
 
 
 if [ -z "${remotes}" ];

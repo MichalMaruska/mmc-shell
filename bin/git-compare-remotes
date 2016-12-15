@@ -123,7 +123,7 @@ case $cmp in
         echo "error in comparing $branch & FETCHMAIL"
         ;;
     3)
-        echo "diverged"
+        cecho red "diverged"
         ;;
     *)
         echo "error while comparing: $cmp"
