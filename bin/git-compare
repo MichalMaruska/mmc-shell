@@ -9,11 +9,8 @@
 # + other actions (on remotes).
 source /usr/share/mmc-shell/git-functions.sh
 
-if [ $(hostname) = "optiplex-maruska" ]; then
-    remote=e6440
-else
-    remote=optiplex
-fi
+set_remote_name
+remote=$GIT_REMOTE_NAME
 
 branch="master"
 
@@ -34,17 +31,16 @@ git_remote_branch_known()
 
 
 foreach d (**/.git) {
-    dir=${d%/.git}; cd $dir;
-
+    dir=${d%.git};
+    if [ "$dir" = "" ]; then dir=.;fi
+    cd $dir;
 
     # Remove this remote:
-    if git remote show $obsolete_remote &>/dev/null; then
+    if git_remote_known $obsolete_remote; then
         set -x
         git remote rm $remote;
         set +x
     fi
-
-
 
     if ! git_remote_known $remote; then
         cecho cyan "no remote '$remote' in $dir"
@@ -54,7 +50,6 @@ foreach d (**/.git) {
         git fetch $remote
         cecho hiblue "the remote does not contain branch $branch of $dir"
         #try:
-
     elif ! git_ref_exists "heads/$branch"; then
         git branch $branch "$remote/$branch"
     else
