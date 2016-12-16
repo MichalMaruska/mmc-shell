@@ -45,6 +45,7 @@ foreach d (**/.git) {
     if ! git_remote_known $remote; then
         cecho cyan "no remote '$remote' in $dir"
         # fixme: this needs the new version which alre fetches...
+        git-pull-from-remote -c
         git-add-remote-mdell
     elif ! git_remote_branch_known $remote $branch ; then
         git fetch $remote
