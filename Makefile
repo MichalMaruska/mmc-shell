@@ -1,9 +1,7 @@
-
-
-INSTALL=install
-BIN_INSTALL_DIR = /usr/bin
-
-BINFILES=$(wildcard bin/*)
+INSTALL := install
+BIN_INSTALL_DIR := /usr/bin
+SHARED_INSTALL_DIR := /usr/share/mmc-shell/
+BINFILES := $(wildcard bin/*)
 
 all:
 	echo ""
@@ -12,6 +10,10 @@ install: install-zsh
 	$(INSTALL) -v -D --directory $(DESTDIR)$(BIN_INSTALL_DIR)
 	for p in $(BINFILES); do \
 	  $(INSTALL) -v -m 555 $$p $(DESTDIR)$(BIN_INSTALL_DIR) ; \
+	done
+	$(INSTALL) -v -D --directory $(DESTDIR)$(SHARED_INSTALL_DIR)
+	for p in share/*; do \
+	  $(INSTALL) -v -m 555 $$p $(DESTDIR)$(SHARED_INSTALL_DIR) ; \
 	done
 
 

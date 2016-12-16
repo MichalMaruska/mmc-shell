@@ -1,0 +1,76 @@
+#!/bin/zsh -eu
+
+# Maintain a mirror of git repositories in a dir-hierarchy.
+# This is only about SSH-based git. not git:// urls!
+
+# Inverse of git-pull-from-remote
+
+: ${GIT_REMOTE_NAME=e6440}
+: ${GIT_URL=michal@e6440}
+
+usage()
+{
+    cat <<EOF
+usage: ${0##*/} [+-h] [-n URL] [-d]
+-f force -set-url an existing remote
+-d verbose
+-n ex. ${GIT_REMOTE_NAME-}
+-u ex ${GIT_URL-}
+EOF
+}
+
+#possible wrapped into echo(1). for a dry run.
+CMD=
+
+function get_remote_path()
+{
+    # Strip $HOME
+    local local_path=$(pwd)
+    local_path=${local_path#$HOME}
+
+    local remote_home=/home/michal
+
+    remote_path=$remote_home$local_path
+    echo $remote_path
+}
+
+remote_path=$(get_remote_path)
+
+override=n
+while getopts :hfvdn:u: OPT; do
+    case $OPT in
+        f)
+            override=y
+            ;;
+        d)
+            # run_dry=y
+            CMD=echo
+            ;;
+        h|+h)
+            usage
+            exit 0
+            ;;
+        u)
+            GIT_URL=$OPTARG
+            ;;
+        n|+n)
+            GIT_REMOTE_NAME=$OPTARG
+            ;;
+        *)
+            usage >&2
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+if [ $# -gt 0 ]; then
+    usage
+    exit 1
+fi
+
+if [ $override = y ]; then
+    $CMD git remote set-url $GIT_REMOTE_NAME $GIT_URL:$remote_path
+else
+    $CMD git remote add $GIT_REMOTE_NAME $GIT_URL:$remote_path
+fi

@@ -1,0 +1,39 @@
+#!/bin/zsh -feu
+
+# set -x
+usage() {
+    setopt POSIX_ARGZERO
+    cat <<EOF
+usage: ${0##*/} [+-h] [--]  remote   branch
+
+Fast-forward to remote head, stashing around.
+EOF
+    unsetopt POSIX_ARGZERO
+}
+while getopts :h OPT; do
+    case $OPT in
+        h|+h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage >&2
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+if [ $# -ne 2 ]; then
+    usage;
+fi
+
+remote=$1
+branch=$2
+
+# fixme: if necessary:
+git stash
+
+git checkout $branch
+git merge --ff $remote/$branch
+
+git stash pop

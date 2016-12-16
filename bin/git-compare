@@ -1,0 +1,66 @@
+#!/bin/zsh -feu
+
+# how to use: cd ~/repo; $0
+
+# does NOT fetch.
+# show diverged:
+# show retarded, or advanced.
+
+# + other actions (on remotes).
+
+if [ $(hostname) = "optiplex-maruska" ]; then
+    remote=e6440
+else
+    remote=optiplex
+fi
+
+branch="master"
+
+# check git if still using this, then drop it:
+obsolete_remote=mdell
+
+git_remote_known()
+{
+    git remote show $1 &>/dev/null
+}
+
+git_remote_branch_known()
+{
+    local remote=$1
+    local branch=$2
+    git branch --remote|grep "$remote/$branch" >/dev/null
+}
+
+
+foreach d (**/.git) {
+    dir=${d%/.git}; cd $dir;
+
+
+    # Remove this remote:
+    if git remote show $obsolete_remote &>/dev/null; then
+        set -x
+        git remote rm $remote;
+        set +x
+    fi
+
+
+
+    if ! git_remote_known $remote; then
+        cecho cyan "no remote '$remote' in $dir"
+        # fixme: this needs the new version which alre fetches...
+        git-add-remote-mdell
+    elif ! git_remote_branch_known $remote $branch ; then
+        git fetch $remote
+        cecho hiblue "the remote does not contain branch $branch of $dir"
+        #try:
+    else
+        compare=$(git-compare-remotes -q $branch $remote)
+        if [ $compare = "diverged" ];
+        then
+            cecho red $dir;
+        else
+            cecho yellow "$dir $compare"
+        fi;
+    fi
+    cd -
+}

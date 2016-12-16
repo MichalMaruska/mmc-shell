@@ -1,0 +1,102 @@
+#!/bin/zsh -f
+
+# Act on the remote host, which mirrors local git repositories (same dir structure)
+# -- clone, pull, gitk
+# add as a `git remote host' maruskadell, with the path same as this one.
+
+# todo: this should be just:  ssh @remote:local/ "$@".
+# and aliases which uses & provide the $1 in $@
+
+
+# get the remote host! from 'git remote'
+# origin -> hostname
+
+usage()
+{
+    cat <<EOF
+
+usage: ${0##*/} [+-iv} [--] {hostname}
+
+-i add the local host as git-remote to the remote repo
+-v invoke "git remote" to see we are added
+-x invoke "gitk --all"  on the remote.
+
+-c clone the local/current repo to the remote, at the same path.
+EOF
+}
+
+
+TOP=$HOME
+source /usr/share/mmc-shell/git-functions.sh
+
+
+function get_remote_path()
+{
+    # Strip $HOME
+    local local_path=$(get_local_path $TOP)
+
+    local remote_home=/home/michal
+
+    remote_path=$remote_home$local_path
+    echo $remote_path
+}
+
+remote_path=$(get_remote_path)
+
+this_remote=$(hostname)
+this_remote="optiplex"
+
+
+CMD="git fetch $this_remote"
+while getopts :ivhcx OPT; do
+    case $OPT in
+        i|+i)
+            CMD="~/bin/git-add-remote-mdell"
+            ;;
+        v|+v)
+            CMD="git remote"
+            ;;
+        c)
+            # a/b -> a
+            remote_path=${remote_path%/*}
+            local local_path=$(get_local_path)
+            CMD="git clone $this_remote:$local_path"
+
+            run_post=y
+            ;;
+        x)
+            CMD="gitk --all"
+            ;;
+        -h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage >&2
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+if [ $# -lt 1 ]; then
+    usage; exit 2
+fi
+
+hostname=$1
+shift
+
+set -x
+ssh -Y -A $hostname "cd $remote_path; $CMD $@"
+
+
+#POSTCMD="
+if [ ${run_post-n} = y ]; then
+    ~/bin/git-add-remote-mdell $hostname
+    git fetch $hostname
+fi
+
+
+# $CMD git remote add $GIT_REMOTE_NAME $GIT_URL:$remote_path
+# `find':
+# time for-each-git-dir       --  'if git remote show e6440 &>/dev/null; then cecho blue candidate $(pwd); fi'
