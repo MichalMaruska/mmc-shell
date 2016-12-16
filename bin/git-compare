@@ -7,6 +7,7 @@
 # show retarded, or advanced.
 
 # + other actions (on remotes).
+source /usr/share/mmc-shell/git-functions.sh
 
 if [ $(hostname) = "optiplex-maruska" ]; then
     remote=e6440
@@ -53,6 +54,9 @@ foreach d (**/.git) {
         git fetch $remote
         cecho hiblue "the remote does not contain branch $branch of $dir"
         #try:
+
+    elif ! git_ref_exists "heads/$branch"; then
+        git branch $branch "$remote/$branch"
     else
         compare=$(git-compare-remotes -q $branch $remote)
         if [ $compare = "diverged" ];
