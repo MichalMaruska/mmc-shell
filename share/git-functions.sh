@@ -8,3 +8,8 @@ function get_local_path()
     local_path=${local_path#$TOP}
     echo $local_path
 }
+
+function git_ref_exists()
+{
+    [ -e .git/refs/$1 ]
+}

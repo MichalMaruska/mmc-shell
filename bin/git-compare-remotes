@@ -11,10 +11,7 @@ EOF
 }
 
 
-git_ref_exists()
-{
-    [ -e .git/refs/$1 ]
-}
+source /usr/share/mmc-shell/git-functions.sh
 
 # return 1 if A < B
 # 0 if  A=B
