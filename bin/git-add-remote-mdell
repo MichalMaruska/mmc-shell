@@ -5,8 +5,14 @@
 
 # Inverse of git-pull-from-remote
 
+if [ $(hostname) = e6440 ]; then
+: ${GIT_REMOTE_NAME:=optiplex}
+: ${GIT_URL:=michal@optiplex}
+else
 : ${GIT_REMOTE_NAME=e6440}
 : ${GIT_URL=michal@e6440}
+fi
+
 
 usage()
 {
