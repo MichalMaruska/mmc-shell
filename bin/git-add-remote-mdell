@@ -75,3 +75,5 @@ if [ $override = y ]; then
 else
     $CMD git remote add $GIT_REMOTE_NAME $GIT_URL:$remote_path
 fi
+
+git fetch $GIT_REMOTE_NAME
