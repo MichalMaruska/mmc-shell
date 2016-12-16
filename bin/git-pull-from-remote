@@ -94,7 +94,7 @@ ssh -Y -A $GIT_REMOTE_NAME "cd $remote_path; $CMD $@"
 #POSTCMD="
 if [ ${run_post-n} = y ]; then
     # $CMD git remote add $GIT_REMOTE_NAME $GIT_URL:$remote_path
-    git-add-remote-mdell $GIT_REMOTE_NAME
+    git-add-remote-mdell        # -r $GIT_REMOTE_NAME
     git fetch $GIT_REMOTE_NAME
 fi
 
