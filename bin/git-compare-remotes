@@ -28,6 +28,7 @@ compare_commits()
     local first=$(git log $1 --max-count=1 --format="%H")
     local second=$(git log $2 --max-count=1 --format="%H")
     if [ -z "$first" -o -z "$second" ]; then
+        if [ $verbose = y ]; then echo "$first $second" >&2;fi
         return 4
     fi
     if [ $first = $second ]; then
@@ -35,7 +36,10 @@ compare_commits()
     fi
 
     common=$(git merge-base $1 $2)
-    if [ $? != 0 ]; then return 4;fi
+    if [ $? != 0 ]; then
+        if [ $verbose = y ]; then echo "no common merge-base">&2;fi
+        return 4;
+    fi
 
     if [ $common = $second ]; then
         return 1;
