@@ -2,67 +2,67 @@
 
 usage() {
 
-	echo "${0##*/}: [-v] [-d <source tree>] [git log options] <platform 1> <platform 2>"
-	echo "Show a diff between two platform builds from git."
-	echo ""
-	echo "Platform 1 and platform 2 can be one of"
-	echo "   - a source tree (based on git)"
-	echo "   - a git-heads.txt file, or "
-	echo "   - a platform...zip file"
-	echo ""
-	echo " -v Enables verbose operation."
-	echo " -d To specify the source tree to run the diffs. If this is not specified it is"
-	echo "    assumed that the current directory is the top of the tree."
-	echo ""
-	echo " Any unrecognized parameter is assumed to be a formatting option for git log."
-	echo " One of the most useful options is \"--format=oneline\"."
+        echo "${0##*/}: [-v] [-d <source tree>] [git log options] <platform 1> <platform 2>"
+        echo "Show a diff between two platform builds from git."
+        echo ""
+        echo "Platform 1 and platform 2 can be one of"
+        echo "   - a source tree (based on git)"
+        echo "   - a git-heads.txt file, or "
+        echo "   - a platform...zip file"
+        echo ""
+        echo " -v Enables verbose operation."
+        echo " -d To specify the source tree to run the diffs. If this is not specified it is"
+        echo "    assumed that the current directory is the top of the tree."
+        echo ""
+        echo " Any unrecognized parameter is assumed to be a formatting option for git log."
+        echo " One of the most useful options is \"--format=oneline\"."
 }
 
 cleanup() {
 
-	[[ -n "${WORKDIR:-}" ]] && [[ "${DEBUG:-}" != y ]] && rm -rf $WORKDIR || :
+        [[ -n "${WORKDIR:-}" ]] && [[ "${DEBUG:-}" != y ]] && rm -rf $WORKDIR || :
 }
 
 resolve_head() {
-	if [[ $2 = "HEAD" ]]
-	then
-		(cd $SOURCE_TREE/$1 && git log --format="format:%H" --max-count=1)
-	else
-		echo $2
-	fi
+        if [[ $2 = "HEAD" ]]
+        then
+                (cd $SOURCE_TREE/$1 && git log --format="format:%H" --max-count=1)
+        else
+                echo $2
+        fi
 }
 
 show_diff() {
 
-	local project="$1"
-	local h1="$2"
-	local h2="$3"
+        local project="$1"
+        local h1="$2"
+        local h2="$3"
 
-	h1=$( resolve_head $project $h1 )
-	h2=$( resolve_head $project $h2 )
+        h1=$( resolve_head $project $h1 )
+        h2=$( resolve_head $project $h2 )
 
-	if [[ $VERBOSE = y ]] || [[ $h1 != $h2 ]]
-	then
-		cecho blue "Diff of $1:"
-		(cd $SOURCE_TREE/$1 && git --no-pager log "${GIT_OPTS[@]-}" $h1...$h2; )
-		echo
-	fi
+        if [[ $VERBOSE = y ]] || [[ $h1 != $h2 ]]
+        then
+                cecho blue "Diff of $1:"
+                (cd $SOURCE_TREE/$1 && git --no-pager log "${GIT_OPTS[@]-}" $h1...$h2; )
+                echo
+        fi
 }
 
 get_git_heads_from_zip() {
 
-	TMPFILE=$( mktemp $WORKDIR/git-heads.XXXX )
+        TMPFILE=$( mktemp $WORKDIR/git-heads.XXXX )
 
-	# only want to know whether it is a zipfile at all
-	if unzip -l $1 >/dev/null 2>&1
-	then
-		unzip -d $WORKDIR $1 META/git-heads.txt >/dev/null
-		mv -f $WORKDIR/META/git-heads.txt $TMPFILE
-		echo $TMPFILE
-	else
-		# can't unzip the file so assume it is a git-heads by itself
-		echo $1
-	fi
+        # only want to know whether it is a zipfile at all
+        if unzip -l $1 >/dev/null 2>&1
+        then
+                unzip -d $WORKDIR $1 META/git-heads.txt >/dev/null
+                mv -f $WORKDIR/META/git-heads.txt $TMPFILE
+                echo $TMPFILE
+        else
+                # can't unzip the file so assume it is a git-heads by itself
+                echo $1
+        fi
 }
 
 
@@ -85,59 +85,59 @@ NEXT_OPT=""
 for OPT in "$@"
 do
 
-	if [[ "$NEXT_OPT" = "-d" ]]
-	then
-		SOURCE_TREE="$OPT"
-		NEXT_OPT=""
-		continue
-	fi
+        if [[ "$NEXT_OPT" = "-d" ]]
+        then
+                SOURCE_TREE="$OPT"
+                NEXT_OPT=""
+                continue
+        fi
 
-	case $OPT in
-	-v)
-		VERBOSE=y
-		;;
-	-d)
-		NEXT_OPT=$OPT
-		;;
-	-*)
-		# short or long option
-		GIT_OPTS+=("$OPT")
-		;;
-	*)
-		# possibly parameter to option or an input file
-		# if is is a file or directory we'll assume input
-		if [[ -e $OPT ]]
-		then
-			if [[ -z "$FILE1" ]]
-			then
-				FILE1="$OPT"
-			elif [[ -z "$FILE2" ]]
-			then
-				FILE2="$OPT"
-			else
-				echo "Error: too many input files. Cannot handle $OPT."
-				usage
-				exit 1
-			fi
-		else
-			GIT_OPTS+=("$OPT")
-		fi
-		;;
-	esac
+        case $OPT in
+        -v)
+                VERBOSE=y
+                ;;
+        -d)
+                NEXT_OPT=$OPT
+                ;;
+        -*)
+                # short or long option
+                GIT_OPTS+=("$OPT")
+                ;;
+        *)
+                # possibly parameter to option or an input file
+                # if is is a file or directory we'll assume input
+                if [[ -e $OPT ]]
+                then
+                        if [[ -z "$FILE1" ]]
+                        then
+                                FILE1="$OPT"
+                        elif [[ -z "$FILE2" ]]
+                        then
+                                FILE2="$OPT"
+                        else
+                                echo "Error: too many input files. Cannot handle $OPT."
+                                usage
+                                exit 1
+                        fi
+                else
+                        GIT_OPTS+=("$OPT")
+                fi
+                ;;
+        esac
 done
 
 if [[ -n "$NEXT_OPT" ]]
 then
-	echo "Missing parameter for option $NEXT_OPT" >&2
-	usage
-	exit 1
+        echo "Missing parameter for option $NEXT_OPT" >&2
+        usage
+        exit 1
 fi
 
 if [[ -z "$FILE1" ]] || [[ -z "$FILE2" ]]
 then
-	echo "Not enough files specified to diff." >&2
-	usage
-	exit 1
+        echo "Not enough files specified to diff." >&2
+        usage
+        exit 1
 fi
 
 
@@ -149,27 +149,27 @@ fi
 
 if [[ -d "$FILE1" ]] || [[ -d "$FILE2" ]]
 then
-	[[ -d $FILE1 ]] || CAT_FILE=$FILE1
-	[[ -d $FILE2 ]] || CAT_FILE=$FILE2
-	if [[ -z "${CAT_FILE:-}" ]]
-	then
-		echo "Can't diff two directories." >&2
-		usage
-		exit 1
-	fi
-	cat $CAT_FILE | while read PROJECT COMMIT_ID
-	do
-		if [[ "$CAT_FILE" == "$FILE1" ]]
-		then
-			show_diff $PROJECT $COMMIT_ID HEAD
-		else
-			show_diff $PROJECT HEAD $COMMIT_ID
-		fi
-	done
+        [[ -d $FILE1 ]] || CAT_FILE=$FILE1
+        [[ -d $FILE2 ]] || CAT_FILE=$FILE2
+        if [[ -z "${CAT_FILE:-}" ]]
+        then
+                echo "Can't diff two directories." >&2
+                usage
+                exit 1
+        fi
+        cat $CAT_FILE | while read PROJECT COMMIT_ID
+        do
+                if [[ "$CAT_FILE" == "$FILE1" ]]
+                then
+                        show_diff $PROJECT $COMMIT_ID HEAD
+                else
+                        show_diff $PROJECT HEAD $COMMIT_ID
+                fi
+        done
 else
-	# both files point to a git-heads.txt
-	join -j1 -t' ' $FILE1 $FILE2 | while read PROJECT COMMIT_ID1 COMMIT_ID2
-	do
-		show_diff $PROJECT $COMMIT_ID1 $COMMIT_ID2
-	done
+        # both files point to a git-heads.txt
+        join -j1 -t' ' $FILE1 $FILE2 | while read PROJECT COMMIT_ID1 COMMIT_ID2
+        do
+                show_diff $PROJECT $COMMIT_ID1 $COMMIT_ID2
+        done
 fi
