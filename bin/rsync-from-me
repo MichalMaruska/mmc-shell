@@ -121,14 +121,15 @@ CHECK_OPTIONS=(--times)
 
 delete_level=0
 
+# --inplace
 GLOBAL_OPTIONS=(--hard-links)
 interactive="yes"
 
 # todo: delete=no
 # no,limit,yes
 cmd_options=$(getopt --name $0 --shell bash \
- 	      --longoptions hide-progress,verbose,dry,size-only,delete,source: \
- 	      --options ivnfsd -- "$@") || { usage && exit 1 }
+ 	      --longoptions hide-progress,progress,verbose,dry,size-only,delete,source: \
+ 	      --options ipvnfsd -- "$@") || { usage && exit 1 }
 eval set -- "$cmd_options"
 
 ROOT=$(pwd)
@@ -136,9 +137,13 @@ ROOT=$(pwd)
 while (( $# > 0 )) do
     case $1 in
 	#process_rest "$@"
-	-i | --hide-progress )
-	      interactive=no
+	-i | --hide-progress)
+	    # fixme!
+	    interactive=no
 	      ;;
+	-p | --progress)
+	    LOG_OPTIONS+=(--progress)
+            ;;
 	-v | --verbose ) # verbose
 	    LOG_OPTIONS=($LOG_OPTIONS_RO)
 	    ECHO_RSYNC_COMMAND=y
@@ -187,10 +192,6 @@ fi
 
 
 GLOBAL_OPTIONS+=($DELETE_OPTIONS)
-
-if [ $interactive = "yes" ]; then
-   LOG_OPTIONS+=(--progress)
-fi
 
 GLOBAL_OPTIONS+=($LOG_OPTIONS)
 
