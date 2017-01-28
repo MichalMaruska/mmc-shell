@@ -22,6 +22,7 @@ _COLORS[black]='\E[30m'
 _COLORS[red]='\E[31m'
 _COLORS[yellow]='\E[32m'
 _COLORS[green]='\E[33m'
+_COLORS[hired]='\033[31;1m'
 _COLORS[hiyellow]='\033[1;32m'
 _COLORS[higreen]='\033[1;33m'
 _COLORS[blue]='\E[34m'
@@ -42,6 +43,7 @@ else
 "red:\E[31;47m"
 "green:\E[32;47m"
 "yellow:\E[33;47m"
+"hired:\033[31;1m"
 "hiyellow:\033[1;32m"
 "higreen:\033[1;33m"
 "blue:\E[34;47m"
