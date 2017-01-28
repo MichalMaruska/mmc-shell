@@ -1,3 +1,38 @@
+mmc-shell (3.3) release; urgency=medium
+
+  * Prefer mpg321, since 123 requires the session/foreground
+  * cecho: orange
+  * git-compare-remotes: accept "branch remote" as args.
+  * git-compare-remotes: output only when verbose
+  * New: git-drop-remote & git-add-remote-sibling
+  * Back to mpg123 & pulse:
+  * git-compare-remotes: report error in "git merge-base"
+  * usage on error; use the installed git-compare-remotes
+  * compare-git-deb: accept a directory as 1st parameter; . is default.
+  * git-fetch-compare: handle correctly -r xx vs. remaining arguments
+  * git-fetch-compare: fix usage of getopt(1)
+  * git-fetch-compare: clean
+  * TABS
+  * rsync-from-me: use die to print usage.
+  * rsync-from-me: --progress option to explicitly request the previous default behaviour
+  * play *.ape with gst123
+  * repo-sync: explain & document
+  * log better: color & less
+  * git-compare-remotes: verbose
+  * Take over git-* tools to sync between 2 mirrored repo-line hierarchy of git repos
+  * git_ref_exists: split into functions
+  * create branch if ... checked out with repo(1).
+  * git-add-remote-mdell: common for different hosts
+  * set_remote_name: use in git-add-remote-mdell, git-pull-from-remote: -r
+  * git-compare: also use set_remote_name + fix the cd!
+  * git-add-remote-mdell: fetch immediately
+  * adapt usage
+  * git-compare: immediately clone as well.
+  * whitespace
+  * new color: higreen
+
+ -- Michal Maruska <mmaruska@gmail.com>  Sat, 28 Jan 2017 03:04:30 +0100
+
 mmc-shell (3.1) release; urgency=medium
 
   * fix the symlink creation
