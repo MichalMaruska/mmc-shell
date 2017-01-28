@@ -6,7 +6,7 @@ shift
 
 # As requested, let's support Bash 3 (a shell without associative arrays)
 if [ x$BASH_VERSINFO != x \
-	-a $BASH_VERSINFO -lt 4 ]
+        -a $BASH_VERSINFO -lt 4 ]
 then
     hash_support=0
 else
@@ -63,12 +63,12 @@ then
     echo -n -e "${_COLORS[$COLOR]}"
 else
     for info in ${_COLORS[@]} ; do
-	KEY=${info%%:*}
-	VALUE=${info##*:}
-	if [ $KEY = $1 ]
-	    then
-	    echo -n -e "$VALUE"
-	fi
+        KEY=${info%%:*}
+        VALUE=${info##*:}
+        if [ $KEY = $1 ]
+            then
+            echo -n -e "$VALUE"
+        fi
     done
 fi
 }
@@ -77,15 +77,15 @@ fi
 
 if [ -t 1 -o "${FORCE_COLOR-}" = y -o -S /dev/stdout ]; then
     if [ "${TERM}" = "xterm" \
-	-o "${TERM}" = "screen" \
-	-o "${TERM}" = "rxvt" \
-	-o "${TERM}" = "ansi" ]; then
-	emit_color $COLOR
-	echo "$@"
-	tput sgr0
-	# echo
+        -o "${TERM}" = "screen" \
+        -o "${TERM}" = "rxvt" \
+        -o "${TERM}" = "ansi" ]; then
+        emit_color $COLOR
+        echo "$@"
+        tput sgr0
+        # echo
     else
-	echo "$@"
+        echo "$@"
     fi
 else
     echo "$@"

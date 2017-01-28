@@ -66,12 +66,12 @@ do_rsync()
 
     # fixme: choose the local from $ROOT or $SOURCE_REPO
     time rsync --exclude-from=./.rsync-ignore \
-	$GLOBAL_OPTIONS \
-	--recursive --archive \
-	 \
-	$TRANSFER_OPTIONS \
-	$RSYNC_RULES \
-	"$@"
+        $GLOBAL_OPTIONS \
+        --recursive --archive \
+         \
+        $TRANSFER_OPTIONS \
+        $RSYNC_RULES \
+        "$@"
 
     if [ $ECHO_RSYNC_COMMAND = y ]; then set +x;fi
 }
@@ -128,51 +128,51 @@ interactive="yes"
 # todo: delete=no
 # no,limit,yes
 cmd_options=$(getopt --name $0 --shell bash \
- 	      --longoptions hide-progress,progress,verbose,dry,size-only,delete,source: \
- 	      --options ipvnfsd -- "$@") || { usage && exit 1 }
+              --longoptions hide-progress,progress,verbose,dry,size-only,delete,source: \
+              --options ipvnfsd -- "$@") || { usage && exit 1 }
 eval set -- "$cmd_options"
 
 ROOT=$(pwd)
 
 while (( $# > 0 )) do
     case $1 in
-	#process_rest "$@"
-	-i | --hide-progress)
-	    # fixme!
-	    interactive=no
-	      ;;
-	-p | --progress)
-	    LOG_OPTIONS+=(--progress)
+        #process_rest "$@"
+        -i | --hide-progress)
+            # fixme!
+            interactive=no
+              ;;
+        -p | --progress)
+            LOG_OPTIONS+=(--progress)
             ;;
-	-v | --verbose ) # verbose
-	    LOG_OPTIONS=($LOG_OPTIONS_RO)
-	    ECHO_RSYNC_COMMAND=y
-	    ;;
-	-n| +n)
-	    GLOBAL_OPTIONS+=(--dry-run)
-	    LOG_OPTIONS=($LOG_OPTIONS_RO)
-	    ;;
-	-d | --delete )
-	    ((delete_level+=1))
-	    ;;
-	-f)
-	    GLOBAL_OPTIONS+=($TRANSFER_OPTIONS)
-	    ;;
-	-s | --size-only )			# don't check time, but size.
-	    GLOBAL_OPTIONS+=(--size-only)
-	    ;;
-	--)
-	    shift
-	    break
-	    ;;
-	--source )
-	    SOURCE_REPO=$2
-	    shift
-	    ;;
-	*)
-	    echo $1>&2
-	    usage
-	    exit 2
+        -v | --verbose ) # verbose
+            LOG_OPTIONS=($LOG_OPTIONS_RO)
+            ECHO_RSYNC_COMMAND=y
+            ;;
+        -n| +n)
+            GLOBAL_OPTIONS+=(--dry-run)
+            LOG_OPTIONS=($LOG_OPTIONS_RO)
+            ;;
+        -d | --delete )
+            ((delete_level+=1))
+            ;;
+        -f)
+            GLOBAL_OPTIONS+=($TRANSFER_OPTIONS)
+            ;;
+        -s | --size-only )			# don't check time, but size.
+            GLOBAL_OPTIONS+=(--size-only)
+            ;;
+        --)
+            shift
+            break
+            ;;
+        --source )
+            SOURCE_REPO=$2
+            shift
+            ;;
+        *)
+            echo $1>&2
+            usage
+            exit 2
     esac
     shift
 done
@@ -184,9 +184,9 @@ if [ $delete_level -gt 0 ]; then
     DELETE_OPTIONS=(--delete --delete-excluded)
 
     if [ $delete_level -gt 1 ]; then
-	# DELETE_OPTIONS+=($DELETE_OPTIONS_UNSAFE)
+        # DELETE_OPTIONS+=($DELETE_OPTIONS_UNSAFE)
     else
-	DELETE_OPTIONS+=(--max-delete 100)
+        DELETE_OPTIONS+=(--max-delete 100)
     fi
 fi
 
@@ -201,8 +201,8 @@ then
     for subdir
     # in $@
     do
-	# note: I do append the "/" after ROOT
-	do_rsync --relative "$SOURCE_REPO/./$subdir"  $ROOT/
+        # note: I do append the "/" after ROOT
+        do_rsync --relative "$SOURCE_REPO/./$subdir"  $ROOT/
     done
 else
     do_rsync $SOURCE_REPO/   $ROOT/
