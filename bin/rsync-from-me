@@ -148,7 +148,7 @@ while (( $# > 0 )) do
             LOG_OPTIONS=($LOG_OPTIONS_RO)
             ECHO_RSYNC_COMMAND=y
             ;;
-        -n| +n)
+        -n| +n| --dry)
             GLOBAL_OPTIONS+=(--dry-run)
             LOG_OPTIONS=($LOG_OPTIONS_RO)
             ;;
