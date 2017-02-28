@@ -117,19 +117,19 @@ LOG_OPTIONS=()
 LOG_OPTIONS_RO=(--itemize-changes --human-readable)
 TRANSFER_OPTIONS=(--partial)
 # too slow: --bwlimit=100
-CHECK_OPTIONS=(--times)
+# CHECK_OPTIONS=(--times)
 
 delete_level=0
 
 # --inplace
-GLOBAL_OPTIONS=(--hard-links)
+GLOBAL_OPTIONS=(--hard-links --omit-dir-times --checksum)
 interactive="yes"
 
 # todo: delete=no
 # no,limit,yes
 cmd_options=$(getopt --name $0 --shell bash \
-              --longoptions hide-progress,progress,verbose,dry,size-only,delete,source: \
-              --options ipvnfsd -- "$@") || { usage && exit 1 }
+              --longoptions hide-progress,progress,verbose,dry,size-only,delete,source:,backup: \
+              --options ipvnfs:db: -- "$@") || { usage && exit 1 }
 eval set -- "$cmd_options"
 
 ROOT=$(pwd)
@@ -137,6 +137,10 @@ ROOT=$(pwd)
 while (( $# > 0 )) do
     case $1 in
         #process_rest "$@"
+        -b | --backup)
+            GLOBAL_OPTIONS+=(--backup-dir $2)
+            shift
+            ;;
         -i | --hide-progress)
             # fixme!
             interactive=no
