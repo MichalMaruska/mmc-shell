@@ -1,3 +1,13 @@
+mmc-shell (3.4) release; urgency=medium
+
+  * hired
+  * tabs
+  * do recognize the --dry option!
+  * rsync-from-me: support for -backup/b option.
+  * Implement different levels of comparison:
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 29 Mar 2017 17:05:07 +0200
+
 mmc-shell (3.3) release; urgency=medium
 
   * Prefer mpg321, since 123 requires the session/foreground
