@@ -67,8 +67,7 @@ do_rsync()
     # fixme: choose the local from $ROOT or $SOURCE_REPO
     time rsync --exclude-from=./.rsync-ignore \
         $GLOBAL_OPTIONS \
-        --recursive --archive \
-         \
+        $COMPARISON_OPTIONS \
         $TRANSFER_OPTIONS \
         $RSYNC_RULES \
         "$@"
@@ -122,14 +121,22 @@ TRANSFER_OPTIONS=(--partial)
 delete_level=0
 
 # --inplace
-GLOBAL_OPTIONS=(--hard-links --omit-dir-times --checksum)
+# --archive =  -rlptgoD
+# ==
+# --recursive --links --perms --group --owner --devices --specials
+# --times
+GLOBAL_OPTIONS=(--hard-links --omit-dir-times --ignore-times  --recursive --links --perms --group --owner --devices --specials)
+
+# By default we compare by time & thus maintain it too:
+COMPARISON_OPTIONS=(--times)
+
 interactive="yes"
 
 # todo: delete=no
 # no,limit,yes
 cmd_options=$(getopt --name $0 --shell bash \
-              --longoptions hide-progress,progress,verbose,dry,size-only,delete,source:,backup: \
-              --options ipvnfs:db: -- "$@") || { usage && exit 1 }
+              --longoptions hide-progress,progress,verbose,dry,size-only,checksum,delete,source:,backup: \
+              --options ipvnfs:cdb: -- "$@") || { usage && exit 1 }
 eval set -- "$cmd_options"
 
 ROOT=$(pwd)
@@ -159,11 +166,16 @@ while (( $# > 0 )) do
         -d | --delete )
             ((delete_level+=1))
             ;;
+        c | --checksum)
+            # otherwise:
+            # todo: warn about conflict with -s
+            COMPARISON_OPTIONS=(--checksum)
+            ;;
         -f)
             GLOBAL_OPTIONS+=($TRANSFER_OPTIONS)
             ;;
         -s | --size-only )			# don't check time, but size.
-            GLOBAL_OPTIONS+=(--size-only)
+            COMPARISON_OPTIONS=(--size-only)
             ;;
         --)
             shift
