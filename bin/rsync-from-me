@@ -125,7 +125,7 @@ delete_level=0
 # ==
 # --recursive --links --perms --group --owner --devices --specials
 # --times
-GLOBAL_OPTIONS=(--hard-links --omit-dir-times --ignore-times  --recursive --links --perms --group --owner --devices --specials)
+GLOBAL_OPTIONS=(--hard-links --omit-dir-times  --recursive --links --perms --group --owner --devices --specials)
 
 # By default we compare by time & thus maintain it too:
 COMPARISON_OPTIONS=(--times)
@@ -169,7 +169,7 @@ while (( $# > 0 )) do
         -c | --checksum)
             # otherwise:
             # todo: warn about conflict with -s
-            COMPARISON_OPTIONS=(--checksum)
+            COMPARISON_OPTIONS=(--checksum --ignore-times)
             ;;
         -f)
             GLOBAL_OPTIONS+=($TRANSFER_OPTIONS)
