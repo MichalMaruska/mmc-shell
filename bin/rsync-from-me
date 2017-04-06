@@ -136,7 +136,7 @@ interactive="yes"
 # no,limit,yes
 cmd_options=$(getopt --name $0 --shell bash \
               --longoptions hide-progress,progress,verbose,dry,size-only,checksum,delete,source:,backup: \
-              --options ipvnfs:cdb: -- "$@") || { usage && exit 1 }
+              --options ipvnfscdb: -- "$@") || { usage && exit 1 }
 eval set -- "$cmd_options"
 
 ROOT=$(pwd)
