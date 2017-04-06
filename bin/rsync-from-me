@@ -166,7 +166,7 @@ while (( $# > 0 )) do
         -d | --delete )
             ((delete_level+=1))
             ;;
-        c | --checksum)
+        -c | --checksum)
             # otherwise:
             # todo: warn about conflict with -s
             COMPARISON_OPTIONS=(--checksum)
