@@ -153,7 +153,8 @@ while (( $# > 0 )) do
             interactive=no
               ;;
         -p | --progress)
-            LOG_OPTIONS+=(--progress)
+            GLOBAL_OPTIONS+=(--progress)
+            # -v overrides this! fixme!
             ;;
         -v | --verbose ) # verbose
             LOG_OPTIONS=($LOG_OPTIONS_VERBOSE)
