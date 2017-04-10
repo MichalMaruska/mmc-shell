@@ -66,11 +66,12 @@ do_rsync()
 
     # fixme: choose the local from $ROOT or $SOURCE_REPO
     time rsync --exclude-from=./.rsync-ignore \
-        $GLOBAL_OPTIONS \
-        $COMPARISON_OPTIONS \
-        $TRANSFER_OPTIONS \
-        $RSYNC_RULES \
-        "$@"
+         $GLOBAL_OPTIONS \
+         $FAITHFUL_COPY_OPTIONS \
+         $COMPARISON_OPTIONS \
+         $TRANSFER_OPTIONS \
+         $RSYNC_RULES \
+         "$@"
 
     if [ $ECHO_RSYNC_COMMAND = y ]; then set +x;fi
 }
@@ -124,7 +125,10 @@ delete_level=0
 # ==
 # --recursive --links --perms --group --owner --devices --specials
 # --times
-GLOBAL_OPTIONS=(--hard-links --omit-dir-times  --recursive --links --perms --group --owner --devices --specials)
+GLOBAL_OPTIONS=(--hard-links --omit-dir-times  --recursive --links  --devices --specials)
+# I don't want to keep the --perms
+FAITHFUL_COPY_OPTIONS=(--group --owner) # --times --perms
+# I don't want --times, I want to mark it with current time, to work with make(1).
 
 # By default we compare by time & thus maintain it too:
 # log:  t with --times
