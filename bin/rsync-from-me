@@ -9,9 +9,9 @@
 # The config files itself are expected inside ROOT, so rsync can update them.
 # hopefully not overwrite while it's executing.
 
-# those are:  .rsync.env .rsync-ignore
+# those are:  .rsync.env
 
-# see example .rsync-ignore...
+# see example
 # to avoid copying cscope* files, and also the git files -- not relevant
 # for building.
 
@@ -65,7 +65,7 @@ do_rsync()
     if [ $ECHO_RSYNC_COMMAND = y ]; then set -x;fi
 
     # fixme: choose the local from $ROOT or $SOURCE_REPO
-    time rsync --exclude-from=./.rsync-ignore \
+    time rsync \
          $GLOBAL_OPTIONS \
          $FAITHFUL_COPY_OPTIONS \
          $COMPARISON_OPTIONS \
@@ -96,8 +96,8 @@ fi
 
 
 
-if ! [ -e .rsync.env -a -e .rsync-ignore ]; then
-    die "missing .rsync.env (or .rsync-ignore) file in $(pwd)"
+if ! [ -e .rsync.env ]; then
+    die "missing .rsync.env file in $(pwd)"
 fi
 
 source .rsync.env
