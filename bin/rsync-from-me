@@ -113,7 +113,7 @@ fi
 ECHO_RSYNC_COMMAND=n
 
 LOG_OPTIONS=()
-LOG_OPTIONS_RO=(--itemize-changes --human-readable)
+LOG_OPTIONS_VERBOSE=(--itemize-changes --human-readable)
 TRANSFER_OPTIONS=(--partial)
 # too slow: --bwlimit=100
 # CHECK_OPTIONS=(--times)
@@ -156,12 +156,12 @@ while (( $# > 0 )) do
             LOG_OPTIONS+=(--progress)
             ;;
         -v | --verbose ) # verbose
-            LOG_OPTIONS=($LOG_OPTIONS_RO)
+            LOG_OPTIONS=($LOG_OPTIONS_VERBOSE)
             ECHO_RSYNC_COMMAND=y
             ;;
         -n| +n| --dry)
             GLOBAL_OPTIONS+=(--dry-run)
-            LOG_OPTIONS=($LOG_OPTIONS_RO)
+            LOG_OPTIONS=($LOG_OPTIONS_VERBOSE)
             ;;
         -d | --delete )
             ((delete_level+=1))
