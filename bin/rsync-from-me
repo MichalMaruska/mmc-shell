@@ -116,7 +116,6 @@ LOG_OPTIONS=()
 LOG_OPTIONS_VERBOSE=(--itemize-changes --human-readable)
 TRANSFER_OPTIONS=(--partial)
 # too slow: --bwlimit=100
-# CHECK_OPTIONS=(--times)
 
 delete_level=0
 
@@ -128,7 +127,11 @@ delete_level=0
 GLOBAL_OPTIONS=(--hard-links --omit-dir-times  --recursive --links --perms --group --owner --devices --specials)
 
 # By default we compare by time & thus maintain it too:
-COMPARISON_OPTIONS=(--times)
+# log:  t with --times
+#       T  ... current time!
+# --checksum --size-only --ignore-times
+COMPARISON_OPTIONS=()
+comparison_level=0
 
 interactive="yes"
 
@@ -167,16 +170,31 @@ while (( $# > 0 )) do
         -d | --delete )
             ((delete_level+=1))
             ;;
+
+        -s | --size-only)			# don't check time, but size.
+            # todo: contradicts --checksum
+            # --ignore-times  contradicst --checksum, --size-only !
+            COMPARISON_OPTIONS=(--size-only)
+            if [[ $comparison_level -gt 0 ]];
+            then
+                echo "mismatch in the heuristics"
+                exit 1
+            fi
+            comparison_level=1
+            ;;
         -c | --checksum)
             # otherwise:
             # todo: warn about conflict with -s
-            COMPARISON_OPTIONS=(--checksum --ignore-times)
+            COMPARISON_OPTIONS=(--checksum)
+            if [[ $comparison_level -gt 0 ]];
+            then
+                echo "mismatch in the heuristics"
+                exit 1
+            fi
+            comparison_level=2
             ;;
         -f)
             GLOBAL_OPTIONS+=($TRANSFER_OPTIONS)
-            ;;
-        -s | --size-only )			# don't check time, but size.
-            COMPARISON_OPTIONS=(--size-only)
             ;;
         --)
             shift
