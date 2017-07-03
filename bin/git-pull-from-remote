@@ -22,6 +22,7 @@ usage: ${0##*/} [+-iv} [--] [ -r hostname]
 -x invoke "gitk --all"  on the remote.
 -r remote (by default $GIT_REMOTE_NAME)
 -c clone the local/current repo to the remote, at the same path.
+-f skip fetching also
 EOF
 }
 
@@ -42,12 +43,15 @@ function get_remote_path()
 }
 
 remote_path=$(get_remote_path)
-
 this_remote=$(hostname)
+fetch_also=y
 
 CMD="git fetch $this_remote"
-while getopts :ivhcxr: OPT; do
+while getopts :ivfhcxr: OPT; do
     case $OPT in
+        f)
+            fetch_also=n
+            ;;
         i|+i)
             CMD="git-add-remote-mdell"
             ;;
@@ -89,6 +93,10 @@ OPTIND=1
 
 set -x
 ssh -Y -A $GIT_REMOTE_NAME "cd $remote_path; $CMD $@"
+
+if [ $fetch_also = y ]; then
+    git fetch $GIT_REMOTE_NAME
+fi
 
 
 #POSTCMD="
