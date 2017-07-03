@@ -1,3 +1,22 @@
+mmc-shell (3.5) release; urgency=medium
+
+  * fix the -c option recognition.
+  * fix the -s option recognition.
+  * fixme: so ignore-times is about the detection.
+    Sometimes I want to copy/i.e. sync with timestamp change only when the content differs.
+    Then I need --checksum detection, don't need to preserve --times (on _matching_ checksum),
+    but I'm ok with to --ignore-times?
+  * rename LOG_OPTIONS_RO->LOG_OPTIONS_VERBOSE
+  * fix the -p option. To show the progress.
+  * point out the exclusivity of --size-only & --checksum.
+  * allow various levels of faithful copies -- time, permissions (perforce)
+  * format
+  * drop .rsync-ignore
+  * document -c -s options
+  * git-pull-from-remote: fetch also (unless -f)
+
+ -- Michal Maruska <mmaruska@gmail.com>  Mon, 03 Jul 2017 12:16:32 +0200
+
 mmc-shell (3.4) release; urgency=medium
 
   * hired
