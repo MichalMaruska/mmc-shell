@@ -85,35 +85,35 @@ while [ -n "$1" ]
 do
     case "$1" in
     -f)
-	if [ "X$2" = "X" ]
-	then
-	    echo "$0: No database file specified" >&2
-	    exit 1
-	fi
-	DATABASE_FILE="$2"
-	shift
-	;;
+        if [ "X$2" = "X" ]
+        then
+            echo "$0: No database file specified" >&2
+            exit 1
+        fi
+        DATABASE_FILE="$2"
+        shift
+        ;;
     -i)
-	if [ "X$2" = "X" ]
-	then
-	    echo "$0: No list file specified" >&2
-	    exit 1
-	fi
-	LIST_FILE="$2"
-	shift
-	;;
+        if [ "X$2" = "X" ]
+        then
+            echo "$0: No list file specified" >&2
+            exit 1
+        fi
+        LIST_FILE="$2"
+        shift
+        ;;
     -l)
-	LIST_ONLY=1
-	;;
+        LIST_ONLY=1
+        ;;
     -r)
-	RECURSE=1
-	;;
+        RECURSE=1
+        ;;
     -v)
-	VERBOSE=1
-	;;
+        VERBOSE=1
+        ;;
     *)
-	DIR="$1"
-	;;
+        DIR="$1"
+        ;;
     esac
     shift
 done
@@ -128,13 +128,13 @@ fi
 (
     if [ "X$RECURSE" = "X" ]
     then
-	# Ugly, inefficient, but it works.
-	for f in *
-	do
-	    echo "$DIR/$f"
-	done
+        # Ugly, inefficient, but it works.
+        for f in *
+        do
+            echo "$DIR/$f"
+        done
     else
-	find $DIR \( -type f -o -type l \)
+        find $DIR \( -type f -o -type l \)
     fi
 ) | \
     egrep -i '\.([chly](xx|pp)*|cc|hh)$' | \
