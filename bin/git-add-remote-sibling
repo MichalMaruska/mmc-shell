@@ -1,15 +1,19 @@
 #!/bin/zsh -eu
 
+# Tool to setup a mirror of git repositories in an identical dir-hierarchy (on 2 hosts).
 # This is only about SSH-based git. not git:// urls!
 # Add as a `git remote host' maruskadell, with the path same as this one.
+
+source /usr/share/mmc-shell/git-functions.sh
+set_remote_name
 
 usage()
 {
     cat <<EOF
 usage: ${0##*/} [+-h] [-n URL] [-d]
 -d verbose
--n ex. optiplex
--u ex michal@optiplex
+-n ex. ${GIT_REMOTE_NAME-}
+-u ex ${GIT_URL-}
 EOF
 }
 
@@ -28,16 +32,7 @@ function get_remote_path()
     echo $remote_path
 }
 
-remote_path=$remote_home$local_path
-
-if [ $(hostname) = "optiplex-maruska" ];
-then
-    : ${GIT_REMOTE_NAME:=e6440}
-    : ${GIT_URL:=michal@e6440}
-else
-    : ${GIT_REMOTE_NAME:=optiplex}
-    : ${GIT_URL:=michal@optiplex}
-fi
+remote_path=$(get_remote_path)
 
 override=n
 while getopts :hfvdn:u: OPT; do
@@ -77,3 +72,5 @@ if [ $override = y ]; then
 else
     $CMD git remote add $GIT_REMOTE_NAME $GIT_URL:$remote_path
 fi
+
+git fetch $GIT_REMOTE_NAME
