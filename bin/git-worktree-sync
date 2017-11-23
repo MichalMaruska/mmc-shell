@@ -1,0 +1,52 @@
+#!/bin/zsh -feu
+
+# usage: from to
+#
+# syncs 2 git worktrees, by git commands.
+# git worktree  list --porcelain
+
+usage()
+{
+    cat <<EOF
+usage: ${0##*/} [+-h] [--] {source_worktree_dir} {target_worktree_dir}
+
+EOF
+}
+
+while getopts :h OPT; do
+    case $OPT in
+        h|+h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage >&2
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+if [ $# != 2 ]; then
+    usage >&2
+    exit 1;
+fi
+
+readonly SOURCE=$1
+readonly TARGET=$2
+
+
+(
+cd $SOURCE
+# get the id:
+# sha=$(git rev-parse HEAD)
+readonly sha=$(git stash create)
+
+if [ -z "$sha" ];
+then
+    cecho yellow "no stash created" >&2
+    sha=$(git rev-parse HEAD)
+fi
+)
+
+cd $TARGET; git reset --hard $sha
