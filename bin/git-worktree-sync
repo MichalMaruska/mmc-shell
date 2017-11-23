@@ -36,17 +36,20 @@ readonly SOURCE=$1
 readonly TARGET=$2
 
 
-(
-cd $SOURCE
-# get the id:
-# sha=$(git rev-parse HEAD)
-readonly sha=$(git stash create)
+sha=$(
+    cd $SOURCE
+    # get the id:
+    # sha=$(git rev-parse HEAD)
+    sha=$(git stash create)
 
-if [ -z "$sha" ];
-then
-    cecho yellow "no stash created" >&2
-    sha=$(git rev-parse HEAD)
-fi
-)
+    if [ -z "$sha" ];
+    then
+        cecho yellow "no stash created" >&2
+        sha=$(git rev-parse HEAD)
+    fi
 
+    echo $sha
+   )
+
+# there is a race w/ "git gc" which might drop the $sha commit.
 cd $TARGET; git reset --hard $sha
