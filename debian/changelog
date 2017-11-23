@@ -1,3 +1,15 @@
+mmc-shell (3.6) release; urgency=medium
+
+  * Bump debian compat to 9.
+  * Add cscope-indexer
+  * whitespace
+  * Drop obsolete git-add-remote-mdell, and update git-add-remote-sibling
+  * New: git-worktree-sync
+  * chmod
+  * rename to mmc-cscope-indexer
+
+ -- Michal Maruska <michal@ubuntu>  Thu, 23 Nov 2017 14:28:03 +0100
+
 mmc-shell (3.5) release; urgency=medium
 
   * fix the -c option recognition.
