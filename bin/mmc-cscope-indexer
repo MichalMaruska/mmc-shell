@@ -134,7 +134,12 @@ fi
             echo "$DIR/$f"
         done
     else
-        find $DIR \( -type f -o -type l \)
+        # fixme: we already did cd $DIR
+        # foreach exclude
+        # find .  \( -type d \( -path Build/Output -o -name .git \) -prune  \) -o    \( -type f -o -type l \) -print
+        find .  \( -type d \( -path ./Build/Output -o -path ./Components/NavKit/Build/Output -o -name .git \) -prune  \) \
+             -o \( -type f -o -type l \) -print
+        # find $DIR \( -type f -o -type l \)
     fi
 ) | \
     egrep -i '\.([chly](xx|pp)*|cc|hh)$' | \
