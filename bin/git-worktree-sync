@@ -52,4 +52,8 @@ sha=$(
    )
 
 # there is a race w/ "git gc" which might drop the $sha commit.
-cd $TARGET; git reset --hard $sha
+cd $TARGET;
+sha_from=$(git rev-parse HEAD)
+git reset --hard $sha
+
+git diff --name-status $sha_from
