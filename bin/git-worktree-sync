@@ -8,8 +8,9 @@
 usage()
 {
     cat <<EOF
-usage: ${0##*/} [+-h] [--] {source_worktree_dir} {target_worktree_dir}
+usage: ${0##*/} [+-h] [--] {source_worktree_dir} {target_worktree_dir} [ref]
 
+either [ref] is given   or  STASH & sync.
 EOF
 }
 
@@ -27,7 +28,7 @@ done
 shift OPTIND-1
 OPTIND=1
 
-if [ $# != 2 ]; then
+if [ $# -lt 2 ]; then
     usage >&2
     exit 1;
 fi
@@ -35,21 +36,25 @@ fi
 readonly SOURCE=$1
 readonly TARGET=$2
 
+if [ $# -gt 2 ]; then
+    sha=$(git rev-parse $3)
+else
+    #by default:
+    sha=$(
+        cd $SOURCE
+        # get the id:
+        # sha=$(git rev-parse HEAD)
+        sha=$(git stash create)
 
-sha=$(
-    cd $SOURCE
-    # get the id:
-    # sha=$(git rev-parse HEAD)
-    sha=$(git stash create)
+        if [ -z "$sha" ];
+        then
+            cecho yellow "no stash created" >&2
+            sha=$(git rev-parse HEAD)
+        fi
 
-    if [ -z "$sha" ];
-    then
-        cecho yellow "no stash created" >&2
-        sha=$(git rev-parse HEAD)
-    fi
-
-    echo $sha
-   )
+        echo $sha
+       )
+fi
 
 # there is a race w/ "git gc" which might drop the $sha commit.
 cd $TARGET;
