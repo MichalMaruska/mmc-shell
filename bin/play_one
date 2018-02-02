@@ -19,12 +19,17 @@ fi
 
 usage()
 {
-print "usage: ${0##*/} [+-va} [--] ARGS..."
+    print "usage: ${0##*/} [+-va} [--] ARGS..."
 }
 
 alsa=n
-while getopts :vahp OPT; do
+use_gst=no
+
+while getopts :vahpg OPT; do
     case $OPT in
+        g)
+            use_gst=yes
+            ;;
 	v|+v)
 	    set -x
 	    ;;
@@ -86,10 +91,10 @@ function play_one ()
 	*.flv | *.mp4 | *.m4a | *.wma | *.webm | *.ape )
 	    cecho green "$1"
 	    #
-	    if which mplayer > /dev/null ; then
+	    if which mplayer > /dev/null && [[ $use_gst == 'no' ]] ; then
 		play_mplayer $1
 	    else
-		gst123 --novideo --quiet "$1"
+		DISPLAY= gst123 --novideo --quiet "$1"
 	    fi
 	    ;;
 
