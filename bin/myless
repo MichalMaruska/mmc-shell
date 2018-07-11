@@ -7,6 +7,40 @@
 
 set -A ls /bin/ls ${=LS_OPTIONS}
 
+usage()
+{
+    cat <<EOF
+usage: ${0##*/} [+-d] [-h] [--] ARGS...
+
+-d debug
+-h help
+
+
+EOF
+}
+
+
+debug=n
+
+while getopts :dh OPT; do
+    case $OPT in
+        d|+d)
+            debug=y
+        ;;
+        h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage >&2
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+
+
 if [ $# -gt 0 ]
 then # We are given the filename
 
