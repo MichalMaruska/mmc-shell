@@ -4,7 +4,7 @@
 
 # My generic view program ()
 
-
+# alias?
 set -A ls /bin/ls ${=LS_OPTIONS}
 
 usage()
@@ -45,7 +45,7 @@ if [ $# -gt 0 ]
 then # We are given the filename
 
     filename=$1;
-    if [ -d "$filename" ]
+    if [[ -d "$filename" ]]
     then
         #cecho red directory
         $ls "$filename"
