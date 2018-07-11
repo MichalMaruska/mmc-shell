@@ -58,7 +58,13 @@ then # We are given the filename
             'htm'| 'html') ${HTML_BROWSER-elinks} "$filename";;
             'pod') my-perldoc "$filename";;
             'dvi') xd "$filename";;
-            *) less $*;;
+            *)
+                if [[ $debug = y ]]; then
+                    ~/.lessfilter -d "$filename"
+                else
+                    less "$*"
+                fi
+                ;;
         esac
     fi
 else
