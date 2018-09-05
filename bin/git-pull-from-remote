@@ -44,6 +44,12 @@ function get_remote_path()
 
 remote_path=$(get_remote_path)
 this_remote=$(hostname)
+
+# historical:
+if [ $this_remote = "optiplex-maruska" ]; then
+    this_remote="optiplex"
+fi
+
 fetch_also=y
 
 CMD="git fetch $this_remote"
