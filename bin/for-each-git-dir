@@ -45,42 +45,42 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
     FOR_EACH_DIR_CHILD=2
     AFTER=()
     cmd_options=$(getopt --name $0 --shell bash \
-	--longoptions pass,debug,help,wait --options pdhw \
-	-- "$@" ) || { usage && exit 1 }
+        --longoptions pass,debug,help,wait --options pdhw \
+        -- "$@" ) || { usage && exit 1 }
     eval set -- "$cmd_options"
 
     while (( $# > 0 )) do
-	case $1 in
-	    -p|--pass)
-		FOR_EACH_DIR_CHILD=1
-		;;
-	    -d|--debug)
-		args+=(-d)
-		;;
-	    --help|-h)
-		usage
-		exit 0
-		;;
-	    --wait| -w)
-		AFTER=(-exec sleep 3 \;)
-		;;
-	    --)
-		shift
-		break;
-	esac
-	shift
+        case $1 in
+            -p|--pass)
+                FOR_EACH_DIR_CHILD=1
+                ;;
+            -d|--debug)
+                args+=(-d)
+                ;;
+            --help|-h)
+                usage
+                exit 0
+                ;;
+            --wait| -w)
+                AFTER=(-exec sleep 3 \;)
+                ;;
+            --)
+                shift
+                break;
+        esac
+        shift
     done
 
 
     if [ $# = 0 ]; then
-	usage; exit 1
+        usage; exit 1
     fi
     # skip  .repo
     export FOR_EACH_BASE_DIR=$(pwd)
     find . -name .repo -prune \
-	 -o \
-	 -type d -name .git $print_args \
-	 -exec $0 \{\} $args "$@" \; $AFTER -prune
+         -o \
+         -type d -name .git $print_args \
+         -exec $0 \{\} $args "$@" \; $AFTER -prune
 # todo -execdir
 
 else
@@ -90,15 +90,14 @@ else
     cd $dir
 
     if [ $1 = "-d" ]; then
-	cecho cyan $dir
-	shift;
+        cecho cyan $dir
+        shift;
     fi
     # $(git describe) ;
     # set -x
     if [ $FOR_EACH_DIR_CHILD = 2 ]; then
-	eval $@[1] $@[2,-1]
+        eval $@[1] $@[2,-1]
     else
-	eval $@[1] $dir $@[2,-1]
+        eval $@[1] $dir $@[2,-1]
     fi
 fi
-
