@@ -1,11 +1,35 @@
 #! /bin/bash
 
+# this puts a program/macro into register `r' and the program invokes itself!
+# it invokes "program in r" when the stack is still more than 1
+
 # file=times.pure
 # with precision 9
 # register a ... count
 # register r ... macro
 #
 # $file
-dc -f - -e '9k  1sa  [+1  la+sa   z1<r]sr z1<r  la / p' 2>/dev/null
+exec dc --file=- --expression='9k  1sa  [+1  la+sa   z1<r]sr z1<r  la / p' 2>/dev/null
+
+#                             ^ store 1 into register 'a'
+#                                       ^ la -- push on stack the register 'a'
+#                                  [................] is stored as a macro in register `r'
+#                                                         <r invokes the macro if 2 values on top are  x < y ?
+
+# p print
+# +1
+
+# r  Reverses the order of (swaps) the top two values on the stack.
+
+# 256 memory registers.
+# sa  ... store top of the stack (POP) into a ... a number?
 
 
+# 3 parameters: the precision, the input radix, and the output radix
+# 9k  precision; i.e. 1/ put 9 on the stack, 2/ pop from stack & use as precision
+#
+
+
+# z ... Pushes the current stack depth: the number of objects on the stack
+
+# / divides the second one popped from the first one
