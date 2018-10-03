@@ -1,3 +1,20 @@
+mmc-shell (3.7) release; urgency=medium
+
+  * fix git-worktree-sync
+  * git-worktree-sync: provide some statistics -- files changed.
+  * git-worktree-sync: accept a 3rd argument -- commit id. Default to HEAD+stash
+  * Provide an option (-g) to prefer gst123 over mplayer
+  * myless: spaces
+  * myless: getopt. start "debug" option
+  * the debug functionality
+  * comments on shell
+  * use the historical name "optiplex"
+  * spaces
+  * play also mkv files.
+  * document average-value dc script.
+
+ -- Michal Maruska <michal@ubuntu>  Wed, 03 Oct 2018 12:54:52 +0200
+
 mmc-shell (3.6) release; urgency=medium
 
   * Bump debian compat to 9.
