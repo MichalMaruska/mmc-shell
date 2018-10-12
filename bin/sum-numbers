@@ -1,0 +1,5 @@
+#!/bin/sh
+
+exec /usr/bin/dc --file - --expression='9k  [+  z1<r]sr z1<r  p' 2>/dev/null
+
+# +  sums 2/ pops and result on top.
