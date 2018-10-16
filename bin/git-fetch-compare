@@ -31,39 +31,35 @@ push=no
 
 # how can I have optional argument to ... ?
 cmd_options=$(getopt --name ${0##*/} --shell bash \
-	--longoptions push,pushto:,remote,verbose --options r:pP:hv \
-	-- "$@" ) || { usage && exit 1 }
+        --longoptions push,pushto:,remote,verbose --options r:pP:hv \
+        -- "$@" ) || { usage && exit 1 }
 
 eval set -- "$cmd_options"
 
 while (( $# > 0 )); do
     case $1 in
-	-p | --push )
-	    push=yes
-	    ;;
-	-P | --pushto)
-	    shift
-	    push=$1
-	    ;;
-	-h | --help)
-	    usage
-	    exit 0
-	    ;;
-	--all | -a)
-	    remote="--all"
-	    ;;
-	-r | --remote)
-	    shift
-	    remote=$1
-	    ;;
-	--)
-	     shift
-	     break
-	     ;;
-	*)
-	    echo $1>&2
-	    usage
-	    exit 2
+        -p | --push )
+            push=yes
+            ;;
+        -P | --pushto)
+            shift
+            push=$1
+            ;;
+        -h | --help)
+            usage
+            exit 0
+            ;;
+        --all | -a)
+            remote="--all"
+            ;;
+        -r | --remote)
+            shift
+            remote=$1
+            ;;
+        --)
+             shift
+             break
+             ;;
         -v | --verbose)
             verbose=y
             ;;
@@ -96,7 +92,7 @@ then
     #remotes=($(git remote))
 else
     foreach remote ($remotes) {
-	git fetch ${remote} --quiet
+        git fetch ${remote} --quiet
     }
 fi
 
@@ -104,7 +100,7 @@ fi
     #echo $remotes vs $remote
     #echo ${remote:|remotes}
 # if [ -z "${remote:|remotes}" ]; then
-	    # set -x
+            # set -x
 
 foreach remote ($remotes) {
     git-compare-remotes master $remote
@@ -122,4 +118,3 @@ foreach remote ($remotes) {
 #     cecho yellow  "git push master"
 # #    echo git push $remote master
 # fi
-
