@@ -105,6 +105,10 @@ for ((i=1; i<= ${#bind_mounts}; i++))
 
 echo $bind_mounts
 
+if [[ $# = 0 ]]; then
+    arguments+=( /bin/zsh )
+fi
+
 exec sudo systemd-nspawn \
      --directory $CONTAINER_DIR \
      $bind_mounts \
