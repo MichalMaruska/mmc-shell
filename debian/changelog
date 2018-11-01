@@ -1,3 +1,14 @@
+mmc-shell (3.8) release; urgency=medium
+
+  * new: git-reset-conflict
+  * sum-numbers: new dc script
+  * Change-Id: Ice6af0fe53e980a3e1a47f44dc818e3a6371e556
+  * untab
+  * enter-container: new command to enter systemd-nspawn based containers.
+  * enter-container: by default launch zsh.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 01 Nov 2018 21:58:56 +0100
+
 mmc-shell (3.7) release; urgency=medium
 
   * fix git-worktree-sync
