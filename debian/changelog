@@ -1,3 +1,9 @@
+mmc-shell (3.91) release; urgency=medium
+
+  * rename to avoid confict with arch-test.deb
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 02 Nov 2018 12:00:15 +0100
+
 mmc-shell (3.8) release; urgency=medium
 
   * new: git-reset-conflict
