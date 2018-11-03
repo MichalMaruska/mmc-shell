@@ -9,8 +9,6 @@ CONTAINER_DIR=
 distro=sid
 arch=i386
 
-
-set -x
 as_root=n
 arguments=()
 # todo:  --root
