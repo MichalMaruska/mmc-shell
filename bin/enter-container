@@ -13,11 +13,17 @@ as_root=n
 arguments=()
 # todo:  --root
 
+
 bind_mounts=(
-    /home/michal/git/
-    /home/michal/repo/
-    # /run/tmp/libx11-1.6.7-1
+)
+
+readonly build_bind_mounts=(
+    # ash gpg
     /home/michal/.gnupg
+    )
+readonly user_bind_mounts=(
+    $HOME
+    /dev/
 )
 
 if getopt -T; then # should test (( $? = -4 ))
@@ -38,7 +44,8 @@ EOF
 }
 
 cmd_options=$(getopt --name $0 --shell bash \
-                     --longoptions private-network,machine:,arch:,distro:,bind:,chdir:,root,usage,help  --options :nrb:c:m:a:d: \
+                     --longoptions private-network,machine:,arch:,distro:,bind:,chdir:,root,usage,help,interactive \
+                     --options :nrb:c:m:a:d:i \
                      -- "$@" ) || { usage; exit 1 }
 eval set -- "$cmd_options"
 
@@ -50,6 +57,9 @@ while (( $# > 0 )) do
           -d | --distro)
               shift
               arch=$1
+              ;;
+          -i | --interactive)
+              bind_mounts+=($user_bind_mounts)
               ;;
           -a | --arch)
               shift
