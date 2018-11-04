@@ -8,7 +8,7 @@
 CONTAINER_DIR=
 distro=sid
 arch=i386
-
+VERBOSE=n
 as_root=n
 arguments=()
 # todo:  --root
@@ -44,8 +44,8 @@ EOF
 }
 
 cmd_options=$(getopt --name $0 --shell bash \
-                     --longoptions private-network,machine:,arch:,distro:,bind:,chdir:,root,usage,help,interactive \
-                     --options :nrb:c:m:a:d:i \
+                     --longoptions private-network,machine:,arch:,distro:,bind:,chdir:,root,usage,help,interactive,verbose \
+                     --options :nrb:c:m:a:d:iv \
                      -- "$@" ) || { usage; exit 1 }
 eval set -- "$cmd_options"
 
@@ -60,6 +60,9 @@ while (( $# > 0 )) do
               ;;
           -i | --interactive)
               bind_mounts+=($user_bind_mounts)
+              ;;
+          -v | --verbose)
+              VERBOSE=y
               ;;
           -a | --arch)
               shift
@@ -117,6 +120,7 @@ if [[ $# = 0 ]]; then
     arguments+=(/usr/bin/setsid -c -w /bin/zsh -l)
 fi
 
+if [ $VERBOSE = y ]; then  set -x;fi
 exec sudo systemd-nspawn \
      --directory $CONTAINER_DIR \
      $bind_mounts \
