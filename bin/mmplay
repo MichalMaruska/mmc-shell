@@ -27,9 +27,9 @@ color_echo ()
 {
     if which color >/dev/null
     then
-	echo `color green`  `color bd` "$1" `color off`
+        echo `color green`  `color bd` "$1" `color off`
     else
-	echo "$1"
+        echo "$1"
     fi
 }
 
@@ -85,17 +85,16 @@ do
     IFS="${old_ifs}"
     if [ $START -gt 1 ];
     then
-	START=`expr $START - 1`
-	    # echo $START
-	else
-	    if [ -d "$song" ];
-	    then
-		(cd "$song"
-		$SELF_CMD
-		)
-	    else
-	       play_one  "$song"
-	    fi
+        START=`expr $START - 1`
+            # echo $START
+        else
+            if [ -d "$song" ];
+            then
+                (cd "$song"
+                $SELF_CMD
+                )
+            else
+               play_one  "$song"
+            fi
     fi
 done
-
