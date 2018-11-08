@@ -11,6 +11,8 @@ arch=i386
 VERBOSE=n
 as_root=n
 arguments=(--private-users=no)
+machine=n
+start=n
 # todo:  --root
 
 
@@ -44,49 +46,56 @@ EOF
 }
 
 cmd_options=$(getopt --name $0 --shell bash \
-                     --longoptions private-network,machine:,arch:,distro:,bind:,chdir:,root,usage,help,interactive,verbose \
-                     --options :nrb:c:m:a:d:iv \
+                     --longoptions \
+                     arch:,bind:,chdir:,distro:,help,interactive,machine,private-network,root,start,usage,verbose \
+                     --options :a:b:c:d:himrsv \
                      -- "$@" ) || { usage; exit 1 }
 eval set -- "$cmd_options"
 
 while (( $# > 0 )) do
       case $1 in
-          n| private-network)
-              arguments+=(--private-network)
-              ;;
-          -d | --distro)
-              shift
-              arch=$1
-              ;;
-          -i | --interactive)
-              bind_mounts+=($user_bind_mounts)
-              ;;
-          -v | --verbose)
-              VERBOSE=y
-              ;;
           -a | --arch)
               shift
               arch=$1
-              ;;
-          m | --machine)
-              shift
-              CONTAINER_DIR="$1"
               ;;
           -b | --bind )
               shift
               bind_mounts+=("$1")
               ;;
-          -r | --root )
-              # as root!
-              as_root=y
-              ;;
           -c | --chdir )
               shift
               arguments+=(--chdir "$1")
               ;;
+          -d | --distro)
+              shift
+              arch=$1
+              ;;
+
           h | usage | help)
               usage
               exit 0
+              ;;
+
+          -i | --interactive)
+              bind_mounts+=($user_bind_mounts)
+              ;;
+          -m | --machine)
+              machine=y
+              arguments=(--boot)
+              bind_mounts+=(/run/tmp/ /run/user/1000) # /run/user/1000 /dev/ /home/
+              ;;
+          -p| private-network)
+              arguments+=(--private-network)
+              ;;
+          -r | --root )
+              # as root!
+              as_root=y
+              ;;
+          -s | --start)
+              start=y
+              ;;
+          -v | --verbose)
+              VERBOSE=y
               ;;
           -- )
               shift
