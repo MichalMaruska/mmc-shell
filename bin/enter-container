@@ -10,7 +10,7 @@ distro=sid
 arch=i386
 VERBOSE=n
 as_root=n
-arguments=()
+arguments=(--private-users=no)
 # todo:  --root
 
 
