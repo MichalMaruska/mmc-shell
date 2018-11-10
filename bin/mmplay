@@ -64,7 +64,7 @@ if [ -f order ];
 then
     songs=$(cat order)
 else
-    songs=`ls |sort -n`
+    songs=`ls -v`
 #|sed -e "s/~/\\~/g;s/$/~/"`
 fi
 
