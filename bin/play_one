@@ -122,8 +122,40 @@ function play_one ()
     esac
 }
 
+play_dir()
+{
+    # local
+    readonly songs=( $(ls -v ))
+    local song
+
+    for song in $songs;
+    do
+        unsetopt SH_WORD_SPLIT
+        # We must return to use commonly accepted syntax:
+        IFS="${old_ifs}"
+        if [[ $START -gt 1 ]];
+        then
+            ((START=START - 1))
+            # echo $START
+        else
+            if [[ -d "$song" ]]
+               # directory
+            then
+                (cd "$song"
+                 play_dir
+                )
+            else
+                play_one "$song"
+            fi
+        fi
+    done
+}
 
 
-for file in "$@"; do
-    play_one $file
-done
+if [[ $# -gt 0 ]]; then
+    for file in "$@"; do
+        play_one $file
+    done
+else
+    play_dir
+fi
