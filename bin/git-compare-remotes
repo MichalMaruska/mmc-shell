@@ -121,7 +121,7 @@ case $cmp in
         fi
         ;;
     4)
-        echo "error in comparing $branch & FETCHMAIL"
+        echo "error in comparing $branch & FETCH_HEAD"
         ;;
     3)
         cecho red "diverged"
