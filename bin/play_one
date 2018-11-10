@@ -6,17 +6,6 @@ function play_mplayer()
 }
 
 
-#
-if pulseaudio --check; then
-    # this suddenly requires staying in fg! and "space" to pause.
-    MPG123=(mpg123-pulse --no-control --gapless ${playdsp+-a $playdsp} --aggressive -q)
-elif which mpg321 > /dev/null; then
-    # -b 10000
-    MPG123=(mpg321 --aggressive -q)
-fi
-
-
-
 usage()
 {
     print "usage: ${0##*/} [+-va} [--] ARGS..."
@@ -24,11 +13,13 @@ usage()
 
 alsa=n
 use_gst=no
+pulse=n
 
 while getopts :vahpg OPT; do
     case $OPT in
         g)
             use_gst=yes
+            MPG123=(gst123 --novideo --quiet)
             ;;
         v|+v)
             set -x
@@ -53,6 +44,18 @@ done
 shift OPTIND-1
 OPTIND=1
 
+
+# decide:
+if [[ "$pulse$alsa" = "nn" ]]; then
+   # try more:
+   if pulseaudio --check; then
+       # this suddenly requires staying in fg! and "space" to pause.
+       MPG123=(mpg123-pulse --no-control --gapless ${playdsp+-a $playdsp} --aggressive -q)
+   elif which mpg321 > /dev/null; then
+       # -b 10000
+       MPG123=(mpg321 --aggressive -q)
+   fi
+fi
 
 function play_one ()
 {

@@ -50,6 +50,7 @@ cmd_options=$(getopt --name $0 --shell bash \
                      arch:,bind:,chdir:,distro:,help,interactive,machine,private-network,root,start,usage,verbose \
                      --options :a:b:c:d:himrsv \
                      -- "$@" ) || { usage; exit 1 }
+# name: n:
 eval set -- "$cmd_options"
 
 while (( $# > 0 )) do
@@ -109,31 +110,130 @@ while (( $# > 0 )) do
       shift
 done
 
-# hostname is derived from this
-arguments+=(--machine="$distro-$arch")
+      # hostname is derived from this
+machine=$distro-$arch
+arguments+=(--machine="$machine")
 
 
 if [ -z $CONTAINER_DIR ]; then
     CONTAINER_DIR=/var/lib/machines/$distro-$arch
 fi
 
-if [ $as_root = n ]
+if [[ $as_root = n && $machine = n ]]
 then
     arguments+=(--user michal)
 fi
 
+rewrite_array()
+{
+    local i
+    local prefix="--bind="
+    local suffix=""
+    for ((i=1; i<= ${#bind_mounts}; i++))
+        {
+            bind_mounts[$i]="$prefix$bind_mounts[$i]$suffix"
+        }
+    echo $bind_mounts
+}
 
-for ((i=1; i<= ${#bind_mounts}; i++))
-    {bind_mounts[$i]="--bind=$bind_mounts[$i]" }
+rewrite_array bind_mounts "--bind=" ""
 
-echo $bind_mounts
-
-if [[ $# = 0 ]]; then
+if [[ $# = 0 && $machine = n ]]; then
     arguments+=(/usr/bin/setsid -c -w /bin/zsh -l)
 fi
 
+# --setenv --register=no
 if [ $VERBOSE = y ]; then  set -x;fi
+
+# sudo systemd-nspawn --bind=/dev/  --directory /var/lib/machines/sid-x32 '--bind=/home/michal' --capability=all  --boot --private-users=no
+
+if [[ $start = y ]]; then
 exec sudo systemd-nspawn \
      --directory $CONTAINER_DIR \
+     --capability=all \
      $bind_mounts \
      $arguments $@
+else
+    # join an existing:
+    # machinectl shell ?
+    #
+    exec sudo systemd-run --pty --machine=$machine $@
+fi
+
+
+# ways to enter the container:
+
+#
+# machinectl shell   ... works, but no exit-code.
+#            login  ...  have to type
+#
+# system-run  ... want to try it!
+# systemd-nspawn --boot   ... cannot bind anymore?
+#                 /bin/shell  ....
+#
+
+
+
+# If I want to use alsamixer, i.e. the sound card directly (ALSA) I need to grant access to device:
+# echo 'c 116:* rwm' >> /sys/fs/cgroup/devices/machine.slice/machine-sid\\x2dx32.scope/devices.allow
+
+# But I am ok with using host pulseaudio. So I share the (named) pipe, via bind-mount. /run/user/1000/
+
+# $ sudo machinectl bind sid-x32  /run/user/1000
+# mmc: sudo machinectl bind sid-x32  /run/user/1000
+
+
+# to boot I cannot --bind-mount. But I can do that later:
+
+# sudo machinectl bind sid-x32    /dev
+# sudo machinectl bind sid-x32    /dev/pts/
+# sudo machinectl bind sid-x32    /home/
+# and /run/user ?
+
+# machinectl login sid-x32
+# sudo machinectl login sid-x32
+# sudo systemd-nspawn --directory /var/lib/machines/sid-x32 '--bind=/home/michal'  --boot
+# sudo systemd-nspawn --bind=/dev/  --directory /var/lib/machines/sid-x32 '--bind=/home/michal' --capability=all  --boot --private-users=no
+
+
+# TODO:
+
+# I can play audio! -- but gthumb & gst123 fail w/ malloc.
+# emails -- firefox.
+# make !
+# emacs
+
+
+# I used local users! root!
+# sudo find /var/lib/machines/sid-x32/ -group 9043968 -print -exec chgrp -h root {} \;
+# sudo find  /var/lib/machines/sid-x32/ -group 9044018 -print  -exec chgrp staff {} \;
+# sudo find /var/lib/machines/sid-x32/ -user 9043968 -print -exec chown -h root {} \;
+
+# sudo find /var/lib/machines/sid-x32/var   -group 9043980 -print  -exec chgrp -h man {} \;
+
+# problem:
+
+# sudo machinectl bind sid-x32  /run/tmp/
+# Failed to bind mount: Container does not allow propagation of mount points.
+
+
+# zsh
+cat <<EOF
+foreach dir (/home/ /dev/ /dev/pts/) {  sudo machinectl bind sid-x32  $dir  }
+
+setterm: terminal vt220 does not support --repeat
+setterm: terminal vt220 does not support --store
+setterm: terminal vt220 does not support --blank
+setterm: cannot (un)set powersave mode: Inappropriate ioctl for device
+zsh compinit: insecure directories, run compaudit for list.
+Ignore insecure directories and continue [y] or abort compinit [n]? 
+
+--notify-ready
+--personality=
+mmc:
+sudo machinectl shell michal@sid-x32
+EOF
+
+# for git-core
+installed: libexpat1-dev subversion
+libruby2.5:x32  depends on libgdbm5
