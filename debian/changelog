@@ -1,3 +1,23 @@
+mmc-shell (3.9) release; urgency=medium
+
+  * stop verbosity
+  * Use setsid to capture the tty for zsh.
+  * Interactive mode ...
+  * Verbose if requested
+  * untab
+  * never use private users (for now)
+  * reorder options + start option. --Machine has a different meaning.
+  * Set the machine name.
+  * test for pulseaudio only if the user has no preference
+  * Wrap mmplay into play_one
+  * Use builtin human sort of ls(1)
+  * format
+  * fix comments
+  * rsync-from-me: change the tracing/info format
+  * fix bind-mounts for --machine option
+
+ -- Michal Maruska <mmaruska@gmail.com>  Sat, 10 Nov 2018 20:10:56 +0100
+
 mmc-shell (3.91) release; urgency=medium
 
   * rename to avoid confict with arch-test.deb
