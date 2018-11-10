@@ -82,8 +82,10 @@ while (( $# > 0 )) do
               ;;
           -m | --machine)
               machine=y
+              start=y
               arguments=(--boot)
-              bind_mounts+=(/run/tmp/ /run/user/1000) # /run/user/1000 /dev/ /home/
+              # /dev/ ->no
+              bind_mounts+=(/run/tmp/ /run/user/1000 /home/)
               ;;
           -p| private-network)
               arguments+=(--private-network)
@@ -110,10 +112,12 @@ while (( $# > 0 )) do
       shift
 done
 
-      # hostname is derived from this
-machine=$distro-$arch
-arguments+=(--machine="$machine")
 
+# hostname is derived from this
+machine=$distro-$arch
+
+# this is needed for ... start only?
+arguments+=(--machine="$machine")
 
 if [ -z $CONTAINER_DIR ]; then
     CONTAINER_DIR=/var/lib/machines/$distro-$arch
