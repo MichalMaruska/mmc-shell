@@ -109,6 +109,9 @@ while (( $# > 0 )) do
       shift
 done
 
+# hostname is derived from this
+arguments+=(--machine="$distro-$arch")
+
 
 if [ -z $CONTAINER_DIR ]; then
     CONTAINER_DIR=/var/lib/machines/$distro-$arch
