@@ -116,7 +116,8 @@ fi
 ECHO_RSYNC_COMMAND=n
 
 LOG_OPTIONS=()
-LOG_OPTIONS_VERBOSE=(--itemize-changes --human-readable)
+LOG_OPTIONS_VERBOSE=(--itemize-changes --info=NAME,stats2 --human-readable)
+
 TRANSFER_OPTIONS=(--partial)
 # too slow: --bwlimit=100
 
