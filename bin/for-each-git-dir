@@ -16,7 +16,7 @@ export FOR_EACH_DIR_CHILD
 
 usage()
 {
-setopt POSIX_ARGZERO
+    setopt POSIX_ARGZERO
     cat <<EOF
 Usage $0 [-s] [-d] cmd ....
 
@@ -27,7 +27,7 @@ Usage $0 [-s] [-d] cmd ....
 EOF
 
 # fixme:
-unsetopt POSIX_ARGZERO
+    unsetopt POSIX_ARGZERO
 }
 
 
