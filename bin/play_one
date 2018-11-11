@@ -1,4 +1,4 @@
-#! /bin/zsh -f
+#! /bin/zsh -feu
 
 function play_mplayer()
 {
@@ -14,6 +14,8 @@ usage()
 alsa=n
 use_gst=no
 pulse=n
+
+START=0
 
 while getopts :vahpg OPT; do
     case $OPT in
@@ -57,7 +59,7 @@ if [[ "$pulse$alsa" = "nn" ]]; then
    fi
 fi
 
-function play_one ()
+function play_file ()
 {
     # cecho  red "play $1:"
     case $(realpath $1) in
@@ -122,33 +124,43 @@ function play_one ()
     esac
 }
 
+
+play_one()
+{
+    local song=$1
+
+    if [[ -d "$song" ]]
+       # directory
+    then
+        (cd "$song"
+         play_dir
+        )
+    else
+        play_file "$song"
+    fi
+}
+
 play_dir()
 {
     # local
-    readonly songs=( $(ls -v ))
-    local song
+    readonly songs=(* ) #  $(ls -vb )
 
-    for song in $songs;
-    do
-        unsetopt SH_WORD_SPLIT
+    local song
+    foreach song ( $songs )
+    {
+        # unsetopt SH_WORD_SPLIT
+
         # We must return to use commonly accepted syntax:
-        IFS="${old_ifs}"
+        # IFS="${old_ifs}"
+
         if [[ $START -gt 1 ]];
         then
             ((START=START - 1))
             # echo $START
         else
-            if [[ -d "$song" ]]
-               # directory
-            then
-                (cd "$song"
-                 play_dir
-                )
-            else
-                play_one "$song"
-            fi
+            play_one $song
         fi
-    done
+    }
 }
 
 
