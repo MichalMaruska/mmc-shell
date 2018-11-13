@@ -42,7 +42,9 @@ typeset -a bind_mounts=(
 # full machine:
 readonly special_id=$(id -u michal)
 # my Source repositories to be able to build.
-readonly new_machine_mounts=(/run/tmp/ /home/ /run/user/$special_id)
+readonly new_machine_mounts=(/run/tmp/ /home/)
+# sorry this break dbus on the host!  /run/user/$special_id
+# you can only bind  /run/user/$special_id/pulse maybe.
 
 # the `standalone' scenario
 readonly user_bind_mounts=(
@@ -278,5 +280,14 @@ sudo machinectl shell michal@sid-x32
 for git-core
  installed: libexpat1-dev subversion
  libruby2.5:x32  depends on libgdbm5
+
+pulseaudio:
+--kill
+--start
+
+4 modes:
+$ enter-container -a x32 =ls
+$ enter-container -a x32 --interactive
+  .. .this damages dbus!
 
 EOF
