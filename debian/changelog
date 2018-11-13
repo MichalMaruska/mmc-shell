@@ -1,3 +1,10 @@
+mmc-shell (3.10) release; urgency=medium
+
+  * fix play_one
+  * formulate 4 modes of operation.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Tue, 13 Nov 2018 08:01:32 +0100
+
 mmc-shell (3.9) release; urgency=medium
 
   * stop verbosity
