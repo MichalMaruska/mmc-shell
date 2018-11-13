@@ -1,42 +1,65 @@
 #!/bin/zsh -feu
 
-# Enter a container with 32-bit environment.
-# - bind-mount my Source repositories to be able to build.
-# -
-
-# typeset
-CONTAINER_DIR=
-distro=sid
-arch=i386
-VERBOSE=n
-as_root=n
-arguments=(--private-users=no)
-machine=n
-start=n
-# todo:  --root
-
-
-bind_mounts=(
-)
-
-readonly build_bind_mounts=(
-    # ash gpg
-    /home/michal/.gnupg
-    )
-readonly user_bind_mounts=(
-    $HOME
-    /dev/
-)
-
 if getopt -T; then # should test (( $? = -4 ))
     echo "incompatible  getopt(1) installed. Abort"
     exit -1
 fi
 
+
+# Enter a container with 32-bit environment.
+
+# 4 scenarios to invoke this:
+# --machine .... start a systemd as init
+# --start .... bind & mount & invoke SHELL as init.
+
+# cmd                 .... run the cmd inside a running
+# --interactive .. will bind-mount standard user's dirs.
+
+#               full         user shell
+# start       --machine       --start
+# join-shell    cmd
+# join        --interactive
+
+
+
+# defaults:
+CONTAINER_DIR=
+distro=sid
+arch=i386
+
+VERBOSE=n
+as_root=n
+machine=n
+start=n
+interactive=n
+# todo:  --root
+
+arguments=(--private-users=no)
+
+typeset -a bind_mounts=(
+)
+
+# full machine:
+readonly special_id=$(id -u michal)
+# my Source repositories to be able to build.
+readonly new_machine_mounts=(/run/tmp/ /home/ /run/user/$special_id)
+
+# the `standalone' scenario
+readonly user_bind_mounts=(
+    $HOME
+    /dev/
+)
+
+
 usage()
 {
 cat <<EOF
 usage: ${0##*/} [+-n] [-c dir] [-b dir] [--] ARGS...
+
+# commands:
+--start
+--interactive
+
 
 -n  ... setup private network (no networking at start?)
 -b  .. add directory as --bind mount.
@@ -72,22 +95,29 @@ while (( $# > 0 )) do
               arch=$1
               ;;
 
-          h | usage | help)
+          h | --usage | --help)
               usage
               exit 0
               ;;
 
           -i | --interactive)
+              interactive=y
               bind_mounts+=($user_bind_mounts)
               ;;
+
+          # -n | --name)
+          #     shift
+          #     CONTAINER_DIR="$1"
+          #     ;;
+
           -m | --machine)
               machine=y
               start=y
               arguments=(--boot)
               # /dev/ ->no
-              bind_mounts+=(/run/tmp/ /run/user/1000 /home/)
+              bind_mounts+=$new_machine_mounts
               ;;
-          -p| private-network)
+          -p| --private-network)
               arguments+=(--private-network)
               ;;
           -r | --root )
@@ -114,10 +144,10 @@ done
 
 
 # hostname is derived from this
-machine=$distro-$arch
+readonly machine_name=$distro-$arch
 
 # this is needed for ... start only?
-arguments+=(--machine="$machine")
+arguments+=(--machine="$machine_name")
 
 if [ -z $CONTAINER_DIR ]; then
     CONTAINER_DIR=/var/lib/machines/$distro-$arch
@@ -142,26 +172,32 @@ rewrite_array()
 
 rewrite_array bind_mounts "--bind=" ""
 
+# for interactive use?
 if [[ $# = 0 && $machine = n ]]; then
+    # this was useful when: systemd-nspawn ...i.e. 1-access only.
     arguments+=(/usr/bin/setsid -c -w /bin/zsh -l)
 fi
 
 # --setenv --register=no
-if [ $VERBOSE = y ]; then  set -x;fi
+if [ $VERBOSE = y ]; then set -x;fi
 
 # sudo systemd-nspawn --bind=/dev/  --directory /var/lib/machines/sid-x32 '--bind=/home/michal' --capability=all  --boot --private-users=no
 
 if [[ $start = y ]]; then
-exec sudo systemd-nspawn \
-     --directory $CONTAINER_DIR \
-     --capability=all \
-     $bind_mounts \
-     $arguments $@
+    exec sudo systemd-nspawn \
+         --directory $CONTAINER_DIR \
+         --capability=all \
+         $bind_mounts \
+         $arguments $@
 else
-    # join an existing:
-    # machinectl shell ?
-    #
-    exec sudo systemd-run --pty --machine=$machine $@
+    # `join' an existing:
+    if [[ $interactive = y ]]; then
+        # machinectl shell ?
+        # --setenv "inside_container"
+        sudo machinectl shell --uid=$(id --user) $machine_name
+    else
+        exec sudo systemd-run --pty --machine=$machine_name $@
+    fi
 fi
 
 
@@ -236,8 +272,11 @@ Ignore insecure directories and continue [y] or abort compinit [n]?
 --personality=
 mmc:
 sudo machinectl shell michal@sid-x32
-EOF
 
-# for git-core
-installed: libexpat1-dev subversion
-libruby2.5:x32  depends on libgdbm5
+
+
+for git-core
+ installed: libexpat1-dev subversion
+ libruby2.5:x32  depends on libgdbm5
+
+EOF
