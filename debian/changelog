@@ -1,3 +1,9 @@
+mmc-shell (3.10.1) release; urgency=medium
+
+  * Document the dbus issue
+
+ -- Michal Maruska <mmaruska@gmail.com>  Tue, 13 Nov 2018 11:09:24 +0100
+
 mmc-shell (3.10) release; urgency=medium
 
   * fix play_one
