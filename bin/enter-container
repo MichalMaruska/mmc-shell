@@ -5,6 +5,7 @@ if getopt -T; then # should test (( $? = -4 ))
     exit -1
 fi
 
+trap 'print ${PROGRAM-$0} ERROR: $LINENO:  $ZSH_EVAL_CONTEXT $0 >&2' ZERR
 
 # Enter a container with 32-bit environment.
 
@@ -42,7 +43,7 @@ typeset -a bind_mounts=(
 # full machine:
 readonly special_id=$(id -u michal)
 # my Source repositories to be able to build.
-readonly new_machine_mounts=(/run/tmp/ /home/)
+typeset -r new_machine_mounts=(/run/tmp/ /home/)
 # sorry this break dbus on the host!  /run/user/$special_id
 # you can only bind  /run/user/$special_id/pulse maybe.
 
@@ -104,7 +105,6 @@ while (( $# > 0 )) do
 
           -i | --interactive)
               interactive=y
-              bind_mounts+=($user_bind_mounts)
               ;;
 
           # -n | --name)
@@ -117,7 +117,7 @@ while (( $# > 0 )) do
               start=y
               arguments=(--boot)
               # /dev/ ->no
-              bind_mounts+=$new_machine_mounts
+              bind_mounts+=($new_machine_mounts)
               ;;
           -p| --private-network)
               arguments+=(--private-network)
@@ -162,14 +162,16 @@ fi
 
 rewrite_array()
 {
+    # array=$1
+    local prefix=$2
+    local suffix=$3
+
     local i
-    local prefix="--bind="
-    local suffix=""
     for ((i=1; i<= ${#bind_mounts}; i++))
         {
             bind_mounts[$i]="$prefix$bind_mounts[$i]$suffix"
         }
-    echo $bind_mounts
+    # echo $bind_mounts
 }
 
 rewrite_array bind_mounts "--bind=" ""
@@ -186,12 +188,21 @@ if [ $VERBOSE = y ]; then set -x;fi
 # sudo systemd-nspawn --bind=/dev/  --directory /var/lib/machines/sid-x32 '--bind=/home/michal' --capability=all  --boot --private-users=no
 
 if [[ $start = y ]]; then
+    if [ $interactive = y ]; then
+       # this would be used if we --start:
+       bind_mounts+=($user_bind_mounts)
+    fi
+
     exec sudo systemd-nspawn \
          --directory $CONTAINER_DIR \
          --capability=all \
          $bind_mounts \
          $arguments $@
 else
+    if [[ -t 1 && -z "$@" ]]; then
+        interactive=y
+    fi
+
     # `join' an existing:
     if [[ $interactive = y ]]; then
         # machinectl shell ?
