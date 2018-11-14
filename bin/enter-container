@@ -33,6 +33,7 @@ as_root=n
 machine=n
 start=n
 interactive=n
+workdir=""
 # todo:  --root
 
 arguments=(--private-users=no)
@@ -91,6 +92,7 @@ while (( $# > 0 )) do
               ;;
           -c | --chdir )
               shift
+              workdir="$1"
               arguments+=(--chdir "$1")
               ;;
           -d | --distro)
@@ -203,13 +205,30 @@ else
         interactive=y
     fi
 
+
+    args=()
+    if [[ $as_root = n ]]; then
+        args+=( --uid=$(id --user) )
+    fi
+
+
     # `join' an existing:
     if [[ $interactive = y ]]; then
         # machinectl shell ?
         # --setenv "inside_container"
-        sudo machinectl shell --uid=$(id --user) $machine_name
+        # note: here we ignore the $* !!
+        if [[ $# -gt 0 ]]; then
+            echo "ignoring remaining arguments, starting shell";
+        fi
+        sudo machinectl shell $args $machine_name
+
     else
-        exec sudo systemd-run --pty --machine=$machine_name $@
+        if [[ -n "$workdir" ]]; then
+            cmd=(/bin/bash -c "cd $workdir; $@")
+        else
+            cmd=$@
+        fi
+        exec sudo systemd-run --pty $args --machine=$machine_name $cmd
     fi
 fi
 
