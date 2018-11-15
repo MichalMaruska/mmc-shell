@@ -224,11 +224,14 @@ else
 
     else
         if [[ -n "$workdir" ]]; then
-            cmd=(/bin/bash -c "cd $workdir; $@")
+            # bug:
+            args+=(--)
+            # I need the $@ to be inside the d-quotes!
+            cmd="/bin/bash -c \"cd $workdir; $@\""
         else
             cmd=$@
         fi
-        exec sudo systemd-run --pty $args --machine=$machine_name $cmd
+        exec sudo systemd-run --pty --machine=$machine_name --setenv "MAKEFLAGS=$MAKEFLAGS" --setenv "GITSHA=$GITSHA" $args $cmd
     fi
 fi
 
