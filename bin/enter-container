@@ -36,7 +36,7 @@ interactive=n
 workdir=""
 # todo:  --root
 
-arguments=(--private-users=no)
+arguments=()
 
 typeset -a bind_mounts=(
 )
@@ -150,17 +150,10 @@ done
 # hostname is derived from this
 readonly machine_name=$distro-$arch
 
-# this is needed for ... start only?
-arguments+=(--machine="$machine_name")
-
 if [ -z $CONTAINER_DIR ]; then
     CONTAINER_DIR=/var/lib/machines/$distro-$arch
 fi
 
-if [[ $as_root = n && $machine = n ]]
-then
-    arguments+=(--user michal)
-fi
 
 rewrite_array()
 {
@@ -176,10 +169,8 @@ rewrite_array()
     # echo $bind_mounts
 }
 
-rewrite_array bind_mounts "--bind=" ""
-
 # for interactive use?
-if [[ $# = 0 && $machine = n ]]; then
+if [[ $start = y && $machine = n ]]; then
     # this was useful when: systemd-nspawn ...i.e. 1-access only.
     arguments+=(/usr/bin/setsid -c -w /bin/zsh -l)
 fi
@@ -195,6 +186,19 @@ if [[ $start = y ]]; then
        bind_mounts+=($user_bind_mounts)
     fi
 
+    rewrite_array bind_mounts "--bind=" ""
+
+    # this is needed for ... start only?
+    arguments+=(--machine="$machine_name")
+    arguments+=(--read-only --mkdir bind /run/user/1000/ /run/user-ro/1000/)
+    arguments+=(--private-users=no)
+
+    if [[ $machine = n && $as_root = n ]]
+    then
+        arguments+=(--user michal)
+    fi
+
+
     exec sudo systemd-nspawn \
          --directory $CONTAINER_DIR \
          --capability=all \
@@ -205,12 +209,18 @@ else
         interactive=y
     fi
 
+    # mmc: let's try:
+    args=($arguments)
 
-    args=()
     if [[ $as_root = n ]]; then
-        args+=( --uid=$(id --user) )
+         args+=( --uid=$(id --user) )
     fi
 
+    if [[ -n ${GITSHA-} ]]; then
+        args+=(--setenv "GITSHA=$GITSHA")
+    fi
+
+    args+=(--setenv "MAKEFLAGS=$MAKEFLAGS" --setenv PULSE_SERVER=/run/user-ro/1000/pulse/native)
 
     # `join' an existing:
     if [[ $interactive = y ]]; then
@@ -220,7 +230,7 @@ else
         if [[ $# -gt 0 ]]; then
             echo "ignoring remaining arguments, starting shell";
         fi
-        sudo machinectl shell $args $machine_name
+        sudo machinectl $args shell $machine_name
 
     else
         if [[ -n "$workdir" ]]; then
@@ -231,7 +241,9 @@ else
         else
             cmd=$@
         fi
-        exec sudo systemd-run --pty --machine=$machine_name --setenv "MAKEFLAGS=$MAKEFLAGS" --setenv "GITSHA=$GITSHA" $args $cmd
+
+        exec sudo systemd-run --pty --machine=$machine_name \
+             $args $cmd
     fi
 fi
 
