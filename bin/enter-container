@@ -180,6 +180,9 @@ if [ $VERBOSE = y ]; then set -x;fi
 
 # sudo systemd-nspawn --bind=/dev/  --directory /var/lib/machines/sid-x32 '--bind=/home/michal' --capability=all  --boot --private-users=no
 
+
+readonly FAKE_USER_DIR=/run/user-ro/
+
 if [[ $start = y ]]; then
     if [ $interactive = y ]; then
        # this would be used if we --start:
@@ -190,7 +193,7 @@ if [[ $start = y ]]; then
 
     # this is needed for ... start only?
     arguments+=(--machine="$machine_name")
-    arguments+=(--read-only --mkdir bind /run/user/1000/ /run/user-ro/1000/)
+    arguments+=(--bind-ro /run/user:$FAKE_USER_DIR)
     arguments+=(--private-users=no)
 
     if [[ $machine = n && $as_root = n ]]
@@ -220,7 +223,7 @@ else
         args+=(--setenv "GITSHA=$GITSHA")
     fi
 
-    args+=(--setenv "MAKEFLAGS=$MAKEFLAGS" --setenv PULSE_SERVER=/run/user-ro/1000/pulse/native)
+    args+=(--setenv "MAKEFLAGS=$MAKEFLAGS" --setenv PULSE_SERVER=$FAKE_USER_DIR/1000/pulse/native)
 
     # `join' an existing:
     if [[ $interactive = y ]]; then
@@ -230,7 +233,7 @@ else
         if [[ $# -gt 0 ]]; then
             echo "ignoring remaining arguments, starting shell";
         fi
-        sudo machinectl $args shell $machine_name
+        exec sudo machinectl $args shell $machine_name
 
     else
         if [[ -n "$workdir" ]]; then
