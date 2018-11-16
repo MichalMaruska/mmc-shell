@@ -1,3 +1,12 @@
+mmc-shell (3.11) release; urgency=medium
+
+  * enter-container: Improve & fix.
+  * Implement the user & chdir for the Attach usecase.
+  * half-fix the shell expansion, and try to export at least the 2 envVars for debuild
+  * Provide access to Pulse, fixes.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 16 Nov 2018 07:33:05 +0100
+
 mmc-shell (3.10.1) release; urgency=medium
 
   * Document the dbus issue
