@@ -2,7 +2,7 @@
 
 function play_mplayer()
 {
-    mplayer -vo none -really-quiet -ao pulse,alsa "$1" </dev/null
+    mplayer -vo none -really-quiet $mplayer_args "$1" </dev/null
 }
 
 
@@ -16,7 +16,7 @@ use_gst=no
 pulse=n
 
 START=0
-
+mplayer_args=(-ao pulse,alsa)
 while getopts :vahpg OPT; do
     case $OPT in
         g)
@@ -33,6 +33,7 @@ while getopts :vahpg OPT; do
         p)
             pulse=y
             MPG123=(mpg123-pulse --gapless ${playdsp+-a $playdsp} --aggressive -q)
+            mplayer_args=(-ao pulse)
             ;;
         h)
             usage
