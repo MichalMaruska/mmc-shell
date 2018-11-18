@@ -242,9 +242,9 @@ else
     else
         if [[ -n "$workdir" ]]; then
             # bug:
-            args+=(--)
+            args+=(-- /bin/bash -c)
             # I need the $@ to be inside the d-quotes!
-            cmd="/bin/bash -c \"cd $workdir; $@\""
+            cmd="cd $workdir; $@"
         else
             cmd=$@
         fi
