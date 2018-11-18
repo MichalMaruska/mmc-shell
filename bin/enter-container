@@ -93,7 +93,6 @@ while (( $# > 0 )) do
           -c | --chdir )
               shift
               workdir="$1"
-              arguments+=(--chdir "$1")
               ;;
           -d | --distro)
               shift
@@ -199,6 +198,11 @@ if [[ $start = y ]]; then
     if [[ $machine = n && $as_root = n ]]
     then
         arguments+=(--user michal)
+    fi
+
+    if [[ $workdir != "" ]];
+    then
+        arguments+=(--chdir "$workdir")
     fi
 
 
