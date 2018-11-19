@@ -51,7 +51,7 @@ OPTIND=1
 # decide:
 if [[ "$pulse$alsa" = "nn" ]]; then
    # try more:
-   if pulseaudio --check; then
+   if [[ -n ${PULSE_SERVER-} ]] || pulseaudio --check; then
        # this suddenly requires staying in fg! and "space" to pause.
        MPG123=(mpg123-pulse --no-control --gapless ${playdsp+-a $playdsp} --aggressive -q)
    elif which mpg321 > /dev/null; then
