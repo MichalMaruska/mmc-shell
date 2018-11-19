@@ -1,3 +1,14 @@
+mmc-shell (3.12) release; urgency=medium
+
+  * small improvements: exec & variable.
+  * --chdir only for the starting cases
+  * Fix the shell invocation ... when the command is non-trivial
+  * default to x32
+  * fix the mplayer/pulse invocation.
+  * better detection of Pulse
+
+ -- Michal Maruska <mmaruska@gmail.com>  Mon, 19 Nov 2018 11:32:08 +0100
+
 mmc-shell (3.11) release; urgency=medium
 
   * enter-container: Improve & fix.
