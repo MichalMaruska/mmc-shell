@@ -229,7 +229,9 @@ else
         args+=(--setenv "GITSHA=$GITSHA")
     fi
 
-    args+=(--setenv "MAKEFLAGS=$MAKEFLAGS" --setenv PULSE_SERVER=$FAKE_USER_DIR/1000/pulse/native)
+    args+=(--setenv "MAKEFLAGS=$MAKEFLAGS"
+           --setenv PULSE_SERVER=$FAKE_USER_DIR/1000/pulse/native
+           --setenv DISPLAY=$DISPLAY)
 
     # `join' an existing:
     if [[ $interactive = y ]]; then
