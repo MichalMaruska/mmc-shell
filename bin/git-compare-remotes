@@ -103,6 +103,7 @@ set -e
 # # REMOTE=FETCH_HEAD
 
 
+args=(--max-count 15)
 case $cmp in
     0)
         cecho bold "same"
@@ -111,13 +112,13 @@ case $cmp in
         cecho green "HEAD ahead of $REMOTE"
         if [ $verbose = y ]; then
             git diff --shortstat  $REMOTE
-            git log --oneline $REMOTE..HEAD --
+            git log $args --oneline $REMOTE..HEAD --
         fi
         ;;
     2)
         cecho hiyellow "local is behind"
         if [ $verbose = y ]; then
-            git log --oneline HEAD..$REMOTE --
+            git log $args --oneline HEAD..$REMOTE --
         fi
         ;;
     4)
