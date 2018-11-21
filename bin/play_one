@@ -1,64 +1,25 @@
 #! /bin/zsh -feu
 
+function usage()
+{
+    cat <<EOF
+usage: ${0##*/} [+-va} [--] [nr] files...
+-v  verbose
+-g  use gstreamer (rather than mplayer)
+-p  pulse
+-a  alsa
+EOF
+}
+
 function play_mplayer()
 {
     mplayer -vo none -really-quiet $mplayer_args "$1" </dev/null
 }
 
-
-usage()
+function is_number()
 {
-    print "usage: ${0##*/} [+-va} [--] ARGS..."
+    expr match $1  '^[[:digit:]]\+$'
 }
-
-alsa=n
-use_gst=no
-pulse=n
-
-START=0
-mplayer_args=(-ao pulse,alsa)
-while getopts :vahpg OPT; do
-    case $OPT in
-        g)
-            use_gst=yes
-            MPG123=(gst123 --novideo --quiet)
-            ;;
-        v|+v)
-            set -x
-            ;;
-        a|+a)
-            alsa=y
-            MPG123=(mpg123-alsa --gapless ${playdsp+-a $playdsp} --aggressive -q)
-            ;;
-        p)
-            pulse=y
-            MPG123=(mpg123-pulse --gapless ${playdsp+-a $playdsp} --aggressive -q)
-            mplayer_args=(-ao pulse)
-            ;;
-        h)
-            usage
-            exit 0
-            ;;
-        *)
-            usage
-            exit 2
-    esac
-done
-shift OPTIND-1
-OPTIND=1
-
-
-# decide:
-if [[ "$pulse$alsa" = "nn" ]]; then
-   # try more:
-   if [[ -n ${PULSE_SERVER-} ]] || pulseaudio --check; then
-       # this suddenly requires staying in fg! and "space" to pause.
-       MPG123=(mpg123-pulse --no-control --gapless ${playdsp+-a $playdsp} --aggressive -q)
-   elif which mpg321 > /dev/null; then
-       # -b 10000
-       MPG123=(mpg321 --aggressive -q)
-   fi
-fi
 
 function play_file ()
 {
@@ -125,19 +86,26 @@ function play_file ()
     esac
 }
 
-
 play_one()
 {
     local song=$1
 
-    if [[ -d "$song" ]]
-       # directory
+    if [[ $START -gt 1 ]];
     then
-        (cd "$song"
-         play_dir
-        )
+        ((START=START - 1))
+        # echo $START
     else
-        play_file "$song"
+
+
+        if [[ -d "$song" ]]
+           # directory
+        then
+            (cd "$song"
+             play_dir
+            )
+        else
+            play_file "$song"
+        fi
     fi
 }
 
@@ -154,16 +122,65 @@ play_dir()
         # We must return to use commonly accepted syntax:
         # IFS="${old_ifs}"
 
-        if [[ $START -gt 1 ]];
-        then
-            ((START=START - 1))
-            # echo $START
-        else
-            play_one $song
-        fi
+        play_one $song
     }
 }
 
+alsa=n
+use_gst=no
+pulse=n
+
+START=0
+mplayer_args=(-ao pulse,alsa)
+while getopts :vahpg OPT; do
+    case $OPT in
+        g)
+            use_gst=yes
+            MPG123=(gst123 --novideo --quiet)
+            ;;
+        v|+v)
+            set -x
+            ;;
+        a|+a)
+            alsa=y
+            MPG123=(mpg123-alsa --gapless ${playdsp+-a $playdsp} --aggressive -q)
+            ;;
+        p)
+            pulse=y
+            MPG123=(mpg123-pulse --gapless ${playdsp+-a $playdsp} --aggressive -q)
+            mplayer_args=(-ao pulse)
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+
+if [[ $# -gt 0 ]] && is_number $1; then
+    START=$1
+    shift
+fi
+
+
+
+# decide:
+if [[ "$pulse$alsa" = "nn" ]]; then
+   # try more:
+   if [[ -n ${PULSE_SERVER-} ]] || pulseaudio --check; then
+       # this suddenly requires staying in fg! and "space" to pause.
+       MPG123=(mpg123-pulse --no-control --gapless ${playdsp+-a $playdsp} --aggressive -q)
+   elif which mpg321 > /dev/null; then
+       # -b 10000
+       MPG123=(mpg321 --aggressive -q)
+   fi
+fi
 
 if [[ $# -gt 0 ]]; then
     for file in "$@"; do
