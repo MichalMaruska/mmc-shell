@@ -1,3 +1,11 @@
+mmc-shell (3.13) release; urgency=medium
+
+  * enter: export DISPLAY
+  * git-compare-remotes: limit the diff-list to max 15 commits.
+  * play_one: implement skipping of first N items
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 22 Nov 2018 15:12:56 +0100
+
 mmc-shell (3.12) release; urgency=medium
 
   * small improvements: exec & variable.
