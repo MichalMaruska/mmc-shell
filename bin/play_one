@@ -133,7 +133,7 @@ play_dir()
 
 alsa=n
 use_gst=no
-pulse=n
+pulse=y
 
 START=0
 mplayer_args=(-ao pulse,alsa)
