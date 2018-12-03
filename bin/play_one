@@ -72,7 +72,12 @@ function play_file ()
             else
                 # gst123 --quiet $1 &> /dev/null </dev/null
                 # gst123 insists on having the console (being in foregroung).
-                flac --silent --decode --stdout $1 | aplay  -q  -
+                flac --silent --decode --stdout $1 |\
+                    if [[ $pulse = y ]]; then
+                        paplay
+                    else
+                        aplay  -q  -
+                    fi
             fi
             ;;
         *tif|*png|*txt|*jpg)
