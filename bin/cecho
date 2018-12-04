@@ -3,6 +3,22 @@
 COLOR=$1
 shift
 
+echo_args=""
+while getopts :ne OPT; do
+    case $OPT in
+        n|+n)
+            echo_args="-n $echo_args"
+            ;;
+        e|+e)
+            echo_args="-e $echo_args"
+            ;;
+        *)
+            echo "usage: ${0##*/} [+-ne} [--] ARGS..."
+            exit 2
+    esac
+done
+shift $(( OPTIND - 1 ))
+OPTIND=1
 
 # As requested, let's support Bash 3 (a shell without associative arrays)
 if [ x$BASH_VERSINFO != x \
@@ -81,12 +97,12 @@ if [ -t 1 -o "${FORCE_COLOR-}" = y -o -S /dev/stdout ]; then
         -o "${TERM}" = "rxvt" \
         -o "${TERM}" = "ansi" ]; then
         emit_color $COLOR
-        echo "$@"
+        # -n is broken here? cecho hired -ne "ahoj\n"; echo ok
+        /bin/echo $echo_args "$@"
         tput sgr0
-        # echo
     else
-        echo "$@"
+        echo $echo_args "$@"
     fi
 else
-    echo "$@"
+    echo $echo_args "$@"
 fi
