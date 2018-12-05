@@ -1,0 +1,207 @@
+#!/bin/zsh -feu
+
+# So, I follow a remote repo R. I cut down my R1 into R2
+# Then I update from R my R1, and want to integrate the changes into R2.
+# It is expected that the changes would not be cut away.
+
+# My design keeps a table -- mapping of commits in R1 into commits in R2.
+# The table is stored inside R2.
+
+# The table contains the commit-SHA1 mapping.
+
+# The aim is to port "up-to certain R1-ref", say master.
+# And last time I pulled (or cut down at the beginning) Commit A into commit A'.
+
+# So, I take the set of missing commits, and try to attach them.... to their parents
+# mapped.
+# The parent may be BELOW the top, so the mapping must include those. Manual help is needed.
+# Merges are assumed to be `clean' no additional changes made, so are just re-merged.
+
+
+# How to use:
+# re-invoke until all is reported to be had
+# then manually move the `base_commit'
+base_commit=96e5bc1986f37ff889ce37c42fc8c4edc992ddf0
+# 96e5bc1986f37ff889ce37c42fc8c4edc992ddf0 -> b60cb73823ce1e6dfd08ab0fc569849cffdd2874
+# 38780ac202438222b8984dfb3ec77aabe8a51520
+
+# also move the:
+# git branch -f master  b60cb73823ce1e6dfd08ab0fc569849cffdd2874
+
+trap 'print ${PROGRAM-$0} ERROR: $LINENO:  $ZSH_EVAL_CONTEXT $0 >&2' ZERR
+
+origin=~/sem/bis/navapp
+target=~/sem/bis/navapp-cut
+
+
+#read_in_table=
+typeset -A commit_map
+commit_map=(
+    #$base_commit $base_commit_cut
+    #27177d7d8cd5d26887abed1b9d5a227d15805753 1c1292cccdf1df8f45861d3b60f05fc21464cbcb
+)
+
+
+# read an associative arrray from a file: simply space-separated 'key value' lines.
+# simplified: fixed variable: `commit_map'
+load_table()
+{
+    while read from to;
+    do
+        commit_map[$from]=$to
+    done
+}
+
+# write
+dump_table()
+{
+    local key
+    local val
+
+    for key val in ${(kv)commit_map}; do
+        echo "$key $val"
+    done
+}
+
+
+load_table < $target/.git-table
+
+#dump_table
+# exit 1
+
+
+# check they both have the same date.
+
+# branches above
+
+top=origin/master
+# walk down one-by-one and make a table!
+# old_table
+# after working write a new table!
+cd $origin
+# set -x
+typeset -a new_commits
+new_commits=($(git rev-list --topo-order \^$base_commit $top))
+
+
+# no! any merge coming down to previous....
+# git log 38780ac202438222b8984dfb3ec77aabe8a51520..origin/master
+
+#for each parent ...find the parents images.
+# 1 parent -> format-patch & am
+
+add_to_mapping()
+{
+    local commit=$1
+    local sha1=$2
+    cecho yellow "new commit is $sha1" >&2
+    commit_map[$commit]=$sha1
+}
+
+
+# charry-pick a commit $1 in $origin onto $2 in $target
+cherry_pick()
+{
+    commit=$1
+    above=$2
+
+    cd $target
+    git checkout $above
+    (cd $origin;
+     git format-patch --keep-subject --stdout  "$commit^!" ) |
+        git am --keep --
+
+    # get the sha
+    add_to_mapping $commit $(git rev-parse HEAD)
+}
+
+
+rebase()
+{
+    local commit=$1
+    echo "need to rebase $commit"
+    git show --no-patch --oneline $commit
+
+    # find parent in the running table
+    local parent=$(git show -s  --format=format:"%P" $commit)
+    if [[ -z "${commit_map[(I)$parent]}" ]]; then
+        cecho red "parent is unknown $parent"
+    else
+        cecho green "Above ${commit_map[$parent]}"
+        cherry_pick $commit ${commit_map[$parent]}
+        cd $origin
+    fi
+}
+
+re_merge()
+{
+    # local
+    readonly commit=$1
+    echo "need to re_merge $commit"
+    git show -s --oneline $commit
+    local parents=($(git show -s  --format=format:"%P" $commit))
+
+    mapped_parents=()
+    all_found=y
+    foreach parent ( $parents) {
+        if [[ -z "${commit_map[(I)$parent]}" ]]; then
+            cecho red "parent is unknown $parent"
+            all_found=ny
+            break
+        else
+            mapped_parents+=( ${commit_map[$parent]} )
+        fi
+    }
+
+    if [[ $all_found = "y" ]];
+    then
+        cecho blue "found all!" >&2
+        # do the merge:
+        # same time, commiter etc....?
+        # date
+        subject=$(git show -s  --format=format:"%s" $commit)
+        body=$(git show -s  --format=format:"%b" $commit)
+        cd $target
+
+        git checkout $mapped_parents[1]
+        git merge -m "$subject" $mapped_parents[2,-1]
+
+        add_to_mapping $commit $(git rev-parse HEAD)
+
+        cd $origin
+    fi
+}
+
+# > merge ...
+process_commit()
+{
+    # 867630aff449635d1d09258fe132ad51bb449fd0
+    local commit=$1
+    if [[ -n "${commit_map[(I)$commit]}" ]]; then
+        cecho blue "we already have this commit, skipping" >&2
+    else
+        # 1 parent
+        # more parents
+        local parents=($(git show -s  --format=format:"%P" $commit))
+        if [[ ${#parents} = 1 ]]; then
+            rebase $commit
+        else
+            re_merge $commit
+        fi
+    fi
+}
+
+
+foreach commit ($new_commits)
+{
+    process_commit $commit
+}
+
+
+# dump the table:
+dump_table > $target/.git-table.new
+
+# replace_and_backup()
+# atomically switch them:
+mv $target/.git-table $target/.git-table.old
+mv $target/.git-table.new $target/.git-table
