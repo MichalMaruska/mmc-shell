@@ -1,0 +1,98 @@
+#!/bin/zsh -feu
+
+# how to get the list of controls:
+# am F6 & trial/error
+# then:
+#
+# amixer  -c 1 scontrols
+# same as:   amixer  -c 1|grep control
+#
+# $ amixer -c 1   get 'Line Out'
+#   pswitch
+# Playback [on]
+#  Front Right: Playback [on]
+
+
+
+CARD=1
+jack=0
+builtin=0
+
+while getopts :jpb OPT; do
+    case $OPT in
+	j|+j)
+	    jack=1
+	    ;;
+        p)
+            phones=1
+            ;;
+	b|+b)
+	    builtin=1
+	    ;;
+	*)
+	    print "usage: ${0##*/} [+-jb} [--] ARGS..."
+	    exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+#  Items: 'Disabled' 'Speaker Only' 'Line Out+Speaker'
+#  Item0: 'Line Out+Speaker'
+# only to the jack:
+
+control='Auto-Mute Mode'
+control2='Line Out'
+control3='Speaker'
+control4='Headphone'
+
+# for `control'
+if [ $builtin = 1 ]; then
+    value='Disabled'
+
+else
+    # value='Speaker Only'
+    value='Line Out+Speaker'
+fi
+
+
+# for `control2'
+if [ $jack = 1 ]; then
+    line_out='on'
+    speaker='off'
+    headphone=muted
+elif [[ $builtin = 1 ]] then
+    line_out='off'
+    speaker='on'
+    headphone=muted
+else
+    # phones:
+    line_out='off'
+    speaker='off'
+    headphone=unmuted
+fi
+
+set -x
+# both:
+amixer  sset -c $CARD $control $value
+
+# pswitch
+# value=off
+amixer  sset -c $CARD $control2 $line_out
+
+amixer  sset -c $CARD $control3 $speaker
+amixer  sset -c $CARD $control4 $headphone
+# amixer sset -c 1  'Speaker+LO' 100
+
+# not HDMI:
+pactl --server unix:/run/user/1000/pulse/native  set-card-profile 1 output:analog-stereo+input:analog-stereo
+# HDMI:
+#                                                set-card-profile 0 output:hdmi-stereo+input:analog-stereo
+
+echo <<EOF
+https://wiki.archlinux.org/index.php/PulseAudio/Examples#HDMI_output_configuration
+todo: cat /sys/class/drm/card0-DP-1/status
+
+#
+cat /sys/class/drm/card0/card0-HDMI-A-1/status /sys/class/drm/card0/card0-HDMI-A-2/status /sys/class/drm/card0/card0-HDMI-A-3/status
+EOF
