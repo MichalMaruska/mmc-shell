@@ -1,3 +1,13 @@
+mmc-shell (3.14) release; urgency=medium
+
+  * play flac files on PulseAudio
+  * default to PA
+  * cecho: support -n and -e
+  * audio-select: new command.
+  * "start non-boot" case -- put the shell command at the end, not to mix the options.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 07 Dec 2018 17:12:08 +0100
+
 mmc-shell (3.13) release; urgency=medium
 
   * enter: export DISPLAY
