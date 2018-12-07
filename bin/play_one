@@ -133,7 +133,11 @@ play_dir()
 
 alsa=n
 use_gst=no
+
+# (positive) defaults:
 pulse=y
+MPG123=(mpg123-pulse --gapless ${playdsp+-a $playdsp} --aggressive -q)
+mplayer_args=(-ao pulse)
 
 START=0
 mplayer_args=(-ao pulse,alsa)
