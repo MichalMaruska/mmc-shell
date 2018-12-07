@@ -170,10 +170,13 @@ rewrite_array()
     # echo $bind_mounts
 }
 
+command=()
 # for interactive use?
 if [[ $start = y && $machine = n ]]; then
     # this was useful when: systemd-nspawn ...i.e. 1-access only.
-    arguments+=(/usr/bin/setsid -c -w /bin/zsh -l)
+    command=(/usr/bin/setsid -c -w /bin/zsh -l)
+else
+    command=($@)
 fi
 
 # --setenv --register=no
@@ -212,7 +215,7 @@ if [[ $start = y ]]; then
          --directory $CONTAINER_DIR \
          --capability=all \
          $bind_mounts \
-         $arguments $@
+         $arguments $command
 else
     if [[ -t 1 && -z "$@" ]]; then
         interactive=y
