@@ -53,8 +53,12 @@ function play_file ()
 
         *.ogg)
             cecho green "$1"
-            ogg123 --quiet  "$1";;
-
+            if [[ $pulse = y ]]; then
+                ogg123 -d pulse --quiet  "$1"
+            else
+                ogg123 --quiet  "$1"
+            fi
+            ;;
         *.flv | *.mp4 | *.m4a | *.wma | *.webm | *.ape | *.mkv )
             cecho green "$1"
             #
