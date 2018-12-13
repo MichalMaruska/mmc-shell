@@ -71,13 +71,15 @@ usage: ${0##*/} [+-n] [-c dir] [-b dir] [--] ARGS...
 -b  .. add directory as --bind mount.
 -r  ... start as root
 -c  ... chdir at start
+
+-h  --usage --help ..
 EOF
 }
 
 cmd_options=$(getopt --name $0 --shell bash \
+                     --options a:b:c:d:himrsv \
                      --longoptions \
                      arch:,bind:,chdir:,distro:,help,interactive,machine,private-network,root,start,usage,verbose \
-                     --options :a:b:c:d:himrsv \
                      -- "$@" ) || { usage; exit 1 }
 # name: n:
 eval set -- "$cmd_options"
@@ -101,7 +103,7 @@ while (( $# > 0 )) do
               arch=$1
               ;;
 
-          h | --usage | --help)
+          -h | --usage | --help)
               usage
               exit 0
               ;;
