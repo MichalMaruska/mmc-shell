@@ -47,7 +47,7 @@ control3='Speaker'
 control4='Headphone'
 
 # for `control'
-if [ $builtin = 1 ]; then
+if [[ $builtin = 1 ]]; then
     value='Disabled'
 
 else
@@ -57,7 +57,7 @@ fi
 
 
 # for `control2'
-if [ $jack = 1 ]; then
+if [[ $jack = 1 ]]; then
     line_out='on'
     speaker='off'
     headphone=muted
