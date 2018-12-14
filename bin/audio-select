@@ -82,6 +82,11 @@ amixer  sset -c $CARD $control2 $line_out
 
 amixer sset -c $CARD $control3 $speaker
 amixer sset -c $CARD $control4 $headphone
+# set volumes:
+if [[ $phones = 1 ]]; then
+    amixer sset -c $CARD Headphone  70
+fi
+
 # amixer sset -c 1  'Speaker+LO' 100
 
 # not HDMI:
