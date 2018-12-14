@@ -121,7 +121,7 @@ play_one()
 play_dir()
 {
     # local
-    readonly songs=(* ) #  $(ls -vb )
+    readonly songs=(*) #  $(ls -vb )
 
     local song
     foreach song ( $songs )
