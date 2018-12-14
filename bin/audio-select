@@ -80,8 +80,8 @@ amixer  sset -c $CARD $control $value
 # value=off
 amixer  sset -c $CARD $control2 $line_out
 
-amixer  sset -c $CARD $control3 $speaker
-amixer  sset -c $CARD $control4 $headphone
+amixer sset -c $CARD $control3 $speaker
+amixer sset -c $CARD $control4 $headphone
 # amixer sset -c 1  'Speaker+LO' 100
 
 # not HDMI:
