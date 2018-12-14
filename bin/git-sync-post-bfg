@@ -63,11 +63,48 @@ dump_table()
     done
 }
 
+add_to_mapping()
+{
+    commit_map[$1]=$2
+}
+
+
+usage()
+{
+    cat <<EOF
+usage: ${0##*/} [-s] [+-m ARG] [+-h} [--] ARGS...
+
+-s   show/dump the mapping (& exit)
+-m   add too the mapping
+
+EOF
+}
 
 load_table < $target/.git-table
 
-#dump_table
-# exit 1
+while getopts :sm:h OPT; do
+    case $OPT in
+        s|+s)
+            dump_table
+            exit 0
+            ;;
+        m|+m)
+            # must be  sha:sha2:
+            # expr match
+            add_to_mapping ${OPTARG%:*} ${OPTARG#*:}
+            ;;
+        h|+h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage >&2
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
 
 
 # check they both have the same date.
@@ -90,14 +127,6 @@ new_commits=($(git rev-list --topo-order \^$base_commit $top))
 #for each parent ...find the parents images.
 # 1 parent -> format-patch & am
 
-add_to_mapping()
-{
-    local commit=$1
-    local sha1=$2
-    cecho yellow "new commit is $sha1" >&2
-    commit_map[$commit]=$sha1
-}
-
 
 # charry-pick a commit $1 in $origin onto $2 in $target
 cherry_pick()
@@ -112,7 +141,10 @@ cherry_pick()
         git am --keep --
 
     # get the sha
-    add_to_mapping $commit $(git rev-parse HEAD)
+    local new_commit=$(git rev-parse HEAD)
+    cecho yellow "new commit is $new_commit" >&2
+
+    add_to_mapping $commit $new
 }
 
 
