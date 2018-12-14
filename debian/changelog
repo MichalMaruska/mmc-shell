@@ -1,3 +1,17 @@
+mmc-shell (3.15) release; urgency=medium
+
+  * fill-in positive defaults.
+  * play ogg-with-pulse the right way.
+  * git-sync-post-bfg: new tool to sync bfg.jar treated repo with original
+  * post-BFG dubious way to add into the mapping. it should be taken from BFG only
+  * clean up play
+  * enter-container: fix the -h option handling
+  * audio-select: fix [[
+  * audio-select: fix spaces
+  * audio-select: set initial volumen for phones
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 14 Dec 2018 09:35:09 +0100
+
 mmc-shell (3.14) release; urgency=medium
 
   * play flac files on PulseAudio
