@@ -23,31 +23,31 @@ EOF
 
 while getopts :dkpPfF: OPT; do
     case $OPT in
-	h)
-	    usage
-	    exit 0
-	    ;;
-	k|+k)
-	    keep_graph_file=yes
-	    ;;
-	p|+p)
-	    FORMAT=png
-	    ;;
-	P)
-	    FORMAT=ps
-	    ;;
-	f)
-	    FORMAT=pdf
-	    ;;
-	F)
-	    FORMAT=$OPTARG
-	    ;;
-	d)
-	    set -x
-	    ;;
-	*)
-	    usage
-	    exit 2
+        h)
+            usage
+            exit 0
+            ;;
+        k|+k)
+            keep_graph_file=yes
+            ;;
+        p|+p)
+            FORMAT=png
+            ;;
+        P)
+            FORMAT=ps
+            ;;
+        f)
+            FORMAT=pdf
+            ;;
+        F)
+            FORMAT=$OPTARG
+            ;;
+        d)
+            set -x
+            ;;
+        *)
+            usage
+            exit 2
     esac
 done
 shift OPTIND-1
