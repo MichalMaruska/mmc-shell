@@ -13,7 +13,8 @@ EOF
 
 function play_mplayer()
 {
-    mplayer -vo none -really-quiet $mplayer_args "$1" </dev/null
+    # -msglevel all=9
+    mplayer -vo null -ao pulse -really-quiet $mplayer_args "$1" </dev/null
 }
 
 function is_number()
