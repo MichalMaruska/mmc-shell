@@ -19,7 +19,7 @@ trap 'print ${PROGRAM-$0} ERROR: $LINENO:  $ZSH_EVAL_CONTEXT $0 >&2' ZERR
 #               full      |   user shell
 # start       --boot      |   --start
 # join-shell    cmd       |
-# join        --interactive
+# join          empty cmd
 
 
 
@@ -64,7 +64,6 @@ usage: ${0##*/} [+-n] [-c dir] [-b dir] [--] ARGS...
 
 # commands:
 --start
---interactive
 -B --boot   ...
 
 
@@ -81,7 +80,7 @@ EOF
 cmd_options=$(getopt --name $0 --shell bash \
                      --options a:b:BcC:d:himn:rsv \
                      --longoptions \
-                     arch:,bind:,boot,chdir:,container:,distro:,help,interactive,name,private-network,root,start,usage,verbose \
+                     arch:,bind:,boot,chdir:,container:,distro:,help,name,private-network,root,start,usage,verbose \
                      -- "$@" ) || { usage; exit 1 }
 # name: n:
 eval set -- "$cmd_options"
@@ -98,7 +97,6 @@ while (( $# > 0 )) do
               ;;
           -B | --boot)
               boot=y
-              start=y
               arguments=(--boot)
               # /dev/ ->no
               bind_mounts+=($new_machine_mounts)
@@ -119,10 +117,6 @@ while (( $# > 0 )) do
           -h | --usage | --help)
               usage
               exit 0
-              ;;
-
-          -i | --interactive)
-              interactive=y
               ;;
 
           -n | --name)
@@ -155,6 +149,12 @@ while (( $# > 0 )) do
       shift
 done
 
+if [ $VERBOSE = y ]; then set -x;fi
+
+if [[ -t 1 && $# = 0 ]]; then
+    interactive=y
+fi
+
 
 # hostname is derived from this
 if [[ ! -v machine_name ]]; then
@@ -180,15 +180,6 @@ rewrite_array()
     # echo $bind_mounts
 }
 
-command=()
-# for interactive use?
-if [[ $start = y && $boot = n ]]; then
-    # this was useful when: systemd-nspawn ...i.e. 1-access only.
-    command=(/usr/bin/setsid -c -w /bin/zsh -l)
-else
-    command=($@)
-fi
-
 # --setenv --register=no
 if [ $VERBOSE = y ]; then set -x;fi
 
@@ -197,8 +188,9 @@ if [ $VERBOSE = y ]; then set -x;fi
 
 readonly FAKE_USER_DIR=/run/user-ro/
 
-if [[ $start = y ]]; then
-    if [ $interactive = y ]; then
+if [[ $start = y || $boot = y ]]; then
+
+    if [[ $interactive = y && $boot = n ]]; then
        # this would be used if we --start:
        bind_mounts+=($user_bind_mounts)
     fi
@@ -221,15 +213,30 @@ if [[ $start = y ]]; then
     fi
 
 
+    command=()
+
+    # for interactive use?
+
+    if [[ $start = y ]]; then
+        # This is needed if I run Zsh, and want the Job-control (C-z does not work without it)
+        # this was useful when: systemd-nspawn ...i.e. 1-access only.
+        command=(/usr/bin/setsid -c -w)
+    fi
+
+    if [[ $interactive = y && ! $boot = y ]]; then
+        command+=(/bin/zsh -l)
+    else
+        command+=($@)
+    fi
+
+
+
     exec sudo systemd-nspawn \
          --directory $CONTAINER_DIR \
          --capability=all \
          $bind_mounts \
          $arguments $command
 else
-    if [[ -t 1 && -z "$@" ]]; then
-        interactive=y
-    fi
 
     # mmc: let's try:
     args=($arguments)
@@ -248,24 +255,25 @@ else
 
     # `join' an existing:
     if [[ $interactive = y ]]; then
-        # machinectl shell ?
         # --setenv "inside_container"
-        # note: here we ignore the $* !!
-        if [[ $# -gt 0 ]]; then
-            echo "ignoring remaining arguments, starting shell";
-        fi
-        exec sudo machinectl $args shell $machine_name
 
+        if [ $VERBOSE = y ]; then set -x;fi
+        exec sudo machinectl $args shell $machine_name
     else
+
         if [[ -n "$workdir" ]]; then
             # bug:
             args+=(-- /bin/bash -c)
             # I need the $@ to be inside the d-quotes!
+
+            # This is ugly: once it is a string, and below it is array!
             cmd="cd $workdir; $@"
         else
             cmd=$@
         fi
 
+
+        if [ $VERBOSE = y ]; then set -x;fi
         exec sudo systemd-run --pty --machine=$machine_name \
              $args $cmd
     fi
