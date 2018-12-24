@@ -10,15 +10,15 @@ trap 'print ${PROGRAM-$0} ERROR: $LINENO:  $ZSH_EVAL_CONTEXT $0 >&2' ZERR
 # Enter a container with 32-bit environment.
 
 # 4 scenarios to invoke this:
-# --machine .... start a systemd as init
+# --boot  .... start a systemd as init
 # --start .... bind & mount & invoke SHELL as init.
 
 # cmd                 .... run the cmd inside a running
 # --interactive .. will bind-mount standard user's dirs.
 
-#               full         user shell
-# start       --machine       --start
-# join-shell    cmd
+#               full      |   user shell
+# start       --boot      |   --start
+# join-shell    cmd       |
 # join        --interactive
 
 
@@ -32,7 +32,7 @@ arch=x32
 
 VERBOSE=n
 as_root=n
-machine=n
+boot=n
 start=n
 interactive=n
 workdir=""
@@ -65,6 +65,7 @@ usage: ${0##*/} [+-n] [-c dir] [-b dir] [--] ARGS...
 # commands:
 --start
 --interactive
+-B --boot   ...
 
 
 -n  ... setup private network (no networking at start?)
@@ -77,9 +78,9 @@ EOF
 }
 
 cmd_options=$(getopt --name $0 --shell bash \
-                     --options a:b:c:d:himrsv \
+                     --options a:b:BcC:d:himn:rsv \
                      --longoptions \
-                     arch:,bind:,chdir:,distro:,help,interactive,machine,private-network,root,start,usage,verbose \
+                     arch:,bind:,boot,chdir:,container:,distro:,help,interactive,name,private-network,root,start,usage,verbose \
                      -- "$@" ) || { usage; exit 1 }
 # name: n:
 eval set -- "$cmd_options"
@@ -93,6 +94,13 @@ while (( $# > 0 )) do
           -b | --bind )
               shift
               bind_mounts+=("$1")
+              ;;
+          -B | --boot)
+              boot=y
+              start=y
+              arguments=(--boot)
+              # /dev/ ->no
+              bind_mounts+=($new_machine_mounts)
               ;;
           -c | --chdir )
               shift
@@ -117,13 +125,6 @@ while (( $# > 0 )) do
           #     CONTAINER_DIR="$1"
           #     ;;
 
-          -m | --machine)
-              machine=y
-              start=y
-              arguments=(--boot)
-              # /dev/ ->no
-              bind_mounts+=($new_machine_mounts)
-              ;;
           -p| --private-network)
               arguments+=(--private-network)
               ;;
@@ -174,7 +175,7 @@ rewrite_array()
 
 command=()
 # for interactive use?
-if [[ $start = y && $machine = n ]]; then
+if [[ $start = y && $boot = n ]]; then
     # this was useful when: systemd-nspawn ...i.e. 1-access only.
     command=(/usr/bin/setsid -c -w /bin/zsh -l)
 else
@@ -202,7 +203,7 @@ if [[ $start = y ]]; then
     arguments+=(--bind-ro /run/user:$FAKE_USER_DIR)
     arguments+=(--private-users=no)
 
-    if [[ $machine = n && $as_root = n ]]
+    if [[ $boot = n && $as_root = n ]]
     then
         arguments+=(--user michal)
     fi
