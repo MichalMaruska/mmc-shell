@@ -13,8 +13,11 @@ trap 'print ${PROGRAM-$0} ERROR: $LINENO:  $ZSH_EVAL_CONTEXT $0 >&2' ZERR
 # --boot  .... start a systemd as init
 # --start .... bind & mount & invoke SHELL as init.
 
-# cmd                 .... run the cmd inside a running
+# cmd                 .... run the cmd inside a _running_
 # --interactive .. will bind-mount standard user's dirs.
+
+# --start cmd  run inside a _started_
+
 
 #               full      |   user shell
 # start       --boot      |   --start
