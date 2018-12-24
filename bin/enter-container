@@ -204,7 +204,7 @@ if [[ $start = y || $boot = y ]]; then
 
     if [[ $boot = n && $as_root = n ]]
     then
-        arguments+=(--user michal)
+        arguments+=(--user $USER)
     fi
 
     if [[ $workdir != "" ]];
