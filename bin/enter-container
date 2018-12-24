@@ -70,11 +70,10 @@ usage: ${0##*/} [+-n] [-c dir] [-b dir] [--] ARGS...
 -B --boot   ...
 
 
--n  ... setup private network (no networking at start?)
--b  .. add directory as --bind mount.
+-n --private-network ... setup private network (no networking at start?)
+-b --bind  .. add directory as --bind mount.
 -r  ... start as root
 -c  ... chdir at start
-
 -C --container  dir
 -h  --usage --help ..
 EOF
