@@ -163,7 +163,7 @@ if [[ ! -v machine_name ]]; then
    machine_name=$distro-$arch
 fi
 
-if [ -z $CONTAINER_DIR ]; then
+if [[ -z $CONTAINER_DIR ]]; then
     CONTAINER_DIR=/var/lib/machines/$distro-$arch
 fi
 
@@ -183,7 +183,7 @@ rewrite_array()
 }
 
 # --setenv --register=no
-if [ $VERBOSE = y ]; then set -x;fi
+if [[ $VERBOSE = y ]]; then set -x;fi
 
 # sudo systemd-nspawn --bind=/dev/  --directory /var/lib/machines/sid-x32 '--bind=/home/michal' --capability=all  --boot --private-users=no
 
