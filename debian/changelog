@@ -1,3 +1,19 @@
+mmc-shell (3.16) release; urgency=medium
+
+  * spaces
+  * play_one: fix mplayer invocation to correct -vo, and -ao to pulse
+  * enter-container: --boot instead of --machine
+  * enter-container: move the development notes in doc/
+  * enter-container: --container ... after all to use a specific dir
+  * enter-container: --name to set the name.
+  * Down with the --interactive option; 0 arguments have the same effect.
+  * try to support generic $USER
+  * comments
+  * improve usage()
+  * use [[ conditionals
+
+ -- Michal Maruska <mmaruska@gmail.com>  Mon, 24 Dec 2018 23:48:44 +0100
+
 mmc-shell (3.15) release; urgency=medium
 
   * fill-in positive defaults.
