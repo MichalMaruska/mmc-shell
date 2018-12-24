@@ -125,10 +125,10 @@ while (( $# > 0 )) do
               interactive=y
               ;;
 
-          # -n | --name)
-          #     shift
-          #     CONTAINER_DIR="$1"
-          #     ;;
+          -n | --name)
+               shift
+               machine_name="$1"
+               ;;
 
           -p| --private-network)
               arguments+=(--private-network)
@@ -157,7 +157,9 @@ done
 
 
 # hostname is derived from this
-readonly machine_name=$distro-$arch
+if [[ ! -v machine_name ]]; then
+   machine_name=$distro-$arch
+fi
 
 if [ -z $CONTAINER_DIR ]; then
     CONTAINER_DIR=/var/lib/machines/$distro-$arch
