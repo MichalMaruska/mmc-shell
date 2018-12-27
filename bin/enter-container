@@ -231,8 +231,9 @@ if [[ $start = y || $boot = y ]]; then
         command+=($@)
     fi
 
-
-
+    if [[ $VERBOSE = y ]]; then
+       set -x
+    fi
     exec sudo systemd-nspawn \
          --directory $CONTAINER_DIR \
          --capability=all \
@@ -258,8 +259,9 @@ else
     # `join' an existing:
     if [[ $interactive = y ]]; then
         # --setenv "inside_container"
-
-        if [ $VERBOSE = y ]; then set -x;fi
+        if [[ $VERBOSE = y ]]; then
+            set -x
+        fi
         exec sudo machinectl $args shell $machine_name
     else
 
@@ -274,8 +276,9 @@ else
             cmd=$@
         fi
 
-
-        if [ $VERBOSE = y ]; then set -x;fi
+        if [[ $VERBOSE = y ]]; then
+            set -x
+        fi
         exec sudo systemd-run --pty --machine=$machine_name \
              $args $cmd
     fi
