@@ -1,3 +1,14 @@
+mmc-shell (3.17) release; urgency=medium
+
+  * git-ff: default to the "friendly remote" and the current branch
+  * functions: pull the stashing code from git-hierarchy
+  * play_one: make mplayer verbose conditionally
+  * enter-container: verbosity -> show the systemd* command line
+  * enter-container: simplify the start command calculation
+  * fix the --boot option -- don't reset other options.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 27 Dec 2018 12:31:41 +0100
+
 mmc-shell (3.16) release; urgency=medium
 
   * spaces
