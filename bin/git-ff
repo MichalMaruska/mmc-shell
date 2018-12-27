@@ -42,9 +42,9 @@ if [ $# -gt 0 ]; then
 fi
 
 # fixme: if necessary:
-git stash
+stash_if_non_clean
 
 # git checkout $branch
 git merge --ff $GIT_REMOTE_NAME/$branch
 
-git stash pop
+unstash_if_stashed
