@@ -216,19 +216,18 @@ if [[ $start = y || $boot = y ]]; then
 
 
     command=()
-
     # for interactive use?
 
     if [[ $start = y ]]; then
         # This is needed if I run Zsh, and want the Job-control (C-z does not work without it)
         # this was useful when: systemd-nspawn ...i.e. 1-access only.
         command=(/usr/bin/setsid -c -w)
-    fi
 
-    if [[ $interactive = y && ! $boot = y ]]; then
-        command+=(/bin/zsh -l)
-    else
-        command+=($@)
+        if [[ $interactive = y ]]; then
+            command+=(/bin/zsh -l)
+        else
+            command+=($@)
+        fi
     fi
 
     if [[ $VERBOSE = y ]]; then
