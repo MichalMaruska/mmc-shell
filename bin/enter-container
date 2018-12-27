@@ -99,7 +99,7 @@ while (( $# > 0 )) do
               ;;
           -B | --boot)
               boot=y
-              arguments=(--boot)
+              arguments+=(--boot)
               # /dev/ ->no
               bind_mounts+=($new_machine_mounts)
               ;;
