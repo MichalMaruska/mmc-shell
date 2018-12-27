@@ -1,5 +1,7 @@
 #!/bin/zsh -feu
 
+source /usr/share/mmc-shell/git-functions.sh
+
 # set -x
 usage() {
     setopt POSIX_ARGZERO
@@ -10,6 +12,11 @@ Fast-forward to remote head, stashing around.
 EOF
     unsetopt POSIX_ARGZERO
 }
+
+set_remote_name
+# todo: the same I'm on
+branch=$(current_branch_name)
+
 while getopts :h OPT; do
     case $OPT in
         h|+h)
@@ -23,17 +30,21 @@ while getopts :h OPT; do
 done
 shift OPTIND-1
 OPTIND=1
-if [ $# -ne 2 ]; then
-    usage;
+
+if [ $# -gt 0 ]; then
+    GIT_REMOTE_NAME=$1
+    shift
 fi
 
-remote=$1
-branch=$2
+if [ $# -gt 0 ]; then
+    branch=$1
+    shift
+fi
 
 # fixme: if necessary:
 git stash
 
-git checkout $branch
-git merge --ff $remote/$branch
+# git checkout $branch
+git merge --ff $GIT_REMOTE_NAME/$branch
 
 git stash pop
