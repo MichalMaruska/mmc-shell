@@ -13,8 +13,7 @@ EOF
 
 function play_mplayer()
 {
-    # -msglevel all=9
-    mplayer -vo null -ao pulse -really-quiet $mplayer_args "$1" </dev/null
+    mplayer -vo null -ao pulse $mplayer_args "$1" </dev/null
 }
 
 function is_number()
@@ -145,7 +144,9 @@ MPG123=(mpg123-pulse --gapless ${playdsp+-a $playdsp} --aggressive -q)
 mplayer_args=(-ao pulse)
 
 START=0
+verbose=n
 mplayer_args=(-ao pulse,alsa)
+
 while getopts :vahpg OPT; do
     case $OPT in
         g)
@@ -153,6 +154,7 @@ while getopts :vahpg OPT; do
             MPG123=(gst123 --novideo --quiet)
             ;;
         v|+v)
+            verbose=y
             set -x
             ;;
         a|+a)
@@ -182,6 +184,12 @@ if [[ $# -gt 0 ]] && is_number $1; then
     shift
 fi
 
+
+if [[ $verbose = y ]]; then
+    mplayer_args+=(-msglevel all=9)
+else
+    mplayer_args+=(-really-quiet)
+fi
 
 
 # decide:
