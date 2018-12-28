@@ -45,6 +45,6 @@ fi
 stash_if_non_clean
 
 # git checkout $branch
-git merge --ff $GIT_REMOTE_NAME/$branch
+git merge --ff-only $remote/$branch
 
 unstash_if_stashed
