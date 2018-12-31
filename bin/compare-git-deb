@@ -14,13 +14,13 @@ usage()
 # fixme: must be invoked inside DIR.
 while getopts :h OPT; do
     case $OPT in
-	h|+h)
-	    usage
-	    exit 0
-	    ;;
-	*)
-	    usage
-	    exit 2
+        h|+h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage
+            exit 2
     esac
 done
 shift OPTIND-1
@@ -60,27 +60,27 @@ if [ 0 = $? ]; then
     set -e
     if [ $match_status = 0 ];
     then
-	#echo -n "$post "
-	tag=$(expr match $last_release_tag '^\(.*\)-[[:digit:]]\+-[[:alnum:]]\+$')
-	cecho hiyellow -n $name
-	echo -n -e '\tis '
-	cecho cyan -n $post
-	echo " commits ahead of\t $tag"
+        #echo -n "$post "
+        tag=$(expr match $last_release_tag '^\(.*\)-[[:digit:]]\+-[[:alnum:]]\+$')
+        cecho hiyellow -n $name
+        echo -n -e '\tis '
+        cecho cyan -n $post
+        echo " commits ahead of\t $tag"
 
-	if [ "$gitversion" != "$version" ]; then
-	    cecho blue -e "\tdifferent versions: $gitversion vs $version"
-	fi
+        if [ "$gitversion" != "$version" ]; then
+            cecho blue -e "\tdifferent versions: $gitversion vs $version"
+        fi
 
 
-	git --no-pager log --format='%C(green)%h %C(blue)%s' $tag..HEAD
-	# git log --oneline $tag..HEAD
-	echo
+        git --no-pager log --format='%C(green)%h %C(blue)%s' $tag..HEAD
+        # git log --oneline $tag..HEAD
+        echo
     else
-	if [ "$gitversion" != "$version" ]; then
-	    cecho red -e $name  '\t' $last_release_tag  '\t installed:' $version
-	else
-	    cecho reset -e $name  '\t' $last_release_tag
-	    #   '\t installed:' $version
-	fi
+        if [ "$gitversion" != "$version" ]; then
+            cecho red -e $name  '\t' $last_release_tag  '\t installed:' $version
+        else
+            cecho reset -e $name  '\t' $last_release_tag
+            #   '\t installed:' $version
+        fi
     fi
 fi
