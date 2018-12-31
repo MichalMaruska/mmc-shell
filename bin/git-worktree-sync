@@ -1,17 +1,19 @@
 #!/bin/zsh -feu
 
-# usage: from to
-#
-# syncs 2 git worktrees, by git commands.
-# git worktree  list --porcelain
 
 usage()
 {
     setopt POSIX_ARGZERO
     cat <<EOF
-usage: ${0##*/} [+-h] [--] {source_worktree_dir} {target_worktree_dir} [ref]
+usage: ${0##*/} [+-h] [--] {Worktree}    [{FROM} | {ref}]
 
-either [ref] is given   or  STASH & sync.
+Either [ref] is given or STASH & sync to HEAD of from.
+
+
+Description:
+
+syncs 2 git worktrees, by git commands.
+git worktree  list --porcelain
 EOF
 }
 
@@ -34,15 +36,14 @@ if [ $# -lt 2 ]; then
     exit 1;
 fi
 
-readonly SOURCE=$1
-readonly TARGET=$2
+readonly TARGET=$1
 
-if [ $# -gt 2 ]; then
-    sha=$(git rev-parse $3)
+if [[ ! -d $2 ]]; then
+    sha=$(git rev-parse $2)
 else
     #by default:
     sha=$(
-        cd $SOURCE
+        cd $2
         # get the id:
         # sha=$(git rev-parse HEAD)
         sha=$(git stash create)
