@@ -13,12 +13,12 @@ do_pull()
     echo
     if ${git_cmd} status --short;
     then
-	cecho green -n "pulling";
-		#  from       ${git} remote show $remote|grep 'Fetch URL'
-	${git_cmd} pull --tags $remote master
-		# ${git} fetch --tags $remote
+        cecho green -n "pulling";
+                #  from       ${git} remote show $remote|grep 'Fetch URL'
+        ${git_cmd} pull --tags $remote master
+                # ${git} fetch --tags $remote
     else
-	cecho red $dir is not clean!
+        cecho red $dir is not clean!
     fi
 }
 
@@ -26,12 +26,12 @@ do_pull()
 remote=origin
 while getopts :r: OPT; do
     case $OPT in
-	r|+r)
-	    remote="$OPTARG"
-	    ;;
-	*)
-	    print "usage: ${0##*/} [+-r ARG} [--] ARGS..."
-	    exit 2
+        r|+r)
+            remote="$OPTARG"
+            ;;
+        *)
+            print "usage: ${0##*/} [+-r ARG} [--] ARGS..."
+            exit 2
     esac
 done
 shift OPTIND-1
