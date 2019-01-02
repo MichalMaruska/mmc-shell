@@ -1,5 +1,6 @@
 #!/bin/zsh -eu
 
+source /usr/share/mmc-shell/git-functions.sh
 
 usage()
 {
@@ -10,9 +11,6 @@ usage: ${0##*/} [+-h] [-q] [--]  branch remote
 
 EOF
 }
-
-
-source /usr/share/mmc-shell/git-functions.sh
 
 # return 1 if A < B
 # 0 if  A=B
@@ -68,20 +66,25 @@ done
 shift OPTIND-1
 OPTIND=1
 
-if [ $# -lt 2 ]; then
-    usage >&2
-    exit 1
+set_remote_name
+
+if [ $# -gt 1 ]; then
+    GIT_REMOTE_NAME=$1
+    shift
 fi
 
-branch=$1
-remote=$2
-REMOTE=remotes/$remote/master
+if [ $# -gt 1 ]; then
+    branch=$1
+    shift
+else
+    branch=$(current_branch_name)
+fi
 
-
+REMOTE=remotes/$GIT_REMOTE_NAME/$branch
 
 set +e
 # could compare with FETCH_HEAD
-compare_commits $branch remotes/$remote/master;
+compare_commits $branch $REMOTE;
 cmp=$?
 set -e
 
@@ -131,6 +134,5 @@ case $cmp in
     *)
         echo "error while comparing: $cmp"
 esac
-
 
 exit 0

@@ -103,7 +103,7 @@ fi
             # set -x
 
 foreach remote ($remotes) {
-    git-compare-remotes master $remote
+    git-compare-remotes $remote master
 }
 # git log --oneline  ORIG_HEAD..HEAD --
 
