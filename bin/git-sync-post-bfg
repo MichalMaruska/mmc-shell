@@ -71,6 +71,7 @@ add_to_mapping()
 
 usage()
 {
+    setopt POSIX_ARGZERO
     cat <<EOF
 usage: ${0##*/} [-s] [+-m ARG] [+-h} [--] ARGS...
 

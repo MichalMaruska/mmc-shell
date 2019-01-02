@@ -2,6 +2,7 @@
 
 function usage()
 {
+    setopt POSIX_ARGZERO
     cat <<EOF
 usage: ${0##*/} [+-va} [--] [nr] files...
 -v  verbose

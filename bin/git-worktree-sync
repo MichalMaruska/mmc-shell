@@ -7,6 +7,7 @@
 
 usage()
 {
+    setopt POSIX_ARGZERO
     cat <<EOF
 usage: ${0##*/} [+-h] [--] {source_worktree_dir} {target_worktree_dir} [ref]
 

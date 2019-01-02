@@ -62,7 +62,8 @@ readonly user_bind_mounts=(
 
 usage()
 {
-cat <<EOF
+    setopt POSIX_ARGZERO
+    cat <<EOF
 usage: ${0##*/} [+-n] [-c dir] [-b dir] [--] ARGS...
 
 # commands:

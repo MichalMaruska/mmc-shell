@@ -6,6 +6,7 @@
 #  o  available debian package version.
 usage()
 {
+    setopt POSIX_ARGZERO
     print "usage: ${0##*/} [+-h] [--] dir ..."
     # enters dir and compares its debian/changelog with what is installed (dpkg -l)
 }

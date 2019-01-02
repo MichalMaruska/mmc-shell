@@ -10,6 +10,7 @@ keep_graph_file=no
 
 usage()
 {
+    setopt POSIX_ARGZERO
     cat <<EOF
 usage: ${0##*/} [+-kpj] [-F format] [--] {file}
 -h help

@@ -3,7 +3,8 @@
 
 usage()
 {
-cat <<EOF
+    setopt POSIX_ARGZERO
+    cat <<EOF
 usage: ${0##*/} [+-h] [-q] [--]  branch remote
 -q  don't dump the commits
 
