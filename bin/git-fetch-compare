@@ -1,5 +1,9 @@
 #! /bin/zsh -feu
 
+. /usr/share/mmc-shell/mmc-functions.sh
+check_getopt
+
+
 ## Keep the local git repo up-to-date & report situation.
 ## i.e. compare (local branch) head with a remote head.
 
