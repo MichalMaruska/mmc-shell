@@ -42,9 +42,9 @@ if [ $# -gt 0 ]; then
 fi
 
 # fixme: if necessary:
-stash_if_non_clean
+stash_if_non_clean "merge fast-forward"
 
 # git checkout $branch
-git merge --ff-only $remote/$branch
+git merge --ff-only $GIT_REMOTE_NAME/$branch
 
 unstash_if_stashed
