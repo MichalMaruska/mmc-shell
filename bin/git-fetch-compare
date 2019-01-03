@@ -4,20 +4,14 @@
 check_getopt
 
 
-## Keep the local git repo up-to-date & report situation.
+## Keep the local git repo up-to-date (fetch from remotes) & report situation.
 ## i.e. compare (local branch) head with a remote head.
 
 ## `Defaults'
 branch=HEAD
 push=yes
-remote=
-# all
 verbose=no
-
-# remotes=$(git remote)
-# if [ ${#remotes} = 1 ]; then
-#     remote=${remotes[1]}
-# fi
+remotes=()
 
 usage()
 {
@@ -58,7 +52,8 @@ while (( $# > 0 )); do
             ;;
         -r | --remote)
             shift
-            remote=$1
+            # better +=
+            remotes+=($1)
             ;;
         --)
              shift
@@ -75,50 +70,27 @@ while (( $# > 0 )); do
     shift
 done
 
-if [ $# -ge 1 ]; then
-    remotes=($@)
-else
-    remotes=($remote)
+# Determine the remotes:
+if [ $# -gt 0 ]; then
+    remotes+=($@)
 fi
 
-if [ $verbose = y ]; then echo "will fetch from: $remotes";fi
-
-# remote or --all
-# git fetch $remote
-if [ $verbose = y ]; then cecho cyan "$(pwd)" ; fi
-
-
+# do the fetch
+# todo: empty-array test?
 if [ -z "${remotes}" ];
 then
+    if [ $verbose = y ]; then echo "will fetch from all remotes";fi
+
     git fetch "--all" --quiet
     git status --short
-    #typeset -a remotes
-    #remotes=($(git remote))
 else
+    if [ $verbose = y ]; then echo "will fetch from: $remotes";fi
     foreach remote ($remotes) {
         git fetch ${remote} --quiet
     }
 fi
 
-# now show the diff:
-    #echo $remotes vs $remote
-    #echo ${remote:|remotes}
-# if [ -z "${remote:|remotes}" ]; then
-            # set -x
-
+# report the change:
 foreach remote ($remotes) {
     git-compare-remotes $remote master
 }
-# git log --oneline  ORIG_HEAD..HEAD --
-
-
-# if [ ! $push = no -a $cmp = 1 ];
-# then
-#     # if maruska -> --mirror
-
-#     # push   .. as configured
-#     # push : .. corresponding
-#     #
-#     cecho yellow  "git push master"
-# #    echo git push $remote master
-# fi
