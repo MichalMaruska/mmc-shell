@@ -2,16 +2,31 @@
 # to be sourced!
 
 # sets GIT_REMOTE_NAME and GIT_URL
+# the `favorite' one:
 set_remote_name()
 {
-    if [ $(hostname) = e6440 ]; then
+    readonly remotes=($(git remote))
+
+    if [[ ${#remotes} = 1 ]]
+    then
+        GIT_REMOTE_NAME=${remotes[1]}
+    elif [[ $(hostname) = e6440 && -n ${remotes[(re)optiplex]} ]]
+    then
+        # todo: check it exists:
         : ${GIT_REMOTE_NAME:=optiplex}
-        : ${GIT_URL:=michal@optiplex}
-    else # [ $(hostname) = "optiplex-maruska" ];
+    elif [[ $(hostname) = "optiplex-maruska" &&  -n ${remotes[(re)e6440]} ]]
+    then
         : ${GIT_REMOTE_NAME=e6440}
-        : ${GIT_URL=michal@e6440}
+    else
+        die "cannot decide for a favorite remote"
     fi
+
+    GIT_URL=$(git remote get-url $GIT_REMOTE_NAME)
+    return
 }
+
+# # REMOTE=FETCH_HEAD
+
 
 function get_local_path()
 {
