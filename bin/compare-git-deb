@@ -4,6 +4,7 @@
 #  o  Git repository which carries a source debian package
 # with
 #  o  available debian package version.
+#   grep-status   -F package   --regex '^make$'
 usage()
 {
     setopt POSIX_ARGZERO
