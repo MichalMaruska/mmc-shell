@@ -32,7 +32,7 @@ compare_commits()
     readonly first=$(git log $1 --max-count=1 --format="%H")
     readonly second=$(git log $2 --max-count=1 --format="%H")
 
-    if [[ -z "$first" -o -z "$second" ]]; then
+    if [[ -z "$first" || -z "$second" ]]; then
         if [[ $verbose = y ]]; then echo "$first $second" >&2;fi
         return 4
     fi
