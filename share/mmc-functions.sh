@@ -7,3 +7,14 @@ check_getopt()
         exit -1
     fi
 }
+
+die()
+{
+    cecho blue $@ >&2
+    exit 1
+}
+
+INFO()
+{
+    cecho green $@
+}
