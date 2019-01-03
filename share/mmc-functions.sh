@@ -18,3 +18,8 @@ INFO()
 {
     cecho green $@
 }
+
+LOG_STEP()
+{
+    cecho cyan $@
+}
