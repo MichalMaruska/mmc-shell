@@ -1,0 +1,67 @@
+#!/bin/zsh -f
+
+# Given a slave work-tree, turn it into the main git repository, and
+# the current main repo into a slave work-tree.
+
+# Hence the objects and refs subdirs move, and the worktree structures shuffle.
+
+source /usr/share/mmc-shell/git-functions.sh
+
+CP=(cp --verbose --archive)
+MV=(mv --verbose --interactive)
+
+
+## Checks
+if [[ ! true = $(git rev-parse --is-inside-work-tree) ]]
+   # todo: no sequencer !
+then
+    exit 1
+fi
+
+# cd ./$(git rev-parse --show-cdup)
+
+## Acquire the parameters
+localdir=$(git rev-parse --show-toplevel)
+
+# The first one?
+maindir=$(git worktree list --porcelain |
+              sed --quiet -e '1 s/worktree //;T;p')
+
+worktreedir=$(git rev-parse --git-dir)
+
+## Check more:
+if expr match $maindir/worktrees/ $worktreedir;
+then
+    exit 1
+fi
+
+
+## Now turn the slave (local) work-tree into a .git repo:
+
+$MV $localdir/.git $localdir/.git.backup
+
+# this copies too much:  only refs and objects?
+$CP $maindir/.git $localdir/.git
+
+# overwrite the local-specific files:
+cp $worktreedir/{HEAD,index} $localdir/.git
+
+# git --git-dir=.git.backup status
+# git --git-dir=.git.backup rev-parse --git-dir
+
+
+
+## Now point the old slave to
+oldgit=$maindir/
+$NEWGIT=$localdir/.git
+
+worktree_local=worktrees/navkit/
+
+# fixme:
+echo $oldgit/.git > $NEWGIT/$worktree_local/gitdir
+
+$CP $oldgit/{HEAD,index} .git/$worktree_local/
+
+## Now create the worktree of the original master.
+$MV $oldgit/.git $oldgit/.git.old
+echo "gitdir: $NEWGIT" > $oldgit/.git
