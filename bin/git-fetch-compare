@@ -92,5 +92,5 @@ fi
 
 # report the change:
 foreach remote ($remotes) {
-    git-compare-remotes $remote master
+    git-compare-remote $remote master
 }
