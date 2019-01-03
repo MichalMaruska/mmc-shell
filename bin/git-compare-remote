@@ -96,12 +96,11 @@ REMOTE=remotes/$GIT_REMOTE_NAME/$branch
 
 
 # I need the exit status, and it won't be zero:
-(set +e
- # could compare with FETCH_HEAD
- compare_commits $branch $REMOTE
- )
-cmp=$?
+# could compare with FETCH_HEAD
 
+# Zsh claims that in && expressions all but the last don't make -e trigger the exit.
+compare_commits $branch $REMOTE && :
+cmp=$?
 
 args=(--max-count 15)
 case $cmp in
