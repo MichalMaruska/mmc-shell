@@ -1,3 +1,36 @@
+mmc-shell (3.19) release; urgency=medium
+
+  * git-ff: use --ff-only
+  * debian: recomment systemd-container as enter-container depends on it!
+  * fix shell undef var
+  * setopt POSIX_ARGZERO
+  * spaces
+  * git-worktree-sync: accept either a workdir _or_ a ref.
+  * fix git-ff: Provide the arg to stash_if_non_clean and fix...
+  * git-compare-remotes: default to current-branch & favorite remote -- API change!
+  * start mmc-functions.sh with check_getopt()
+  * clean up this OLD useles tool
+  * drop git-restate, should be in hierarchy, but it can be made w/ other tools
+  * drop useless tools
+  * tabs
+  * rename to ssh-git-pull
+  * drop the obsolete git-move-branch, git-rebase-branch, push-git-subdirs
+  * mmc-functions.sh: add die() INFO()
+  * simplify git-fetch-compare: drop old comments
+  * git-functions: refine the set_remote_name() -- choose_favorite_remote
+  * drop obsolete tool: git-compare
+  * git-compare-remotes: simplify, clean
+  * rename to git-compare-remote
+  * git-compare-remote: use && instead of -o ! ZShell conditional
+  * Improve running a command with non-zero exit.
+  * unused LOG_STEP()
+  * drop useless pull-git-subdirs
+  * compare-git-deb comment
+  * new git-copy-commit
+  * new git-switch-worktree
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 04 Jan 2019 12:08:24 +0100
+
 mmc-shell (3.17) release; urgency=medium
 
   * git-ff: default to the "friendly remote" and the current branch
