@@ -24,3 +24,12 @@ LOG_STEP()
 {
     cecho cyan $@
 }
+
+
+dump_stack()
+{
+    for ((i=${#zsh_eval_context}; i > 0; i--))
+    do
+        echo ${zsh_eval_context[i]}
+    done
+}
