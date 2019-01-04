@@ -10,9 +10,10 @@ check_getopt()
 
 die()
 {
-    cecho blue $@ >&2
-    exit 1
+    cecho blue "ERROR:" $@ >&2
+    exit -1
 }
+
 
 INFO()
 {
