@@ -20,18 +20,18 @@ builtin=0
 
 while getopts :jpb OPT; do
     case $OPT in
-	j|+j)
-	    jack=1
-	    ;;
+        j|+j)
+            jack=1
+            ;;
         p)
             phones=1
             ;;
-	b|+b)
-	    builtin=1
-	    ;;
-	*)
-	    print "usage: ${0##*/} [+-jb} [--] ARGS..."
-	    exit 2
+        b|+b)
+            builtin=1
+            ;;
+        *)
+            print "usage: ${0##*/} [+-jb} [--] ARGS..."
+            exit 2
     esac
 done
 shift OPTIND-1
