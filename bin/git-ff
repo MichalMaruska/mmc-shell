@@ -6,9 +6,12 @@ source /usr/share/mmc-shell/git-functions.sh
 usage() {
     setopt POSIX_ARGZERO
     cat <<EOF
-usage: ${0##*/} [+-h] [--]  remote   branch
+usage: ${0##*/} [+-h] [-f] [--]  [remote] [branch]
 
 Fast-forward to remote head, stashing around.
+-f not only fast-forward !
+
+By default {branch} is the current one.
 EOF
     unsetopt POSIX_ARGZERO
 }
@@ -16,12 +19,16 @@ EOF
 set_remote_name
 # todo: the same I'm on
 branch=$(current_branch_name)
+force=n
 
-while getopts :h OPT; do
+while getopts :hf OPT; do
     case $OPT in
         h|+h)
             usage
             exit 0
+            ;;
+        f)
+            force=y
             ;;
         *)
             usage >&2
@@ -44,7 +51,11 @@ fi
 # fixme: if necessary:
 stash_if_non_clean "merge fast-forward"
 
-# git checkout $branch
-git merge --ff-only $GIT_REMOTE_NAME/$branch
-
+if [[ $force = y ]];
+then
+    git reset --hard remotes/$GIT_REMOTE_NAME/$branch
+else
+    # git checkout $branch
+    git merge --ff-only $GIT_REMOTE_NAME/$branch
+fi
 unstash_if_stashed
