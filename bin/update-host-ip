@@ -1,0 +1,78 @@
+#!/bin/zsh -feu
+
+HOST_FILE=/etc/hosts
+GREP=(/bin/grep --color)
+
+source /usr/share/mmc-shell/mmc-functions.sh
+
+usage()
+{
+cat <<EOF
+usage: ${0##*/} [+-h} [--] HOSTNAME
+       ${0##*/} [+-h} [--] HOSTNAME  IP
+
+- dump the IP in $HOST_FILE
+- or set it to the provided IP. -- overwrites the line.
+
+Does it work with alias names on the same line?
+
+EOF
+}
+
+dump_ip_of()
+{
+    readonly HOSTNAME=$1
+    $GREP -E "\b($HOSTNAME |$HOSTNAME$)" $HOST_FILE
+}
+
+while getopts :h OPT; do
+    case $OPT in
+        h|+h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage >&2
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+
+if [ $# = 0 ]; then
+    usage
+    exit 1
+fi
+
+
+HOSTNAME=$1
+if [ $# = 1 ]; then
+    dump_ip_of $HOSTNAME
+    exit 0
+fi
+
+set -x
+IP=$2
+# [[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
+IP_REGEXP="[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+"
+if ! echo $IP| grep -E "$IP_REGEXP"; then
+    die "invalid IP: $IP"
+fi
+
+dump_ip_of $HOSTNAME
+
+# sudo sed -ie "s/.*\b$HOSTNAME/$IP $HOSTNAME/" $HOST_FILE
+# 10.17.150.209
+# sudo sed -ie "s/.*\b\($HOSTNAME \|$HOSTNAME\$\)/$IP $HOSTNAME/" $HOST_FILE
+SUFFIX=.old
+sudo sed --regexp-extended --in-place=$SUFFIX -e \
+     "s/^($IP_REGEXP)(.*)\b($HOSTNAME (.*)|$HOSTNAME$)/$IP\2 $HOSTNAME \3/" \
+     $HOST_FILE | grep -F $HOSTNAME
+
+# dump all IP addresses:
+# sed -E -n -e "s/^([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)(.*)/\1/g;T;p" /etc/hosts
+
+dump_ip_of $HOSTNAME
+
+diff --color /etc/hosts$SUFFIX /etc/hosts
