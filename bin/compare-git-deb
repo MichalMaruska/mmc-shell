@@ -1,14 +1,27 @@
 #! /bin/zsh -feu
 
-# Compare
+# Dump the git history since the release which is `available'
+
 #  o  Git repository which carries a source debian package
 # with
 #  o  available debian package version.
 #   grep-status   -F package   --regex '^make$'
+
+readonly VALID_RELEASE_TAG_NUMBER='^.*-\([[:digit:]]\+\)-[[:alnum:]]\+$'
+#                                    vvvv ^^^^^^^^^^^^^
+readonly VALID_RELEASE_TAG_PREFIX='^\(.*\)-[[:digit:]]\+-[[:alnum:]]\+$'
+# 1568-rc56
+#     ^ must be there
+
 usage()
 {
     setopt POSIX_ARGZERO
-    print "usage: ${0##*/} [+-h] [--] dir ..."
+    cat <<EOF
+usage: ${0##*/} [+-h] [--] [dir]
+
+dir ... by default "."
+
+EOF
     # enters dir and compares its debian/changelog with what is installed (dpkg -l)
 }
 
@@ -20,7 +33,7 @@ while getopts :h OPT; do
             exit 0
             ;;
         *)
-            usage
+            usage >&2
             exit 2
     esac
 done
@@ -53,7 +66,8 @@ version=$info
 
 if [ 0 = $? ]; then
     set +e
-    post=$(expr match $last_release_tag '^.*-\([[:digit:]]\+\)-[[:alnum:]]\+$')
+
+    readonly number=$(expr match $last_release_tag $VALID_RELEASE_TAG_NUMBER)
     match_status=$?
 
     gitversion=${${last_release_tag#*/}%%-*}
@@ -61,11 +75,12 @@ if [ 0 = $? ]; then
     set -e
     if [ $match_status = 0 ];
     then
-        #echo -n "$post "
-        tag=$(expr match $last_release_tag '^\(.*\)-[[:digit:]]\+-[[:alnum:]]\+$')
-        cecho hiyellow -n $name
+        #echo -n "$number"
+        tag=$(expr match $last_release_tag $VALID_RELEASE_TAG_PREFIX)
+        cecho hiyellow -n $deb_src_pkg
+
         echo -n -e '\tis '
-        cecho cyan -n $post
+        cecho cyan -n $number
         echo " commits ahead of\t $tag"
 
         if [ "$gitversion" != "$version" ]; then
