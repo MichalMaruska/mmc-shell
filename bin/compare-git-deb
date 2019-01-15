@@ -46,31 +46,29 @@ else
     DIR=.
 fi
 
-# cd $DIR;
-last_release_tag=$(cd $DIR; git describe --tags HEAD 2>/dev/null)
+readonly last_release_tag=$(cd $DIR; git describe --tags HEAD 2>/dev/null)
 
 
 # binary package, somehow representing the source package in that Git repo:
 # todo:
+readonly deb_src_pkg=$(deb-pkg-name $DIR/debian/control*)
 
-deb_src_pkg=$(deb-pkg-name $DIR/debian/control*)
-name=$deb_src_pkg
+# is this an array?
+readonly deb_pkg=$(deb-pkg-binary-packages $DIR)
 
-
-deb_pkg=$(deb-pkg-binary-packages $DIR)
-info=$(deb-pkg-installed-version $deb_pkg |tail -n 1)
-version=$info
+readonly info=$(deb-pkg-installed-version $deb_pkg |tail -n 1)
+readonly version=$info
 #(echo $info)
 
 # path from $FOR_EACH_BASE_DIR
-
-if [ 0 = $? ]; then
+if [ 0 = $? ]; # fixme!
+then
     set +e
 
     readonly number=$(expr match $last_release_tag $VALID_RELEASE_TAG_NUMBER)
     match_status=$?
 
-    gitversion=${${last_release_tag#*/}%%-*}
+    readonly gitversion=${${last_release_tag#*/}%%-*}
 
     set -e
     if [ $match_status = 0 ];
@@ -93,9 +91,9 @@ if [ 0 = $? ]; then
         echo
     else
         if [ "$gitversion" != "$version" ]; then
-            cecho red -e $name  '\t' $last_release_tag  '\t installed:' $version
+            cecho red -e $deb_src_pkg  '\t' $last_release_tag  '\t installed:' $version
         else
-            cecho reset -e $name  '\t' $last_release_tag
+            cecho reset -e $deb_src_pkg  '\t' $last_release_tag
             #   '\t installed:' $version
         fi
     fi
