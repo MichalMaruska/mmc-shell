@@ -15,8 +15,19 @@
 
 
 CARD=1
+# known/expected controls:
+auto_mute_control='Auto-Mute Mode'
+
+line_control='Line Out'
+speaker_control='Speaker'
+headphones_control='Headphone'
+
+AMIXER=(amixer -c $CARD)
+
+# default outputs:
 jack=0
 builtin=0
+phones=0
 
 while getopts :bjlp OPT; do
     case $OPT in
@@ -49,10 +60,6 @@ OPTIND=1
 #  Item0: 'Line Out+Speaker'
 # only to the jack:
 
-control='Auto-Mute Mode'
-control2='Line Out'
-control3='Speaker'
-control4='Headphone'
 
 # for `control'
 if [[ $builtin = 1 ]]; then
@@ -63,6 +70,12 @@ else
     value='Line Out+Speaker'
 fi
 
+set_control()
+{
+    # name value
+    $AMIXER sget $1
+    $AMIXER sset $@
+}
 
 # for `control2'
 if [[ $jack = 1 ]]; then
@@ -82,23 +95,25 @@ fi
 
 set -x
 # both:
-amixer  sset -c $CARD $control $value
+set_control $auto_mute_control $value
+# $AMIXER sset 'Speaker+LO' 100
+
 
 # pswitch
 # value=off
-amixer  sset -c $CARD $control2 $line_out
+set_control $line_control       $line_out
+set_control $speaker_control    $speaker
+set_control $headphones_control $headphone
 
-amixer sset -c $CARD $control3 $speaker
-amixer sset -c $CARD $control4 $headphone
 # set volumes:
 if [[ ${phones-} = 1 ]]; then
-    amixer sset -c $CARD Headphone  70
+    set_control $headphones_control 70
 fi
 
-# amixer sset -c 1  'Speaker+LO' 100
+SET_PULSE_AUDIO=(pactl --server unix:/run/user/1000/pulse/native)
 
 # not HDMI:
-pactl --server unix:/run/user/1000/pulse/native  set-card-profile 1 output:analog-stereo+input:analog-stereo
+$SET_PULSE_AUDIO set-card-profile 1 output:analog-stereo+input:analog-stereo
 # HDMI:
 #                                                set-card-profile 0 output:hdmi-stereo+input:analog-stereo
 
