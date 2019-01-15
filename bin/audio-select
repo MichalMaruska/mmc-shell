@@ -1,10 +1,11 @@
 #!/bin/zsh -feu
 
-# how to get the list of controls:
+# How to get the list of controls:
+# use -l option?
 # am F6 & trial/error
 # then:
 #
-# amixer  -c 1 scontrols
+# amixer -c 1 scontrols
 # same as:   amixer  -c 1|grep control
 #
 # $ amixer -c 1   get 'Line Out'
@@ -79,10 +80,9 @@ OPTIND=1
 # only to the jack:
 
 
-# for `control'
+# for `auto_mute_control'
 if [[ $builtin = 1 ]]; then
     value='Disabled'
-
 else
     # value='Speaker Only'
     value='Line Out+Speaker'
@@ -95,7 +95,8 @@ set_control()
     $AMIXER sset $@
 }
 
-# for `control2'
+
+# for `line_control'
 if [[ $jack = 1 ]]; then
     line_out='on'
     speaker='off'
@@ -133,12 +134,14 @@ SET_PULSE_AUDIO=(pactl --server unix:/run/user/1000/pulse/native)
 # not HDMI:
 $SET_PULSE_AUDIO set-card-profile 1 output:analog-stereo+input:analog-stereo
 # HDMI:
-#                                                set-card-profile 0 output:hdmi-stereo+input:analog-stereo
+#                                               set-card-profile 0 output:hdmi-stereo+input:analog-stereo
 
 echo <<EOF
 https://wiki.archlinux.org/index.php/PulseAudio/Examples#HDMI_output_configuration
 todo: cat /sys/class/drm/card0-DP-1/status
 
 #
-cat /sys/class/drm/card0/card0-HDMI-A-1/status /sys/class/drm/card0/card0-HDMI-A-2/status /sys/class/drm/card0/card0-HDMI-A-3/status
+cat /sys/class/drm/card0/card0-HDMI-A-1/status
+    /sys/class/drm/card0/card0-HDMI-A-2/status
+    /sys/class/drm/card0/card0-HDMI-A-3/status
 EOF
