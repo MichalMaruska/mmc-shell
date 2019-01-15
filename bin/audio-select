@@ -18,7 +18,7 @@ CARD=1
 jack=0
 builtin=0
 
-while getopts :jpb OPT; do
+while getopts :bjlp OPT; do
     case $OPT in
         j|+j)
             jack=1
@@ -28,6 +28,14 @@ while getopts :jpb OPT; do
             ;;
         b|+b)
             builtin=1
+            ;;
+        l)
+            $AMIXER scontrols
+            echo
+            # $AMIXER scontents
+
+            $AMIXER controls| sort -n -t '=' -k '2'
+            exit 0
             ;;
         *)
             print "usage: ${0##*/} [+-jb} [--] ARGS..."
