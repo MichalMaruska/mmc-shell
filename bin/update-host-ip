@@ -1,9 +1,9 @@
 #!/bin/zsh -feu
 
+source /usr/share/mmc-shell/mmc-functions.sh
+
 HOST_FILE=/etc/hosts
 GREP=(/bin/grep --color)
-
-source /usr/share/mmc-shell/mmc-functions.sh
 
 usage()
 {
@@ -12,10 +12,11 @@ usage: ${0##*/} [+-h} [--] HOSTNAME
        ${0##*/} [+-h} [--] HOSTNAME  IP
 
 - dump the IP in $HOST_FILE
-- or set it to the provided IP. -- overwrites the line.
+- or update the IP of the HOST in $HOST_FILE. -- overwrites the line.
 
 Does it work with alias names on the same line?
 
+It is assumed the hostname is separated by whitespace on the line.
 EOF
 }
 
