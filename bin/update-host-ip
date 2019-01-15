@@ -67,7 +67,7 @@ dump_ip_of $HOSTNAME
 # sudo sed -ie "s/.*\b\($HOSTNAME \|$HOSTNAME\$\)/$IP $HOSTNAME/" $HOST_FILE
 SUFFIX=.old
 sudo sed --regexp-extended --in-place=$SUFFIX -e \
-     "s/^($IP_REGEXP)(.*)\b($HOSTNAME (.*)|$HOSTNAME$)/$IP\2 $HOSTNAME \3/" \
+     "s/^($IP_REGEXP)(.*\b)($HOSTNAME( .*)|$HOSTNAME$)/$IP\2$HOSTNAME\4/" \
      $HOST_FILE | grep -F $HOSTNAME
 
 # dump all IP addresses:
