@@ -9,7 +9,6 @@ check_getopt
 
 ## `Defaults'
 branch=HEAD
-push=yes
 verbose=no
 remotes=()
 
@@ -18,31 +17,22 @@ usage()
     setopt POSIX_ARGZERO
     cat <<EOF
 usage: ${0##*/} [+-f] [-r <remote>| -a]  [--] ARGS...
--P | --pushto {remote}
 -r | --remote [remote]   ....
 -a | --all
 --verbose
 EOF
 }
 
-push=no
 
 # how can I have optional argument to ... ?
 cmd_options=$(getopt --name ${0##*/} --shell bash \
-        --longoptions push,pushto:,remote,verbose --options r:pP:hv \
+        --longoptions all,remote:,verbose --options ar:hv \
         -- "$@" ) || { usage && exit 1 }
 
 eval set -- "$cmd_options"
 
 while (( $# > 0 )); do
     case $1 in
-        -p | --push )
-            push=yes
-            ;;
-        -P | --pushto)
-            shift
-            push=$1
-            ;;
         -h | --help)
             usage
             exit 0
