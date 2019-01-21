@@ -1,17 +1,41 @@
 #! /bin/zsh -feu
 
-# Dump the git history since the release which is `available'
+# one day I started to use zsh modules (& read the last chapter of Zsh manual)
+zmodload zsh/regex
+source /usr/share/zsh/functions/Misc/colors
+
+# Dump the git history since the release which is `git-tagged', or `installed'
+# not `available'
 
 #  o  Git repository which carries a source debian package
 # with
 #  o  available debian package version.
 #   grep-status   -F package   --regex '^make$'
 
-readonly VALID_RELEASE_TAG_NUMBER='^.*-\([[:digit:]]\+\)-[[:alnum:]]\+$'
+# readonly DISTANCE_FROM_DESCRIBE_RX='^.*-\([[:digit:]]\+\)-g[[:alnum:]]\+$'
+readonly DISTANCE_FROM_DESCRIBE_ERX='^.*-([[:digit:]]+)-g[[:alnum:]]+$'
+#                                                              7x {7} ?
 #                                    vvvv ^^^^^^^^^^^^^
-readonly VALID_RELEASE_TAG_PREFIX='^\(.*\)-[[:digit:]]\+-[[:alnum:]]\+$'
+# readonly VALID_RELEASE_TAG_PREFIX='^\(.*\)-[[:digit:]]\+-[[:alnum:]]\+$'
+readonly VALID_RELEASE_TAG_PREFIX_ERX='^(.*)-[[:digit:]]+-g[[:alnum:]]+$'
+
+readonly GIT_DESCRIBE_TAG_ERX='^(.*)-([[:digit:]]+)-g([[:alnum:]]+)$'
 # 1568-rc56
 #     ^ must be there
+
+
+# Binary package, somehow representing the source package in that Git repo:
+# is this an array?
+find_installed_version()
+{
+    # local
+    set -x
+    readonly dir=$1
+    readonly deb_pkg=($(deb-pkg-binary-packages $dir))
+    # I could attempt all of the binary packages...
+    deb-pkg-installed-version $deb_pkg[1] |tail -n 1
+}
+
 
 usage()
 {
@@ -46,55 +70,55 @@ else
     DIR=.
 fi
 
-readonly last_release_tag=$(cd $DIR; git describe --tags HEAD 2>/dev/null)
-
-
-# binary package, somehow representing the source package in that Git repo:
-# todo:
+# so this is the `name'
 readonly deb_src_pkg=$(deb-pkg-name $DIR/debian/control*)
+readonly installed_version=$(find_installed_version $DIR)
 
-# is this an array?
-readonly deb_pkg=$(deb-pkg-binary-packages $DIR)
+# Calculate the last release (git-tagged): number, distance:
+readonly git_describe_since_last_release=$(cd $DIR; git describe --tags HEAD 2>/dev/null)
 
-readonly info=$(deb-pkg-installed-version $deb_pkg |tail -n 1)
-readonly version=$info
-#(echo $info)
+# readonly
+# fixme: this does not fail if not the last!
+# git_distance= $(expr match $git_describe_since_last_release $DISTANCE_FROM_DESCRIBE_RX)
+[[ $git_describe_since_last_release -regex-match  $GIT_DESCRIBE_TAG_ERX ]] &&
+    git_distance=$match[2]
+git_tag=$match[1]
+git_sha=$match[3]
 
-# path from $FOR_EACH_BASE_DIR
-if [ 0 = $? ]; # fixme!
-then
-    set +e
+# the tag is distro/version-number
+readonly version_from_tag=${git_tag#*/}
 
-    readonly number=$(expr match $last_release_tag $VALID_RELEASE_TAG_NUMBER)
-    match_status=$?
+#$(expr match $git_describe_since_last_release $VALID_RELEASE_TAG_PREFIX)
+# [[ $git_describe_since_last_release -regex-match $VALID_RELEASE_TAG_PREFIX_ERX ]] &&
 
-    readonly gitversion=${${last_release_tag#*/}%%-*}
-
-    set -e
-    if [ $match_status = 0 ];
-    then
-        #echo -n "$number"
-        tag=$(expr match $last_release_tag $VALID_RELEASE_TAG_PREFIX)
-        cecho hiyellow -n $deb_src_pkg
-
-        echo -n -e '\tis '
-        cecho cyan -n $number
-        echo " commits ahead of\t $tag"
-
-        if [ "$gitversion" != "$version" ]; then
-            cecho blue -e "\tdifferent versions: $gitversion vs $version"
-        fi
+# mmc: wrong:
+cecho red "describe is $git_describe_since_last_release"
+cecho red "distance is $git_distance"
+cecho red "tag is $git_tag"
+cecho red "version is $version_from_tag"
 
 
-        git --no-pager log --format='%C(green)%h %C(blue)%s' $tag..HEAD
-        # git log --oneline $tag..HEAD
-        echo
+cecho hiyellow -n $deb_src_pkg; echo -n -e '\tis '
+echoti setaf 5; echo -n $git_distance
+# cecho cyan -n $git_distance
+echoti setaf 7; echo " commits ahead of\t $git_tag"
+
+
+if [ "$version_from_tag" != "$installed_version" ]; then
+    cecho blue -e "\tdifferent versions: $version_from_tag vs $installed_version"
+fi
+
+git --no-pager log --format='%C(green)%h %C(blue)%s' $git_tag..HEAD
+# git log --oneline $git_tag..HEAD
+echo
+
+
+
+if false; then
+    if [ "$version_from_tag" != "$installed_version" ]; then
+        cecho red -e $deb_src_pkg  '\t' $git_describe_since_last_release  '\t installed:' $installed_version
     else
-        if [ "$gitversion" != "$version" ]; then
-            cecho red -e $deb_src_pkg  '\t' $last_release_tag  '\t installed:' $version
-        else
-            cecho reset -e $deb_src_pkg  '\t' $last_release_tag
-            #   '\t installed:' $version
-        fi
+        cecho reset -e $deb_src_pkg  '\t' $git_describe_since_last_release
+        #   '\t installed:' $version
     fi
 fi
