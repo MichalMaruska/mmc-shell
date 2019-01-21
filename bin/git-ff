@@ -1,6 +1,8 @@
 #!/bin/zsh -feu
 
 source /usr/share/mmc-shell/git-functions.sh
+source /usr/share/mmc-shell/mmc-functions.sh
+colors
 
 # set -x
 usage() {
@@ -48,14 +50,24 @@ if [ $# -gt 0 ]; then
     shift
 fi
 
-# fixme: if necessary:
-stash_if_non_clean "merge fast-forward"
 
-if [[ $force = y ]];
-then
-    git reset --hard remotes/$GIT_REMOTE_NAME/$branch
-else
-    # git checkout $branch
-    git merge --ff-only $GIT_REMOTE_NAME/$branch
+# if the fast-forward would move ahead!
+
+readonly REMOTE_HEAD=$GIT_REMOTE_NAME/$branch
+if [[ $(git rev-parse HEAD) != $(git rev-parse $REMOTE_HEAD) ]]; then
+    if [[  $(git rev-parse HEAD) = $(git merge-base HEAD $REMOTE_HEAD) ]]
+    then
+        stash_if_non_clean "merge fast-forward"
+
+        if [[ $force = y ]];
+        then
+            git reset --hard remotes/$GIT_REMOTE_NAME/$branch
+        else
+            # git checkout $branch
+            git merge --ff-only $REMOTE_HEAD
+        fi
+        unstash_if_stashed
+    else
+        echo >&2 cannot fast-forward to $REMOTE_HEAD: $fg[red]not our descendant$reset_color
+    fi
 fi
-unstash_if_stashed
