@@ -5,17 +5,20 @@ usage()
 {
     setopt POSIX_ARGZERO
     cat <<EOF
-usage: ${0##*/} [+-h] [--] {Worktree}    [{FROM} | {ref}]
+usage: ${0##*/} [+-h] [--] {worktree} [{FROM} | {ref}]
 
-Either [ref] is given or STASH & sync to HEAD of from.
-
+worktree ... is the directory
 
 Description:
+===========
+Syncs 2 git worktrees, by git commands:
+Either {ref} is given or we STASH & sync to HEAD of {FROM}.
 
-syncs 2 git worktrees, by git commands.
-git worktree  list --porcelain
 EOF
 }
+
+# todo: git worktree list --porcelain
+# convert the NAME into directory.
 
 while getopts :h OPT; do
     case $OPT in
