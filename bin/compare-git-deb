@@ -87,12 +87,12 @@ cecho red "distance is $git_distance"
 cecho red "tag is $git_tag"
 cecho red "version is $version_from_tag"
 
-
-cecho hiyellow -n $deb_src_pkg; echo -n -e '\tis '
+echo -ne "$bg_bold[green]$fg[red]$deb_src_pkg" $reset_color '\tis '
 echoti setaf 5; echo -n $git_distance
 # cecho cyan -n $git_distance
 echoti setaf 7; echo " commits ahead of\t $git_tag"
 
+echo   $bg_bold[green] $fg[red] ahoj
 
 if [ "$version_from_tag" != "$installed_version" ]; then
     cecho blue -e "\tdifferent versions: $version_from_tag vs $installed_version"
