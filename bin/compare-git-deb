@@ -2,7 +2,9 @@
 
 # one day I started to use zsh modules (& read the last chapter of Zsh manual)
 zmodload zsh/regex
-source /usr/share/zsh/functions/Misc/colors
+. /usr/share/mmc-shell/mmc-functions.sh
+colors
+
 
 # Dump the git history since the release which is `git-tagged', or `installed'
 # not `available'
@@ -92,9 +94,9 @@ readonly version_from_tag=${git_tag#*/}
 # [[ $git_describe_since_last_release -regex-match $VALID_RELEASE_TAG_PREFIX_ERX ]] &&
 
 # mmc: wrong:
-cecho red "describe is $git_describe_since_last_release"
-cecho red "distance is $git_distance"
-cecho red "tag is $git_tag"
+print "$fg[red]Describe is $bold_color$git_describe_since_last_release$reset_color"
+print "$fg[red]Distance is $bold_color$git_distance"
+echo "tag is $bold_color $git_tag"
 cecho red "version is $version_from_tag"
 
 
