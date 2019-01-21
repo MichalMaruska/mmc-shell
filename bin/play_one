@@ -148,7 +148,7 @@ START=0
 verbose=n
 mplayer_args=(-ao pulse,alsa)
 
-while getopts :vahpg OPT; do
+while getopts :aghpqv OPT; do
     case $OPT in
         g)
             use_gst=yes
@@ -166,6 +166,9 @@ while getopts :vahpg OPT; do
             pulse=y
             MPG123=(mpg123-pulse --gapless ${playdsp+-a $playdsp} --aggressive -q)
             mplayer_args=(-ao pulse)
+            ;;
+        q)
+            MPG123+=(--no-control --fifo /run/tmp/play-fifo )
             ;;
         h)
             usage
