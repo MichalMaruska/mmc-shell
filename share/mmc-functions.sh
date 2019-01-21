@@ -33,3 +33,18 @@ dump_stack()
         echo ${zsh_eval_context[i]}
     done
 }
+
+autoload -Uz colors
+
+if false;
+then
+load_colors()
+{
+    source /usr/share/zsh/functions/Misc/colors
+
+    # color
+    # reset_color bold_color
+    # fg fg_bold fg_no_bold
+    # bg ....
+}
+fi
