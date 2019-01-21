@@ -29,7 +29,21 @@ jack=0
 builtin=0
 phones=0
 
-while getopts :bjlp OPT; do
+usage()
+{
+cat <<EOF
+usage: ${0##*/} [+-jbh] [--] ARGS...
+
+-l list the controls (of the card $CARD)
+
+-b builtin speakers
+-j line-out jack (in dock)
+-p phones
+
+EOF
+}
+
+while getopts :bhjlp OPT; do
     case $OPT in
         j|+j)
             jack=1
@@ -48,8 +62,12 @@ while getopts :bjlp OPT; do
             $AMIXER controls| sort -n -t '=' -k '2'
             exit 0
             ;;
+        h)
+            usage
+            exit 0
+            ;;
         *)
-            print "usage: ${0##*/} [+-jb} [--] ARGS..."
+            usage >&2
             exit 2
     esac
 done
