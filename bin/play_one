@@ -140,7 +140,7 @@ use_gst=no
 
 # (positive) defaults:
 pulse=y
-MPG123=(mpg123-pulse --gapless ${playdsp+-a $playdsp} --aggressive -q)
+MPG123=(mpg123-pulse --gapless ${playdsp+-a $playdsp} --aggressive -q --title)
 mplayer_args=(-ao pulse)
 
 START=0
