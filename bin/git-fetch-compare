@@ -11,6 +11,7 @@ check_getopt
 branch=HEAD
 verbose=no
 remotes=()
+fast_forward=no
 
 usage()
 {
@@ -19,6 +20,7 @@ usage()
 usage: ${0##*/} [+-f] [-r <remote>| -a]  [--] ARGS...
 -r | --remote [remote]   ....
 -a | --all
+-f | --ff fast-forward to the fetched remote-branch
 --verbose
 EOF
 }
@@ -26,7 +28,7 @@ EOF
 
 # how can I have optional argument to ... ?
 cmd_options=$(getopt --name ${0##*/} --shell bash \
-        --longoptions all,remote:,verbose --options ar:hv \
+        --longoptions all,ff:,remote:,verbose --options afhr:v \
         -- "$@" ) || { usage && exit 1 }
 
 eval set -- "$cmd_options"
@@ -40,18 +42,21 @@ while (( $# > 0 )); do
         --all | -a)
             remote="--all"
             ;;
-        -r | --remote)
+        --ff | -f)
+            fast_forward=y
+            ;;
+        --remote | -r)
             shift
             # better +=
             remotes+=($1)
+            ;;
+        -v | --verbose)
+            verbose=y
             ;;
         --)
              shift
              break
              ;;
-        -v | --verbose)
-            verbose=y
-            ;;
         *)
             echo $1>&2
             usage
@@ -84,3 +89,7 @@ fi
 foreach remote ($remotes) {
     git-compare-remote $remote master
 }
+
+if [[ $fast_forward = y && ${#remotes} = 1 ]]; then
+    git-ff $remotes[1]
+fi
