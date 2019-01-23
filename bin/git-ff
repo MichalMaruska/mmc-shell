@@ -55,7 +55,8 @@ fi
 
 readonly REMOTE_HEAD=$GIT_REMOTE_NAME/$branch
 if [[ $(git rev-parse HEAD) != $(git rev-parse $REMOTE_HEAD) ]]; then
-    if [[  $(git rev-parse HEAD) = $(git merge-base HEAD $REMOTE_HEAD) ]]
+
+    if [[ $force = y  || $(git rev-parse HEAD) = $(git merge-base HEAD $REMOTE_HEAD) ]]
     then
         stash_if_non_clean "merge fast-forward"
 
