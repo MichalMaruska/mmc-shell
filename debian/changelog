@@ -1,3 +1,18 @@
+mmc-shell (3.22) release; urgency=medium
+
+  * play_one: -q option to free the terminal
+  * play in numeric order
+  * set the xterm title
+  * git-fetch-compare: drop "push" related non-sense
+  * Use autoload to load colors()
+  * git-worktree-sync: improve usage()
+  * Stop shadowing "colors" autoload function: rename to mmc-colors
+  * git-ff: only if necessary, use colors()
+  * git-fetch-compare: use git-ff on -f/-ff
+  * git-ff: fix the overall condition in case -f is used
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 24 Jan 2019 23:54:20 +0100
+
 mmc-shell (3.20) release; urgency=medium
 
   * git-ff: allow non fast-forward movement, if requested
