@@ -14,7 +14,7 @@
 #  Front Right: Playback [on]
 
 
-
+verbose=n
 CARD=1
 # known/expected controls:
 auto_mute_control='Auto-Mute Mode'
@@ -22,8 +22,6 @@ auto_mute_control='Auto-Mute Mode'
 line_control='Line Out'
 speaker_control='Speaker'
 headphones_control='Headphone'
-
-AMIXER=(amixer -c $CARD)
 
 # default outputs:
 jack=0
@@ -44,10 +42,15 @@ usage: ${0##*/} [+-jbh] [--] ARGS...
 EOF
 }
 
-while getopts :bhjlp OPT; do
+AMIXER=(amixer -c $CARD)
+
+while getopts :bc:hjlpv OPT; do
     case $OPT in
         j|+j)
             jack=1
+            ;;
+        c)
+            CARD=$OPT_ARG
             ;;
         p)
             phones=1
@@ -55,6 +58,7 @@ while getopts :bhjlp OPT; do
         b|+b)
             builtin=1
             ;;
+
         l)
             $AMIXER scontrols
             echo
@@ -62,6 +66,9 @@ while getopts :bhjlp OPT; do
 
             $AMIXER controls| sort -n -t '=' -k '2'
             exit 0
+            ;;
+        v)
+            verbose=y
             ;;
         h)
             usage
@@ -74,6 +81,10 @@ while getopts :bhjlp OPT; do
 done
 shift OPTIND-1
 OPTIND=1
+
+if [[ $verbose = n ]]; then
+    AMIXER=(amixer -c $CARD -q)
+fi
 
 #  Items: 'Disabled' 'Speaker Only' 'Line Out+Speaker'
 #  Item0: 'Line Out+Speaker'
@@ -112,7 +123,6 @@ else
     headphone=unmuted
 fi
 
-set -x
 # both:
 set_control $auto_mute_control $value
 # $AMIXER sset 'Speaker+LO' 100
@@ -136,7 +146,7 @@ $SET_PULSE_AUDIO set-card-profile 1 output:analog-stereo+input:analog-stereo
 # HDMI:
 #                                               set-card-profile 0 output:hdmi-stereo+input:analog-stereo
 
-echo <<EOF
+echo >/dev/null <<EOF
 https://wiki.archlinux.org/index.php/PulseAudio/Examples#HDMI_output_configuration
 todo: cat /sys/class/drm/card0-DP-1/status
 
