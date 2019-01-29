@@ -8,23 +8,29 @@ check_getopt()
     fi
 }
 
+local_cecho()
+{
+    color=$1
+    shift
+    echo $fg[$color] $@ $reset_color
+}
+
 die()
 {
-    cecho blue "ERROR:" $@ >&2
+    local_cecho blue "ERROR:" $@ >&2
     exit -1
 }
 
-
 INFO()
 {
-    cecho green $@
+    # green
+    local_cecho yellow $@
 }
 
 LOG_STEP()
 {
-    cecho cyan $@
+    local_cecho cyan $@
 }
-
 
 dump_stack()
 {
@@ -34,6 +40,7 @@ dump_stack()
     done
 }
 
+# the user can autoload it by calling "colors"
 autoload -Uz colors
 
 if false;
