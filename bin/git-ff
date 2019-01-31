@@ -8,19 +8,22 @@ colors
 usage() {
     setopt POSIX_ARGZERO
     cat <<EOF
-usage: ${0##*/} [+-h] [-f] [--]  [remote] [branch]
+usage: ${0##*/} [+-h] [-f] [--] [remote-or-branch]
 
 Fast-forward to remote head, stashing around.
 -f not only fast-forward !
 
-By default {branch} is the current one.
+By default {branch} is the current one on the favorite remote.
+
 EOF
     unsetopt POSIX_ARGZERO
 }
 
+# find the friend remote:
 set_remote_name
+
 # todo: the same I'm on
-branch=$(current_branch_name)
+current_branch=$(current_branch_name)
 force=n
 
 while getopts :hf OPT; do
@@ -40,35 +43,61 @@ done
 shift OPTIND-1
 OPTIND=1
 
-if [ $# -gt 0 ]; then
-    GIT_REMOTE_NAME=$1
-    shift
+if [ $# -gt 1 ]; then
+    usage >&2
+    exit 2
 fi
 
+# find where to
 if [ $# -gt 0 ]; then
-    branch=$1
+    if is_git_remote_branch $1
+    then
+        # select the branch
+        target=remotes/$1
+    elif is_git_remote $1
+    then
+        GIT_REMOTE_NAME=$1
+        target=$GIT_REMOTE_NAME/$current_branch
+    else
+        target=$1
+    fi
     shift
+else
+    # default:
+    target=$GIT_REMOTE_NAME/$current_branch
 fi
+
 
 
 # if the fast-forward would move ahead!
 
-readonly REMOTE_HEAD=$GIT_REMOTE_NAME/$branch
-if [[ $(git rev-parse HEAD) != $(git rev-parse $REMOTE_HEAD) ]]; then
+git_ff_to_cautiously()
+{
+    # given $ref and $force
+    ref=$1
 
-    if [[ $force = y  || $(git rev-parse HEAD) = $(git merge-base HEAD $REMOTE_HEAD) ]]
-    then
-        stash_if_non_clean "merge fast-forward"
+    if [[ $(git rev-parse HEAD) != $(git rev-parse $ref) ]]; then
 
-        if [[ $force = y ]];
+        if [[ $force = y || $(git rev-parse HEAD) = $(git merge-base HEAD $ref) ]]
         then
-            git reset --hard remotes/$GIT_REMOTE_NAME/$branch
+            if ! git merge --ff-only $ref;
+            then
+                # touching timestamps:
+                stash_if_non_clean "merge fast-forward"
+
+                if [[ $force = y ]];
+                then
+                    git reset --hard $ref
+                else
+                    # git checkout $branch
+                    git merge --ff-only $ref
+                fi
+                unstash_if_stashed
+            fi
         else
-            # git checkout $branch
-            git merge --ff-only $REMOTE_HEAD
+            echo >&2 cannot fast-forward to $ref $fg[red]not our descendant$reset_color
         fi
-        unstash_if_stashed
-    else
-        echo >&2 cannot fast-forward to $REMOTE_HEAD: $fg[red]not our descendant$reset_color
     fi
-fi
+}
+
+git_ff_to_cautiously $target

@@ -98,3 +98,16 @@ unstash_if_stashed()
         git stash pop --quiet
     fi
 }
+
+
+
+is_git_remote_branch()
+{
+    git rev-parse remotes/$1
+}
+
+is_git_remote()
+{
+    git remote get-url $1
+    # git remote | grep -F $1
+}
