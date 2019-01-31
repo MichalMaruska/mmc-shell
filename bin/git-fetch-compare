@@ -91,5 +91,6 @@ foreach remote ($remotes) {
 }
 
 if [[ $fast_forward = y && ${#remotes} = 1 ]]; then
+    # the same-named branch on the remote:
     git-ff $remotes[1]
 fi
