@@ -1,5 +1,6 @@
 #!/bin/zsh -feu
 
+zmodload zsh/regex
 source /usr/share/mmc-shell/git-functions.sh
 source /usr/share/mmc-shell/mmc-functions.sh
 colors
@@ -50,7 +51,7 @@ fi
 
 # find where to
 if [[ $# -gt 0 ]]; then
-    if is_git_remote_branch $1
+    if [[ $1 -regex-match '.*/.*' ]] && is_git_remote_branch $1
     then
         # select the branch
         target=remotes/$1
