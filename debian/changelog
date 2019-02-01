@@ -1,3 +1,17 @@
+mmc-shell (3.23.1) release; urgency=medium
+
+  * audio-select: be quite, unless -v is used. Also -c to switch cards.
+  * Use the internal cecho/color implementation
+  * play_one: Use the internal cecho/color implementation
+  * make git-ff more flexible not necessarily to remote branch.
+  * silent during  tests
+  * use zsh tests [[
+  * make a quick check before git test
+  * fetch tags always
+  * comments
+
+ -- Michal Maruska <michal@ubuntu>  Fri, 01 Feb 2019 10:41:25 +0100
+
 mmc-shell (3.22) release; urgency=medium
 
   * play_one: -q option to free the terminal
