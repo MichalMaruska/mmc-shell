@@ -103,11 +103,11 @@ unstash_if_stashed()
 
 is_git_remote_branch()
 {
-    git rev-parse remotes/$1
+    git rev-parse remotes/$1 2>/dev/null
 }
 
 is_git_remote()
 {
-    git remote get-url $1
+    git remote get-url $1 > /dev/null
     # git remote | grep -F $1
 }
