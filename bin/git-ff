@@ -43,13 +43,13 @@ done
 shift OPTIND-1
 OPTIND=1
 
-if [ $# -gt 1 ]; then
+if [[ $# -gt 1 ]]; then
     usage >&2
     exit 2
 fi
 
 # find where to
-if [ $# -gt 0 ]; then
+if [[ $# -gt 0 ]]; then
     if is_git_remote_branch $1
     then
         # select the branch

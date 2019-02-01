@@ -38,7 +38,7 @@ function get_local_path()
 
 function git_ref_exists()
 {
-    [ -e .git/refs/$1 ]
+    [[ -e ".git/refs/$1" ]]
 }
 
 # please use the one in ~/repo/git-hierarchy/share/functions.sh
