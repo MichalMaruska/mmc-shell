@@ -7,3 +7,6 @@ dd if=/dev/zero of=$SWAP_FILE bs=1M count=8192
 sudo chmod 0600 $SWAP_FILE
 mkswap $SWAP_FILE
 swapon  $SWAP_FILE
+
+# maybe check if it's there already?
+echo "$SWAP_FILE none swap defaults" >> /etc/fstab
