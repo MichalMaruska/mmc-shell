@@ -36,9 +36,14 @@ function get_local_path()
     echo $local_path
 }
 
+function git-branch-exists()
+{
+    git show-ref refs/heads/$1 >/dev/null;
+}
+
 function git_ref_exists()
 {
-    [[ -e ".git/refs/$1" ]]
+    git show-ref refs/$1 >/dev/null;
 }
 
 # please use the one in ~/repo/git-hierarchy/share/functions.sh
