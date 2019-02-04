@@ -81,7 +81,8 @@ then
 else
     if [ $verbose = y ]; then echo "will fetch from: $remotes";fi
     foreach remote ($remotes) {
-        git fetch --tags ${remote} --quiet
+        git fetch --tags ${remote}
+        # --quiet
     }
 fi
 
