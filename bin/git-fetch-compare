@@ -21,7 +21,7 @@ usage: ${0##*/} [+-f] [-r <remote>| -a]  [--] ARGS...
 -r | --remote [remote]   ....
 -a | --all
 -f | --ff fast-forward to the fetched remote-branch
---verbose
+-v | --verbose
 EOF
 }
 
@@ -52,6 +52,7 @@ while (( $# > 0 )); do
             ;;
         -v | --verbose)
             verbose=y
+            set -x
             ;;
         --)
              shift
