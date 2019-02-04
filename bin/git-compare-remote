@@ -58,7 +58,7 @@ compare_commits()
 }
 
 verbose=y
-while getopts :hq OPT; do
+while getopts :hqv OPT; do
     case $OPT in
         h|+h)
             usage
@@ -66,6 +66,9 @@ while getopts :hq OPT; do
             ;;
         q)
             verbose="n"
+            ;;
+        v)
+            set -x
             ;;
         *)
             usage >&2
