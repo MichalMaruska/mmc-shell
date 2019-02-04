@@ -1,3 +1,14 @@
+mmc-shell (3.24) release; urgency=medium
+
+  * create-swap-file: register with fstab
+  * Do show the Git error message!
+  * bin/git-fetch-compare: improve the -v option -- usage() and set -x
+  * git-compare-remote: -v option to set -x
+  * Use zsh/regex instead of expr(1)
+  * git-compare-remote: use zsh colors, and highlite a single word
+
+ -- Michal Maruska <michal@ubuntu>  Mon, 04 Feb 2019 09:47:51 +0100
+
 mmc-shell (3.23.1) release; urgency=medium
 
   * audio-select: be quite, unless -v is used. Also -c to switch cards.
