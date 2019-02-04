@@ -1,6 +1,8 @@
 #!/bin/zsh -eu
 
 source /usr/share/mmc-shell/git-functions.sh
+source /usr/share/mmc-shell/mmc-functions.sh
+colors
 
 usage()
 {
@@ -111,7 +113,8 @@ case $cmp in
         cecho bold "same"
         ;;
     1)
-        cecho green "HEAD ahead of $REMOTE"
+        echo "HEAD $fg_bold[green]$bg[red]ahead$reset_color of $REMOTE"
+
         if [ $verbose = y ]; then
             git diff --shortstat  $REMOTE
             git log $args --oneline $REMOTE..HEAD --
