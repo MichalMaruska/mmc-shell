@@ -111,3 +111,32 @@ is_git_remote()
     git remote get-url $1 > /dev/null
     # git remote | grep -F $1
 }
+
+# Given a filename & `commitish'.
+cat_git_file_from_commit()
+{
+    readonly commit=$1
+    readonly FILENAME=$2
+
+    readonly tree="$commit^{tree}"
+
+    # set -x
+    # tree:
+    if [[ "tree" != $(git cat-file -t "$tree") ]]
+    then
+        die "not a tree"
+    fi
+
+    local line=$(git cat-file -p $tree |grep $FILENAME)
+
+
+    # echo $line
+    if [[ $line -regex-match "[[:digit:]]{6} blob ([[:xdigit:]]+)	hierarchy" ]]
+    then
+        # MATCH the whole match, match submatches!
+        # print -l $MATCH X $match[1]
+        git cat-file -p $match[1]
+    else
+        exit 1
+    fi
+}
