@@ -1,5 +1,6 @@
 #! /bin/zsh -feu
 
+zmodload zsh/regex
 . /usr/share/mmc-shell/mmc-functions.sh
 colors
 
@@ -22,7 +23,9 @@ function play_mplayer()
 
 function is_number()
 {
-    expr match $1  '^[[:digit:]]\+$'
+    # expr match $1  '^[[:digit:]]\+$' &> /dev/null
+    readonly NUMBER_RX='^[[:digit:]]+$'
+    [[ $1 -regex-match $NUMBER_RX ]]
 }
 
 function play_file ()
