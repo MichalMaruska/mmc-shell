@@ -81,8 +81,10 @@ git_ff_to_cautiously()
 
         if [[ $force = y || $(git rev-parse HEAD) = $(git merge-base HEAD $ref) ]]
         then
-            if ! git merge --ff-only $ref;
+            if git merge --ff-only $ref;
             then
+                cecho hiyellow "ff (without conflicts w/ dirty files)"
+            else
                 # touching timestamps:
                 stash_if_non_clean "merge fast-forward"
 
@@ -94,6 +96,7 @@ git_ff_to_cautiously()
                     git merge --ff-only $ref
                 fi
                 unstash_if_stashed
+                cecho hiyellow "ff & unstashed"
             fi
         else
             echo >&2 cannot fast-forward to $ref $fg[red]not our descendant$reset_color
