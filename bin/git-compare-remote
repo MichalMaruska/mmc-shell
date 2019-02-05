@@ -94,6 +94,9 @@ if [ $# -gt 1 ]; then
     shift
 else
     branch=$(current_branch_name)
+    if [[ $? != 0 ]]; then
+        die "not on a branch -> cannot compare"
+    fi
 fi
 
 # so the remote branch:
