@@ -35,7 +35,7 @@ compare_commits()
     readonly second=$(git log $2 --max-count=1 --format="%H")
 
     if [[ -z "$first" || -z "$second" ]]; then
-        if [[ $verbose = y ]]; then echo "$first $second" >&2;fi
+        if [[ $verbose = n ]]; then echo "$first $second" >&2;fi
         return 4
     fi
     if [[ $first = $second ]]; then
@@ -44,13 +44,13 @@ compare_commits()
 
     readonly common=$(git merge-base $first $second)
     if [ $? != 0 ]; then
-        if [ $verbose = y ]; then echo "no common merge-base">&2;fi
+        if [[ $verbose != n ]]; then echo "no common merge-base">&2;fi
         return 4;
     fi
 
-    if [ $common = $second ]; then
+    if [[ $common = $second ]]; then
         return 1;
-    elif [ $common = $first ]; then
+    elif [[ $common = $first ]]; then
         return 2;
         # -1 is nonsense if ever a standalone,
         # but it got delivered as -1 as function!
@@ -71,6 +71,7 @@ while getopts :hqv OPT; do
             ;;
         v)
             set -x
+            verbose=yy
             ;;
         *)
             usage >&2
@@ -118,14 +119,14 @@ case $cmp in
     1)
         echo "HEAD $fg_bold[green]$bg[red]ahead$reset_color of $REMOTE"
 
-        if [ $verbose = y ]; then
+        if [[ $verbose = yy ]]; then
             git diff --shortstat  $REMOTE
             git log $args --oneline $REMOTE..HEAD --
         fi
         ;;
     2)
         cecho hiyellow "local is behind"
-        if [ $verbose = y ]; then
+        if [[ $verbose != n ]]; then
             git log $args --oneline HEAD..$REMOTE --
         fi
         ;;
