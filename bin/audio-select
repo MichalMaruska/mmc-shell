@@ -43,8 +43,9 @@ EOF
 }
 
 AMIXER=(amixer -c $CARD)
+master_volume=80
 
-while getopts :bc:hjlpv OPT; do
+while getopts :bc:hjlLpv OPT; do
     case $OPT in
         j|+j)
             jack=1
@@ -66,6 +67,9 @@ while getopts :bc:hjlpv OPT; do
 
             $AMIXER controls| sort -n -t '=' -k '2'
             exit 0
+            ;;
+        L)
+            master_volume=100
             ;;
         v)
             verbose=y
@@ -124,6 +128,9 @@ else
 fi
 
 # both:
+set_control Master on
+set_control Master $master_volume
+
 set_control $auto_mute_control $value
 # $AMIXER sset 'Speaker+LO' 100
 
