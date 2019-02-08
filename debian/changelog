@@ -1,3 +1,18 @@
+mmc-shell (3.25) release; urgency=medium
+
+  * cat_git_file_from_commit new function
+  * Adopt git-branch-exists from git-hierarchy.
+  * git-ff: give a summary of success
+  * Detect failure in "Command Substitution" -- report the reason
+  * When ahead, do not list our commits, unless verbose (-v).
+  * git-ff: simplify (use functions.sh)
+  * compare-git-deb: verbose option
+  * audio-select: always unmute, and -L option for Loud
+  * auto_mute_control: for Jack we have to set to not being pre-empted by plugged-in phones
+  * Suddenly I cannot mute headphones for the builtin to play. So set the volume leve to zero.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 08 Feb 2019 22:39:36 +0100
+
 mmc-shell (3.24) release; urgency=medium
 
   * create-swap-file: register with fstab
