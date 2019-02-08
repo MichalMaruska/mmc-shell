@@ -118,15 +118,20 @@ if [[ $jack = 1 ]]; then
     line_out='on'
     speaker='off'
     headphone=muted
+    headphone_value=0
 elif [[ $builtin = 1 ]] then
     line_out='off'
     speaker='on'
-    headphone=muted
+    # fixme:
+    headphone=unmuted
+
+    headphone_value=0
 else
     # phones:
     line_out='off'
     speaker='off'
     headphone=unmuted
+    headphone_value=60
 fi
 
 # both:
@@ -145,9 +150,7 @@ set_control $speaker_control    $speaker
 set_control $headphones_control $headphone
 
 # set volumes:
-if [[ ${phones-} = 1 ]]; then
-    set_control $headphones_control 70
-fi
+set_control $headphones_control $headphone_value
 
 SET_PULSE_AUDIO=(pactl --server unix:/run/user/1000/pulse/native)
 
