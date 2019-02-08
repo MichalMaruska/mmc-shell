@@ -5,7 +5,7 @@ zmodload zsh/regex
 . /usr/share/mmc-shell/mmc-functions.sh
 colors
 
-
+verbose=n
 # Dump the git history since the release which is `git-tagged', or `installed'
 # not `available'
 
@@ -36,8 +36,9 @@ usage()
 {
     setopt POSIX_ARGZERO
     cat <<EOF
-usage: ${0##*/} [+-h] [--] [dir]
+usage: ${0##*/} [+-hv] [--] [dir]
 
+-v verbose
 dir ... by default "."
 
 EOF
@@ -45,11 +46,14 @@ EOF
 }
 
 # fixme: must be invoked inside DIR.
-while getopts :h OPT; do
+while getopts :hv OPT; do
     case $OPT in
         h|+h)
             usage
             exit 0
+            ;;
+        v)
+            verbose=y
             ;;
         *)
             usage >&2
@@ -84,10 +88,13 @@ git_sha=$match[3]
 readonly version_from_tag=${git_tag#*/}
 
 # mmc: wrong:
-print "$fg[red]Describe is $bold_color$git_describe_since_last_release$reset_color"
-print "$fg[red]Distance is $bold_color$git_distance"
-echo "tag is $bold_color $git_tag"
-cecho red "version is $version_from_tag"
+if [[ $verbose = y ]]
+then
+    print "$fg[red]Describe is $bold_color$git_describe_since_last_release$reset_color"
+    print "$fg[red]Distance is $bold_color$git_distance"
+    echo "tag is $bold_color $git_tag"
+    cecho red "version is $version_from_tag"
+fi
 
 echo -ne "$bg_bold[green]$fg[red]$deb_src_pkg" $reset_color '\tis '
 echoti setaf 5; echo -n $git_distance
