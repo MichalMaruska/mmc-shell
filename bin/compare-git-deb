@@ -24,7 +24,7 @@ readonly GIT_DESCRIBE_TAG_ERX='^(.*)-([[:digit:]]+)-g([[:alnum:]]+)$'
 find_installed_version()
 {
     # local
-    set -x
+    # set -x
     readonly dir=$1
     readonly deb_pkg=($(deb-pkg-binary-packages $dir))
     # I could attempt all of the binary packages...
