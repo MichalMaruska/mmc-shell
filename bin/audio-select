@@ -116,7 +116,8 @@ set_control()
 # for `line_control'
 if [[ $jack = 1 ]]; then
     line_out='on'
-    speaker='off'
+    speaker='on'
+
     headphone=muted
     headphone_value=0
 elif [[ $builtin = 1 ]] then
