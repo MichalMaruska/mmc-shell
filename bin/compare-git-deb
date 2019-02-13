@@ -79,10 +79,18 @@ readonly git_describe_since_last_release=$(cd $DIR; git describe --tags HEAD 2>/
 # readonly
 # fixme: this does not fail if not the last!
 # git_distance= $(expr match $git_describe_since_last_release $DISTANCE_FROM_DESCRIBE_RX)
-[[ $git_describe_since_last_release -regex-match  $GIT_DESCRIBE_TAG_ERX ]] &&
+if [[ $git_describe_since_last_release -regex-match  $GIT_DESCRIBE_TAG_ERX ]]
+then
     git_distance=$match[2]
-git_tag=$match[1]
-git_sha=$match[3]
+    git_tag=$match[1]
+    git_sha=$match[3]
+else
+    git_distance=0
+    git_tag=$git_describe_since_last_release
+    git_sha=""
+    # fixme: if it's EXACTLY the tag!
+    # die "cannot parse 'git describe' output: $git_describe_since_last_release"
+fi
 
 # the tag is distro/version-number
 readonly version_from_tag=${git_tag#*/}
