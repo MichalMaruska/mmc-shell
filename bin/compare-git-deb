@@ -109,15 +109,14 @@ echoti setaf 5; echo -n $git_distance
 # cecho cyan -n $git_distance
 echoti setaf 7; echo " commits ahead of\t $git_tag"
 
-echo   $bg_bold[green] $fg[red] ahoj
-
 if [ "$version_from_tag" != "$installed_version" ]; then
     cecho blue -e "\tdifferent versions: $version_from_tag vs $installed_version"
 fi
 
-git --no-pager log --format='%C(green)%h %C(blue)%s' $git_tag..HEAD
+# max 10...
+git --no-pager log --max-count=10 --format='%C(green)%h %C(blue)%s' $git_tag..HEAD
 # git log --oneline $git_tag..HEAD
-echo
+echo $reset_color
 
 
 
