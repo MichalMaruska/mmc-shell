@@ -1,0 +1,121 @@
+#!/usr/bin/zsh -feu
+
+# Compare the SNAP debian package (debian/changelog) with the GIT.
+# Operates only with the files inside the sourcetree.
+
+# Beware: when doing git ops (after the last `snap' run),
+# I usually reset--hard the changelog!
+# Hence the SHA-ID is lost.
+
+# But now I retrieve it from the dpkg database!
+
+source /usr/share/mmc-shell/mmc-functions.sh
+
+usage()
+{
+    setopt POSIX_ARGZERO
+    cat <<EOF
+usage: ${0##*/} [+-vh} [--] [dir]
+
+Invoked inside git-managed debian package source-tree (or pointed at by DIR)
+...
+dumps the history (list of commits) still not released.
+
+EOF
+}
+
+VERBOSE=n
+while getopts :vh OPT; do
+    case $OPT in
+        v|+v)
+            VERBOSE=y
+            ;;
+        h|+h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage >&2
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+
+# in which directory?
+if [[ $# -gt 1 ]];
+then
+    DIR=$1
+    cd $DIR
+else
+    DIR=.
+fi
+
+
+# Parse the `last-built' debian/changelog:
+if ! changelog_version=$(deb-pkg-version debian/changelog); then
+    die "error in $DIR"
+fi
+
+extract_gitsha_rx='.*~[[:digit:]]\+\.gbp\(.*\)'
+
+# Extract the sha1 ... from git & from the changelog
+# set -x
+readonly pkgname=$(deb-pkg-name .)
+if debian_changelog_sha=$(dpkg-query --show --showformat='${Dgit}' $pkgname)
+        #expr match $changelog_version $extract_gitsha_rx
+# mmc:
+#   dpkg-query --show --showformat='${binary:Package} ${Status} ${Dgit} ${Version} ${Maintainer}\n' mmc-shellw
+#   dpkg-query --show --showformat='${binary:Package} $Status ${Dgit} ${Version} ${Maintainer}\n' mmc-shell
+# install ok installed
+
+then
+    # So it is a `SNAP' changelog:
+    readonly git_head_sha1=$(git rev-parse HEAD) # |head -c 6
+
+    if [ $git_head_sha1 = $debian_changelog_sha ]; then
+        # no progress since the last SNAP version.
+        if [[ $VERBOSE = y ]]; then
+            echo $DIR;
+            cecho hiyellow "snap $changelog_version (no progress)";
+        else
+            # quiet
+            exit 0
+        fi
+    else
+        echo $DIR
+        git log --oneline $debian_changelog_sha..$git_head_sha1
+        exit 1
+    fi
+else
+
+    # So last time we built a `release'.
+
+    # How far in the past is it?
+    # Find it & compare with HEAD.
+    # Check the GIT tag!
+    if tag=$(git tag --contains HEAD) && test -n "$tag"
+    then
+        if [[ $VERBOSE = y ]]; then
+           echo $DIR
+           INFO "release: $changelog_version tag: $tag"
+        fi
+    else
+        set -x
+
+        # get the release tag:
+        readonly distro=$(deb-pkg-distribution debian/changelog)
+        readonly last_release_tag=$(git tag --list "$distro/$changelog_version")
+        # I should verify, that indeed I have that version in repo!
+
+        if [[ -n "$last_release_tag" ]]
+        then
+            echo $DIR
+            cecho yellow "Found the release in the past -- need to make at least SNAP"
+        else
+            echo $DIR
+            cecho yellow "NON-tagged release: $changelog_version"
+        fi
+    fi
+fi
