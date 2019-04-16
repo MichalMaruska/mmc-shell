@@ -63,6 +63,9 @@ extract_gitsha_rx='.*~[[:digit:]]\+\.gbp\(.*\)'
 # Extract the sha1 ... from git & from the changelog
 # set -x
 readonly pkgname=$(deb-pkg-name .)
+if [[ $? != 0 || -z "$pkgname" ]]; then
+   die "deb-pkg-name failed"
+fi
 if debian_changelog_sha=$(dpkg-query --show --showformat='${Dgit}' $pkgname)
         #expr match $changelog_version $extract_gitsha_rx
 # mmc:
