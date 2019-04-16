@@ -18,9 +18,9 @@ usage()
 {
     setopt POSIX_ARGZERO
     cat <<EOF
-Usage $0 [-s] [-d] cmd ....
+Usage $0 [-d] [-p] cmd ....
 
---debug  | -d  debug ...
+--debug  | -d  debug ... print the DIR before invoking the CMD.
 --pass   | -p  pass the relative path as first argument.
 --help   | -h
 --wait   | -w  wait 3 seconds between
