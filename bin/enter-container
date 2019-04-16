@@ -30,7 +30,7 @@ trap 'print ${PROGRAM-$0} ERROR: $LINENO:  $ZSH_EVAL_CONTEXT $0 >&2' ZERR
 CONTAINER_DIR=
 
 distro=sid
-arch=x32
+fallback_arch=x32
 # i386
 
 VERBOSE=n
@@ -114,7 +114,11 @@ while (( $# > 0 )) do
               ;;
           -d | --distro)
               shift
-              arch=$1
+              distro=$1
+
+              if [[ -z ${arch-} ]]; then
+                  arch=$(arch)
+              fi
               ;;
 
           -h | --usage | --help)
@@ -158,6 +162,10 @@ if [[ -t 1 && $# = 0 ]]; then
     interactive=y
 fi
 
+
+if [[ -z ${arch-} ]]; then
+    arch=$fallback_arch
+fi
 
 # hostname is derived from this
 if [[ ! -v machine_name ]]; then
