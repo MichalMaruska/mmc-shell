@@ -104,7 +104,7 @@ while (( $# > 0 )) do
               # /dev/ ->no
               bind_mounts+=($new_machine_mounts)
               ;;
-          --container)
+          -C | --container )
               shift
               CONTAINER_DIR="$1"
               ;;
