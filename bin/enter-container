@@ -28,6 +28,7 @@ trap 'print ${PROGRAM-$0} ERROR: $LINENO:  $ZSH_EVAL_CONTEXT $0 >&2' ZERR
 
 # defaults:
 CONTAINER_DIR=
+readonly MACHINES_DIR=/var/lib/machines
 
 distro=sid
 fallback_arch=x32
@@ -173,7 +174,7 @@ if [[ ! -v machine_name ]]; then
 fi
 
 if [[ -z $CONTAINER_DIR ]]; then
-    CONTAINER_DIR=/var/lib/machines/$distro-$arch
+    CONTAINER_DIR=$MACHINES_DIR/$distro-$arch
 fi
 
 
