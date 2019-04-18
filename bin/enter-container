@@ -271,7 +271,12 @@ else
         if [[ $VERBOSE = y ]]; then
             set -x
         fi
-        exec sudo machinectl $args shell $machine_name
+        # for ubuntu 16.4 we need /bin/zsh appended:
+        additional_args=()
+        if [[ $machine_name = xena ]]; then
+            additional_args+=(/bin/zsh)
+        fi
+        exec sudo machinectl $args shell $machine_name $additional_args
     else
 
         if [[ -n "$workdir" ]]; then
