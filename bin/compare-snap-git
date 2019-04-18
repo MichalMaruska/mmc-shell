@@ -54,7 +54,7 @@ fi
 
 
 # Parse the `last-built' debian/changelog:
-if ! changelog_version=$(deb-pkg-version debian/changelog); then
+if ! changelog_version=$(deb-pkg-version $DIR/debian/changelog); then
     die "error in $DIR"
 fi
 
