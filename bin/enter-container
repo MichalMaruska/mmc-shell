@@ -71,6 +71,8 @@ usage: ${0##*/} [+-n] [-c dir] [-b dir] [--] ARGS...
 --start
 -B --boot   ...
 
+-d  --distro ... name of the $MACHINES_DIR subdirectory
+
 
 -n --private-network ... setup private network (no networking at start?)
 -b --bind  .. add directory as --bind mount.
