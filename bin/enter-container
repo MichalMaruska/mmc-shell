@@ -298,7 +298,7 @@ else
             # This is ugly: once it is a string, and below it is array!
             cmd="cd $workdir; $@"
         else
-            cmd=$@
+            cmd=($@)
         fi
 
         if [[ $VERBOSE = y ]]; then
