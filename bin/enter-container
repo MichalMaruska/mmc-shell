@@ -304,7 +304,12 @@ else
         if [[ $VERBOSE = y ]]; then
             set -x
         fi
+        # for ubuntu16.4:
+        if [[ $machine_name = xena ]]; then
+            exec sudo machinectl shell $machine_name  $cmd
+        else
         exec sudo systemd-run --pty --machine=$machine_name \
              $args $cmd
+        fi
     fi
 fi
