@@ -73,6 +73,8 @@ usage: ${0##*/} [+-n] [-c dir] [-b dir] [--] ARGS...
 
 -d  --distro ... name of the $MACHINES_DIR subdirectory
 
+-l  list the running machines
+-L  list available machines?
 
 -n --private-network ... setup private network (no networking at start?)
 -b --bind  .. add directory as --bind mount.
@@ -84,9 +86,9 @@ EOF
 }
 
 cmd_options=$(getopt --name $0 --shell bash \
-                     --options a:b:BcC:d:himn:rsv \
+                     --options a:b:BcC:d:hilLmn:rsv \
                      --longoptions \
-                     arch:,bind:,boot,chdir:,container:,distro:,help,name,private-network,root,start,usage,verbose \
+                     arch:,bind:,boot,chdir:,container:,distro:,help,list,list-image,name,private-network,root,start,usage,verbose \
                      -- "$@" ) || { usage; exit 1 }
 # name: n:
 eval set -- "$cmd_options"
@@ -128,7 +130,14 @@ while (( $# > 0 )) do
               usage
               exit 0
               ;;
-
+          -l | --list)
+              machinectl list
+              exit 0
+              ;;
+          -L | --list-images)
+              machinectl --all list-images
+              exit 0
+              ;;
           -n | --name)
                shift
                machine_name="$1"
