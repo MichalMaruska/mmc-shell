@@ -14,7 +14,7 @@ set_remote_name()
     then
         # todo: check it exists:
         : ${GIT_REMOTE_NAME:=optiplex}
-    elif [[ $(hostname) = "optiplex-maruska" &&  -n ${remotes[(re)e6440]} ]]
+    elif [[ $(hostname) = "optiplex-maruska" && -n ${remotes[(re)e6440]-} ]]
     then
         : ${GIT_REMOTE_NAME=e6440}
     else
