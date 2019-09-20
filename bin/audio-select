@@ -142,22 +142,25 @@ else
 fi
 
 # both:
-set_control Master on
-set_control Master $master_volume
+set_mixer_control Master on
+# set_control 'Master Playback Switch' on
+set_mixer_control Master $master_volume
 
 # Auto-Mute Mode
-set_control $auto_mute_control $value
+set_mixer_control $auto_mute_control $value
 $AMIXER sset 'Speaker+LO' 100
 
 
 # pswitch
 # value=off
-set_control $line_control       $line_out
-set_control $speaker_control    $speaker
-set_control $headphones_control $headphone
+set_mixer_control $line_control       $line_out
+# a bit counter-intuitive, & restrictive:
+set_mixer_control $speaker_control    $speaker
 
+# set_control 'Headphone Playback Switch' $headphone
+set_mixer_control $headphones_control $headphone
 # set volumes:
-set_control $headphones_control $headphone_value
+set_mixer_control $headphones_control $headphone_value
 
 SET_PULSE_AUDIO=(pactl --server unix:/run/user/1000/pulse/native)
 
