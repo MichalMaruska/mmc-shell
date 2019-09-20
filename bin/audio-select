@@ -108,6 +108,12 @@ fi
 set_control()
 {
     # name value
+    $AMIXER cget $1
+    $AMIXER cset $@
+}
+
+set_mixer_control()
+{
     $AMIXER sget $1
     $AMIXER sset $@
 }
