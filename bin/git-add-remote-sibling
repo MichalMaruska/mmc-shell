@@ -37,26 +37,26 @@ remote_path=$(get_remote_path)
 override=n
 while getopts :hfvdn:u: OPT; do
     case $OPT in
-	f)
-	    override=y
-	    ;;
-	d)
-	    # run_dry=y
-	    CMD=echo
-	    ;;
-	h|+h)
-	    usage
-	    exit 0
-	    ;;
-	u)
-	    GIT_URL=$OPTARG
-	    ;;
-	n|+n)
-	    GIT_REMOTE_NAME=$OPTARG
-	    ;;
-	*)
-	    usage >&2
-	    exit 2
+        f)
+            override=y
+            ;;
+        d)
+            # run_dry=y
+            CMD=echo
+            ;;
+        h|+h)
+            usage
+            exit 0
+            ;;
+        u)
+            GIT_URL=$OPTARG
+            ;;
+        n|+n)
+            GIT_REMOTE_NAME=$OPTARG
+            ;;
+        *)
+            usage >&2
+            exit 2
     esac
 done
 shift OPTIND-1
@@ -67,10 +67,12 @@ if [ $# -gt 0 ]; then
     exit 1
 fi
 
-if [ $override = y ]; then
-    $CMD git remote set-url $GIT_REMOTE_NAME $GIT_URL:$remote_path
 else
-    $CMD git remote add $GIT_REMOTE_NAME $GIT_URL:$remote_path
-fi
 
-git fetch $GIT_REMOTE_NAME
+    if [ $override = y ]; then
+        $CMD git remote set-url $GIT_REMOTE_NAME $GIT_URL:$remote_path
+    else
+        $CMD git remote add $GIT_REMOTE_NAME $GIT_URL:$remote_path
+    fi
+
+    git fetch $GIT_REMOTE_NAME
