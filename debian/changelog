@@ -1,3 +1,32 @@
+mmc-shell (3.26) release; urgency=medium
+
+  * Handle the 2 output formats of "git describe": the exact match with a tag.
+  * List max of 10 changes, and do the color properly --
+  * audio: even for line-out we have to keep speakers on an pre-empt them by auto_mode.
+  * drop set -x
+  * compare-snap-git: new tool, to be merged with compare-git-deb
+  * enter-container: fix the -C option
+  * enter-container: default to the host architecture, unless empty distro.
+  * die() requires colors() -> autoload them.
+  * for-each-git-dir: improve usage()
+  * compare-snap-git: try to stop when $() fails.
+  * enter-container: MACHINES_DIR
+  * work-around for systemd in 16.06 expecting/needing the shell path
+  * document -d in usage()
+  * fix: invoke deb-pkg-version on passed directory
+  * enter-container: -l -L options to list machines/images
+  * Fix the join-n-exec scenario -- handle all parameters
+  * One more work-around for old systemd (229): ubuntu16.4
+  * fix the test condition
+  * distinguish set_mixer_control from previous set_control
+  * headphone must be unmuted, otherwise no sound.
+  * sq distinguish
+  * enter-container: document -a in usage()
+  * git-add-remote-sibling: spaces
+  * git-add-remote-sibling: clone in certain cases?
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 20 Sep 2019 06:53:40 +0200
+
 mmc-shell (3.25) release; urgency=medium
 
   * cat_git_file_from_commit new function
