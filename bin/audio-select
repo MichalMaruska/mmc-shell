@@ -124,7 +124,7 @@ if [[ $jack = 1 ]]; then
     line_out='on'
     speaker='on'
 
-    headphone=muted
+    headphone=unmuted
     headphone_value=0
 elif [[ $builtin = 1 ]] then
     line_out='off'
