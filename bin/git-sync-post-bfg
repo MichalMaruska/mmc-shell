@@ -1,11 +1,14 @@
 #!/bin/zsh -feu
 
+## obsolete:
+
+
 # So, I follow a remote repo R. I cut down my R1 into R2
 # Then I update from R my R1, and want to integrate the changes into R2.
 # It is expected that the changes would not be cut away.
 
 # My design keeps a table -- mapping of commits in R1 into commits in R2.
-# The table is stored inside R2.
+# The table is stored inside R2. fixme: it is produced by bfg!
 
 # The table contains the commit-SHA1 mapping.
 
@@ -113,16 +116,20 @@ OPTIND=1
 # branches above
 
 top=origin/master
+
+# top-most:
+# base_commit=$git rev-list --topo-order $(cut -f 2 -d ' '  .git-table.good )|head)
+# and map it back!
+
 # walk down one-by-one and make a table!
 # old_table
 # after working write a new table!
 cd $origin
-# set -x
 typeset -a new_commits
 new_commits=($(git rev-list --topo-order \^$base_commit $top))
 
 
-# no! any merge coming down to previous....
+# no! Any merge coming down to previous....
 # git log 38780ac202438222b8984dfb3ec77aabe8a51520..origin/master
 
 #for each parent ...find the parents images.
@@ -138,6 +145,7 @@ cherry_pick()
     cd $target
     git checkout $above
     (cd $origin;
+     # mmc: I need an alias
      git format-patch --keep-subject --stdout  "$commit^!" ) |
         git am --keep --
 
@@ -149,6 +157,7 @@ cherry_pick()
 }
 
 
+# try ...
 rebase()
 {
     local commit=$1
@@ -156,7 +165,7 @@ rebase()
     git show --no-patch --oneline $commit
 
     # find parent in the running table
-    local parent=$(git show -s  --format=format:"%P" $commit)
+    local parent=$(git show --no-patch  --format=format:"%P" $commit)
     if [[ -z "${commit_map[(I)$parent]}" ]]; then
         cecho red "parent is unknown $parent"
     else

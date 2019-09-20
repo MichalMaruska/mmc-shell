@@ -81,10 +81,15 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
          -o \
          -type d -name .git $print_args \
          -exec $0 \{\} $args "$@" \; $AFTER -prune
+# find -type d  -execdir test -d {}/.git \;  -print -exec pwd \;   -prune
+# is slower!
 # todo -execdir
 
 else
     # return from the .git
+
+    # back from from dir/.git into dir:
+    # todo: if only there was a test for test -f .git
     dir=$(expr match $1 '\(.*\)/.git')
     shift
     cd $dir

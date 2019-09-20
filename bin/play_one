@@ -128,6 +128,7 @@ play_one()
 play_dir()
 {
     # local
+    readonly songs=( $( ls -v -Q --quoting-style=shell)) # (*(l))
 
     local song
     foreach song ( *(n) ) # $songs
@@ -186,7 +187,6 @@ while getopts :aghpqv OPT; do
 done
 shift OPTIND-1
 OPTIND=1
-
 
 if [[ $# -gt 0 ]] && is_number $1; then
     START=$1

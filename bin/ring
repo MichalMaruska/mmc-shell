@@ -9,7 +9,6 @@ fi
 
 sound_dir=${activity_dir:-/usr/share}/sounds
 
-
 case $LOGNAME in
     mmc)
 	FILE=complete.wav
@@ -34,7 +33,7 @@ esac
 
 
 
-
+# /usr/share/sounds/purple/alert.wav
 
 if [ $# -gt 0 ];
 then

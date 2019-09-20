@@ -72,6 +72,8 @@ do_rsync()
          $TRANSFER_OPTIONS \
          $RSYNC_RULES \
          "$@"
+    # fixme: do I really want --archive?
+    #  --exclude-from=./.rsync-ignore  --archive
 
     if [ $ECHO_RSYNC_COMMAND = y ]; then set +x;fi
 }

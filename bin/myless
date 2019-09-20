@@ -62,7 +62,7 @@ then # We are given the filename
                 if [[ $debug = y ]]; then
                     ~/.lessfilter -d "$filename"
                 else
-                    less "$*"
+                    less $*
                 fi
                 ;;
         esac

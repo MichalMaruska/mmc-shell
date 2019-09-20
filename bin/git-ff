@@ -98,6 +98,7 @@ git_ff_to_cautiously()
                 cecho hiyellow "ff & unstashed"
             fi
         else
+            # todo: if ancestor, print a different message.
             echo >&2 cannot fast-forward to $ref $fg[red]not our descendant$reset_color
         fi
     fi

@@ -8,3 +8,4 @@ _arguments \
 
 
 #   '*:Other options:_git-buildpackage'
+# /etc/bash_completion.d/source-highlight

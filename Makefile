@@ -1,6 +1,8 @@
 INSTALL := install
 BIN_INSTALL_DIR := /usr/bin
 SHARED_INSTALL_DIR := /usr/share/mmc-shell/
+
+# fixme: ignore *~ files
 BINFILES := $(wildcard bin/*)
 
 all:

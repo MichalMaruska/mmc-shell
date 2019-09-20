@@ -1,7 +1,13 @@
 #! /usr/bin/gawk -f
 
-# input:
+# invoke git-restate(1) in each REPO project directory
+# On any failure the final exit status will be non-null.
+# on STDOUT the messages.
+#  on success, git-stash pop if requested.
+
+# input is the horizont file of this format:
 # dir TAB  ref:  TAB stash-sha
+# ...
 BEGIN {FS="	";
         exit_code=0;
         cmd="" #echo

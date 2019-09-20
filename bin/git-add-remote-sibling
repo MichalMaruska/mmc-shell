@@ -4,9 +4,11 @@
 # This is only about SSH-based git. not git:// urls!
 # Add as a `git remote host' maruskadell, with the path same as this one.
 
+# die ... maybe git-functions should source it?
+source /usr/share/mmc-shell/mmc-functions.sh
 source /usr/share/mmc-shell/git-functions.sh
-set_remote_name
-
+# set_remote_name
+set -x
 usage()
 {
     cat <<EOF

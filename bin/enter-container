@@ -1,11 +1,18 @@
 #!/bin/zsh -feu
 
+zmodload zsh/regex
+
 if getopt -T; then # should test (( $? = -4 ))
     echo "incompatible  getopt(1) installed. Abort"
     exit -1
 fi
 
 trap 'print ${PROGRAM-$0} ERROR: $LINENO:  $ZSH_EVAL_CONTEXT $0 >&2' ZERR
+
+# wrapper for 3 commands:
+# systemd-nspawn
+# machinectl
+# systemd-run
 
 # Enter a container with 32-bit environment.
 
@@ -19,11 +26,13 @@ trap 'print ${PROGRAM-$0} ERROR: $LINENO:  $ZSH_EVAL_CONTEXT $0 >&2' ZERR
 # --start cmd  run inside a _started_
 
 
-#               full      |   user shell
-# start       --boot      |   --start
-# join-shell    cmd       |
-# join          empty cmd
-
+#               full      |   user shell  | command
+# start       --boot      |   --start     |
+#   ...a non-running
+# join-shell    cmd       |               |
+#
+# join          empty cmd                 |
+#  ...interactively?
 
 
 # defaults:
@@ -71,6 +80,7 @@ usage: ${0##*/} [+-n] [-c dir] [-b dir] [--] ARGS...
 --start
 -B --boot   ...
 
+-a arch
 -d  --distro ... name of the $MACHINES_DIR subdirectory
 -a  --arch     i386, x32
 
@@ -187,6 +197,8 @@ if [[ ! -v machine_name ]]; then
     machine_name=$distro-$arch
     machine_name=${machine_name//./-}
     machine_name=${machine_name/_/-}
+    # is this wrong?  _ is forbidden char!
+    # machine_name=$distro-${arch/_/-}
 fi
 
 if [[ -z $CONTAINER_DIR ]]; then
@@ -209,7 +221,7 @@ rewrite_array()
 }
 
 # --setenv --register=no
-if [[ $VERBOSE = y ]]; then set -x;fi
+if [[ $VERBOSE = yy ]]; then set -x;fi
 
 # sudo systemd-nspawn --bind=/dev/  --directory /var/lib/machines/sid-x32 '--bind=/home/michal' --capability=all  --boot --private-users=no
 
@@ -289,7 +301,7 @@ else
         fi
         # for ubuntu 16.4 we need /bin/zsh appended:
         additional_args=()
-        if [[ $machine_name = xena ]]; then
+        if [[ $machine_name = xena || $machine_name -regex-match ubuntu16 ]]; then
             additional_args+=(/bin/zsh)
         fi
         exec sudo machinectl $args shell $machine_name $additional_args

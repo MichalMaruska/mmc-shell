@@ -36,7 +36,8 @@ function get_remote_path()
     # Strip $HOME
     local local_path=$(get_local_path $TOP)
 
-    local remote_home=/home/michal
+    local remote_home=""
+    #/home/michal
 
     remote_path=$remote_home$local_path
     echo $remote_path

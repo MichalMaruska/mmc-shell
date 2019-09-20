@@ -1,5 +1,6 @@
 #!/bin/zsh -eu
 
+# fixme: the remote should be remote/branch and branch only the local one, unless implicitly the current one.
 source /usr/share/mmc-shell/git-functions.sh
 source /usr/share/mmc-shell/mmc-functions.sh
 colors
@@ -94,6 +95,7 @@ if [ $# -gt 1 ]; then
     branch=$1
     shift
 else
+    # fixme: this can be empty!
     branch=$(current_branch_name)
     if [[ $? != 0 ]]; then
         die "not on a branch -> cannot compare"
