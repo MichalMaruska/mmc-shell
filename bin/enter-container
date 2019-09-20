@@ -182,7 +182,11 @@ fi
 
 # hostname is derived from this
 if [[ ! -v machine_name ]]; then
-   machine_name=$distro-$arch
+    # _ . / is wrong!
+    # echo
+    machine_name=$distro-$arch
+    machine_name=${machine_name//./-}
+    machine_name=${machine_name/_/-}
 fi
 
 if [[ -z $CONTAINER_DIR ]]; then
