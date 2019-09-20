@@ -67,6 +67,10 @@ if [ $# -gt 0 ]; then
     exit 1
 fi
 
+
+if [[ $clone ]];
+then
+    $CMD git clone $GIT_URL:$remote_path
 else
 
     if [ $override = y ]; then
@@ -76,3 +80,4 @@ else
     fi
 
     git fetch $GIT_REMOTE_NAME
+fi
