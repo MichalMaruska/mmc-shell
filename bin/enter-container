@@ -72,6 +72,7 @@ usage: ${0##*/} [+-n] [-c dir] [-b dir] [--] ARGS...
 -B --boot   ...
 
 -d  --distro ... name of the $MACHINES_DIR subdirectory
+-a  --arch     i386, x32
 
 -l  list the running machines
 -L  list available machines?
