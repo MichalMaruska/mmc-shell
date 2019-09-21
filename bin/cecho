@@ -94,6 +94,7 @@ fi
 if [ -t 1 -o "${FORCE_COLOR-}" = y -o -S /dev/stdout ]; then
     if [ "${TERM}" = "xterm" \
         -o "${TERM}" = "screen" \
+        -o "${TERM}" = "linux" \
         -o "${TERM}" = "rxvt" \
         -o "${TERM}" = "ansi" ]; then
         emit_color $COLOR
