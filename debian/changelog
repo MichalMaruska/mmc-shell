@@ -1,3 +1,11 @@
+mmc-shell (3.27) release; urgency=medium
+
+  * Don't create invalid machine names
+  * cecho: even on linux console
+  * update-host-ip: append new Hosts
+
+ -- Michal Maruska <mmaruska@gmail.com>  Mon, 23 Sep 2019 08:31:14 +0200
+
 mmc-shell (3.26) release; urgency=medium
 
   * Handle the 2 output formats of "git describe": the exact match with a tag.
