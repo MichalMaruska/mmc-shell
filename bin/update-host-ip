@@ -76,4 +76,10 @@ sudo sed --regexp-extended --in-place=$SUFFIX -e \
 
 dump_ip_of $HOSTNAME
 
-diff --color /etc/hosts$SUFFIX /etc/hosts
+diff --color /etc/hosts$SUFFIX $HOST_FILE
+
+if ! grep -F $HOSTNAME $HOST_FILE;
+then
+    # append
+    echo "$IP $HOSTNAME" |sudo tee -a $HOST_FILE
+fi
