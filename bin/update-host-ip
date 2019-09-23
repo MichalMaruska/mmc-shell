@@ -23,7 +23,7 @@ EOF
 dump_ip_of()
 {
     readonly HOSTNAME=$1
-    $GREP -E "\b($HOSTNAME |$HOSTNAME$)" $HOST_FILE
+    $GREP -E "\b($HOSTNAME |$HOSTNAME$)" $HOST_FILE || :
 }
 
 while getopts :h OPT; do
@@ -67,19 +67,18 @@ dump_ip_of $HOSTNAME
 # 10.17.150.209
 # sudo sed -ie "s/.*\b\($HOSTNAME \|$HOSTNAME\$\)/$IP $HOSTNAME/" $HOST_FILE
 SUFFIX=.old
-sudo sed --regexp-extended --in-place=$SUFFIX -e \
+if sudo sed --regexp-extended --in-place=$SUFFIX -e \
      "s/^($IP_REGEXP)(.*\b)($HOSTNAME( .*)|$HOSTNAME$)/$IP\2$HOSTNAME\4/" \
      $HOST_FILE | grep -F $HOSTNAME
-
-# dump all IP addresses:
-# sed -E -n -e "s/^([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)(.*)/\1/g;T;p" /etc/hosts
-
-dump_ip_of $HOSTNAME
-
-diff --color /etc/hosts$SUFFIX $HOST_FILE
-
-if ! grep -F $HOSTNAME $HOST_FILE;
 then
+
+    # dump all IP addresses:
+    # sed -E -n -e "s/^([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)(.*)/\1/g;T;p" /etc/hosts
+
+    dump_ip_of $HOSTNAME
+
+    diff --color /etc/hosts$SUFFIX $HOST_FILE
+else
     # append
     echo "$IP $HOSTNAME" |sudo tee -a $HOST_FILE
 fi
