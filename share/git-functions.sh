@@ -1,6 +1,31 @@
 #!/bin/zsh -f
 # to be sourced!
 
+function get_remote_path()
+{
+    # Strip $HOME
+    local local_path=$(pwd)
+    local_path=${local_path#$HOME}
+
+    local remote_home=/home/michal
+
+    remote_path=$remote_home$local_path
+    echo $remote_path
+}
+
+guess_twin()
+{
+    if [[ $(hostname) = e6440 ]]
+    then
+        GIT_REMOTE_NAME=optiplex
+    elif [[ $(hostname) = "optiplex-maruska" ]]
+    then
+        GIT_REMOTE_NAME=e6440
+    fi
+
+    GIT_URL="michal@$GIT_REMOTE_NAME:$(get_remote_path)"
+}
+
 # sets GIT_REMOTE_NAME and GIT_URL
 # the `favorite' one:
 set_remote_name()
@@ -10,7 +35,7 @@ set_remote_name()
     if [[ ${#remotes} = 1 ]]
     then
         GIT_REMOTE_NAME=${remotes[1]}
-    elif [[ $(hostname) = e6440 && -n ${remotes[(re)optiplex]} ]]
+    elif [[ $(hostname) = e6440 && -n ${remotes[(re)optiplex]-} ]]
     then
         # todo: check it exists:
         : ${GIT_REMOTE_NAME:=optiplex}
