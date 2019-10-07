@@ -19,13 +19,7 @@ EOF
     unsetopt POSIX_ARGZERO
 }
 
-# find the friend remote:
-set_remote_name
-
-# todo: the same I'm on
-current_branch=$(current_branch_name)
 force=n
-
 while getopts :hf OPT; do
     case $OPT in
         h|+h)
@@ -57,12 +51,20 @@ if [[ $# -gt 0 ]]; then
     elif is_git_remote $1
     then
         GIT_REMOTE_NAME=$1
+        # todo: the same I'm on
+        current_branch=$(current_branch_name)
         target=$GIT_REMOTE_NAME/$current_branch
     else
         target=$1
     fi
     shift
 else
+    # find the friend remote:
+    set_remote_name
+
+    # todo: the same I'm on
+    current_branch=$(current_branch_name)
+
     # default:
     target=$GIT_REMOTE_NAME/$current_branch
 fi
