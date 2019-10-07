@@ -7,7 +7,6 @@
 # die ... maybe git-functions should source it?
 source /usr/share/mmc-shell/mmc-functions.sh
 source /usr/share/mmc-shell/git-functions.sh
-# set_remote_name
 set -x
 usage()
 {
@@ -21,24 +20,17 @@ EOF
 
 #possible wrapped into echo(1). for a dry run.
 CMD=
-
-function get_remote_path()
-{
-    # Strip $HOME
-    local local_path=$(pwd)
-    local_path=${local_path#$HOME}
-
-    local remote_home=/home/michal
-
-    remote_path=$remote_home$local_path
-    echo $remote_path
-}
+clone=n
 
 remote_path=$(get_remote_path)
 
 override=n
-while getopts :hfvdn:u: OPT; do
+verbose=n
+while getopts :hcdfn:u:v OPT; do
     case $OPT in
+        c)
+            clone=y
+            ;;
         f)
             override=y
             ;;
@@ -50,11 +42,14 @@ while getopts :hfvdn:u: OPT; do
             usage
             exit 0
             ;;
+        n|+n)
+            GIT_REMOTE_NAME=$OPTARG
+            ;;
         u)
             GIT_URL=$OPTARG
             ;;
-        n|+n)
-            GIT_REMOTE_NAME=$OPTARG
+        v)
+            verbose=y
             ;;
         *)
             usage >&2
@@ -69,8 +64,10 @@ if [ $# -gt 0 ]; then
     exit 1
 fi
 
+# set_remote_name
+guess_twin
 
-if [[ $clone ]];
+if [[ $clone = "y" ]];
 then
     $CMD git clone $GIT_URL:$remote_path
 else
@@ -78,7 +75,7 @@ else
     if [ $override = y ]; then
         $CMD git remote set-url $GIT_REMOTE_NAME $GIT_URL:$remote_path
     else
-        $CMD git remote add $GIT_REMOTE_NAME $GIT_URL:$remote_path
+        $CMD git remote add $GIT_REMOTE_NAME $GIT_URL
     fi
 
     git fetch $GIT_REMOTE_NAME
