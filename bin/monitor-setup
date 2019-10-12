@@ -104,7 +104,7 @@ connected()
 }
 
 
-set -x
+# set -x
 if [ $OUTPUT = "DP1" ]; then
    if !connected $OUTPUT; then
        echo "ok!">&2
