@@ -1,0 +1,131 @@
+#! /bin/zsh -feu
+
+# see /etc/acpi/power.sh
+OUTPUT=""
+
+mode="--auto"
+
+usage()
+{
+cat <<EOF
+usage: `basename $0` [-vro] [-d device]
+
+r reset
+o off
+v verbose
+EOF
+}
+
+VERBOSE=n
+reset=n
+off=n
+list=n
+while getopts :d:lorhv OPT; do
+    case $OPT in
+        d)
+            OUTPUT=$OPTARG
+            ;;
+        l)
+            list=y
+            ;;
+        o|+o)
+            off=y
+            mode="--off"
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        r|+r)
+            reset=y
+            ;;
+        v)
+            VERBOSE=y
+            set -x
+            ;;
+        *)
+            usage
+            exit 2
+    esac
+done
+
+shift `expr $OPTIND - 1`
+OPTIND=1
+
+if [ $# -gt 0 ]
+then
+    OUTPUT=$1
+fi
+
+
+# set -x
+if [[ $list = y || -z "$OUTPUT" ]]
+then
+    # xrandr |- grep '\bconnected'|cut -d ' ' -f 1
+    OUTPUT="DP1"
+
+    PREFIX="/sys/class/drm"
+
+    if [ $list = y ]; then
+        foreach f ($PREFIX/card?-*) { echo -n "${f#$PREFIX/} "; cat $f/status }
+        exit
+    fi
+
+
+    echo "** scanning for connected:"
+    foreach f ($PREFIX/card?-*)
+    {
+        if [ $(cat $f/status) = "connected" ];
+        then
+            # set -x
+            port=${f#$PREFIX/}
+            # echo $port;
+            card=${port%%-*}
+            output=${port#*-}
+
+            if ! expr $output : "e" >/dev/null;
+            then
+                if expr $output : "HDMI-.-" >/dev/null; then
+                    output=HDMI${output#HDMI-?-}
+                fi
+                OUTPUT=$output
+            fi
+            #/sys/class/drm/card0-eDP-1
+            echo "card $card output: $output"
+            #if
+        fi
+    }
+fi
+
+connected()
+{
+    a=$(xrandr --query --output $1 2>&1)
+    test -z "$a"
+}
+
+
+set -x
+if [ $OUTPUT = "DP1" ]; then
+   if !connected $OUTPUT; then
+       echo "ok!">&2
+       OUTPUT="DP-1"
+   fi
+elif [ $OUTPUT = "DP-2" ]; then
+   if ! connected $OUTPUT; then
+       echo "ok!">&2
+       OUTPUT="DP2"
+   fi
+fi
+
+
+if [ $reset = y ]; then
+    xrandr --output $OUTPUT --off
+    sleep 1
+fi
+
+# echo xrandr --output $device $mode
+echo "using $OUTPUT">&2
+xrandr --output $OUTPUT $mode
+
+# minimize the space!
+# xrandr -s 1366x768

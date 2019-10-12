@@ -1,0 +1,46 @@
+#! /bin/zsh -feu
+
+# invoke extern with the internal-panel device.
+# Could get it from an /etc/ file.
+device="eDP1"
+
+usage()
+{
+cat <<EOF
+    usage: `basename $0` [+-shd] [--] ARGS...
+-s ... set the size
+EOF
+}
+
+ARGS=()
+
+while getopts :shd:o OPT; do
+    case $OPT in
+        s|+s)
+            xrandr --size 1366x768
+            # xrandr --dpi 142x142
+
+            # this is invoked by /etc/acpi/power.sh
+            xrandr --dpi 106
+            exit 0
+            ;;
+        h|+h)
+            usage
+            exit 0
+            ;;
+        o)
+            ARGS+=(-o)
+            ;;
+        d|+d)
+            device=$OPT_ARG
+            ;;
+        *)
+            usage>&2
+            exit 2
+    esac
+done
+
+shift `expr $OPTIND - 1`
+OPTIND=1
+
+$(dirname $0)/monitor-setup -d $device $ARGS
