@@ -1,3 +1,14 @@
+mmc-shell (3.28) release; urgency=medium
+
+  * fix update-host-ip
+  * git-functions: guess_twin for when the remote is not registered yet.
+  * git-add-remote-sibling: guess the twin, either clone or "remote add"
+  * git-ff: allow choosing the remote on cmdline.
+  * cecho: allow options, -h for example.
+  * new: monitor-intern, monitor-setup
+
+ -- Michal Maruska <mmaruska@gmail.com>  Sun, 13 Oct 2019 00:43:52 +0200
+
 mmc-shell (3.27) release; urgency=medium
 
   * Don't create invalid machine names
