@@ -3,7 +3,11 @@
 # invoke extern with the internal-panel device.
 # Could get it from an /etc/ file.
 # device="eDP1"
-device=$(xrandr --listmonitors| grep '^ 0:'|cut -d ' '  -f 6)
+
+# when it's off it does not list!
+# device=$(xrandr --listmonitors| grep '^ 0:'|cut -d ' '  -f 6)
+
+device=$(xrandr | grep 'connected primary' | cut -f 1 -d ' ')
 
 usage()
 {
