@@ -1,3 +1,11 @@
+mmc-shell (3.29) release; urgency=medium
+
+  * drop set -x
+  * Guess the internal monitor as number 0
+  * Improve the detection -- as the primary display.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Sun, 13 Oct 2019 23:30:52 +0200
+
 mmc-shell (3.28) release; urgency=medium
 
   * fix update-host-ip
