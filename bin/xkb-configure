@@ -1,0 +1,62 @@
+#! /usr/bin/zsh -euf
+
+case $USER in
+    michal | mmc)
+        user=mmc
+        ;;
+    beta | bettina)
+        user=beta
+        ;;
+    *)
+        echo "Taking the XKB files for MICHAL">&2
+        user=mmc
+esac
+
+
+
+
+while getopts :mbr OPT; do
+    case $OPT in
+        m|+m)
+            user=mmc
+            ;;
+        b|+b)
+            user=beta
+            ;;
+        r)
+            xplugin -fork
+            exit 0
+            ;;
+        *)
+            print "usage: ${0##*/} [+-mb} [--] ARGS..."
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+xkbfile=/usr/share/X11/xkb/keymap/xkb.$user
+# xkbfile=~/activity/conf/xkb-conf/xkb.mmc
+xkbcomp $xkbfile  $DISPLAY
+
+# xinput list
+id=$(xinput list --short "Virtual core keyboard" |\
+     sed -e 's/.*id=\([0-9]\+\).*$/\1/g')
+
+# ignore if already loaded!
+xplugin -d $id fork || :
+# fork-config-mmc.scm $id
+forkto < ~/config/fork-$user.config
+
+# Turn off auto-repeat:
+# the Meta key:
+xset -r 205
+# scroll lock???  group3 ?
+xset -r 78
+# hyper on f:
+xset -r 61
+# tilde (group)
+xset -r 49
+
+# don't repeat:
+xset -r 48
