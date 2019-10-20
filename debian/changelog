@@ -1,3 +1,11 @@
+mmc-shell (3.30) release; urgency=medium
+
+  * xkb-configure: new from ~/bin
+  * fix shell syntax?
+  * monitor-setup: explain & verbose
+
+ -- Michal Maruska <mmaruska@gmail.com>  Sun, 20 Oct 2019 16:05:58 +0200
+
 mmc-shell (3.29) release; urgency=medium
 
   * drop set -x
