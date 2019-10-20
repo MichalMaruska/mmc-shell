@@ -8,7 +8,7 @@ mode="--auto"
 usage()
 {
 cat <<EOF
-usage: `basename $0` [-vro] [-d device]
+usage: ${0##*/} [-vro] [-d device]
 
 r reset
 o off
@@ -99,6 +99,7 @@ fi
 
 connected()
 {
+    # xrandr does not set the exit status!
     a=$(xrandr --query --output $1 2>&1)
     test -z "$a"
 }
@@ -124,7 +125,7 @@ if [ $reset = y ]; then
 fi
 
 # echo xrandr --output $device $mode
-echo "using $OUTPUT">&2
+echo "${0##*/} using $OUTPUT">&2
 xrandr --output $OUTPUT $mode
 
 # minimize the space!
