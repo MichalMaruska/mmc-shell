@@ -51,7 +51,8 @@ while getopts :bc:hjlLpv OPT; do
             jack=1
             ;;
         c)
-            CARD=$OPT_ARG
+            CARD=$OPTARG
+            AMIXER=(amixer -c $CARD)
             ;;
         p)
             phones=1
