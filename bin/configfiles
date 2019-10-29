@@ -1,0 +1,42 @@
+#!/bin/zsh -feu
+
+usage()
+{
+    cat <<EOF
+usage: ${0##*/} [+-h]
+
+list the user-MODIFIED conffiles of debian.
+
+(better to invoke as root -- needs read access)
+EOF
+}
+while getopts :h OPT; do
+    case $OPT in
+        h|+h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage >&2
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+
+dpkg-query --showformat='${Conffiles}\n' --show |\
+    grep -v -e '^$'|
+    while read file hash; do
+        if [[ ! -f $file ]]
+        then
+            cecho blue "missing $file"
+        elif [[ $hash != $(md5sum $file| cut -f 1 -d ' ') ]]
+        then
+            ls -l $file
+            cecho red "$hash\n"
+            cecho yellow $(md5sum $file| cut -f 1 -d ' ')
+        else
+            # cecho yellow "ok $file"
+        fi
+    done
