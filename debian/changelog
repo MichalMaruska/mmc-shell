@@ -1,3 +1,11 @@
+mmc-shell (3.31) release; urgency=medium
+
+  * fix: audio show the -l for the selected card (-c)
+  * audio-move: new tool to switch pulse-audio sinks
+  * configfiles: new
+
+ -- Michal Maruska <mmaruska@gmail.com>  Tue, 29 Oct 2019 23:25:12 +0100
+
 mmc-shell (3.30) release; urgency=medium
 
   * xkb-configure: new from ~/bin
