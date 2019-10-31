@@ -58,10 +58,8 @@ then
 fi
 
 
-# set -x
-if [[ $list = y || -z "$OUTPUT" ]]
-then
-    # xrandr |- grep '\bconnected'|cut -d ' ' -f 1
+old_scan()
+{
     OUTPUT="DP1"
 
     PREFIX="/sys/class/drm"
@@ -95,6 +93,15 @@ then
             #if
         fi
     }
+}
+
+
+# set -x
+if [[ $list = y || -z "$OUTPUT" ]]
+then
+    # xrandr |- grep '\bconnected'|cut -d ' ' -f 1
+    OUTPUT=$(xrandr | grep ' connected'| grep -v primary|cut -f 1 -d ' ')
+    # old_scan
 fi
 
 connected()
