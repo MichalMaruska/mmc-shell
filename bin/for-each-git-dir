@@ -24,6 +24,7 @@ Usage $0 [-d] [-p] cmd ....
 --pass   | -p  pass the relative path as first argument.
 --help   | -h
 --wait   | -w  wait 3 seconds between
+--exit-on-error | -e
 EOF
 
 # fixme:
@@ -44,8 +45,9 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
     # default
     FOR_EACH_DIR_CHILD=2
     AFTER=()
+    error_exit=n
     cmd_options=$(getopt --name $0 --shell bash \
-        --longoptions pass,debug,help,wait --options pdhw \
+        --longoptions pass,debug,help,wait,exit-on-error --options edhpw \
         -- "$@" ) || { usage && exit 1 }
     eval set -- "$cmd_options"
 
@@ -56,6 +58,9 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
                 ;;
             -d|--debug)
                 args+=(-d)
+                ;;
+            -e)
+                error_exit=y
                 ;;
             --help|-h)
                 usage
@@ -77,10 +82,24 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
     fi
     # skip  .repo
     export FOR_EACH_BASE_DIR=$(pwd)
+
+    # continue:
+    # -execdir $0 \{\} $args "$@" \;  $AFTER -prune
+    # exit-on-error
+    # \( -execdir $0 \{\} $args "$@" \; -o -quit \) $AFTER -prune
+    typeset -a invoke_command
+    invoke_command=( -execdir $0 '{}' $args "$@" \; )
+    if [[ $error_exit = y ]]; then
+        set -x
+        invoke_command=(
+                 '(' $invoke_command -o -printf 'Quit on error!\n' -quit ')' )
+    fi
+
+    set -x
     find . -name .repo -prune \
          -o \
          -type d -name .git $print_args \
-         -exec $0 \{\} $args "$@" \; $AFTER -prune
+         $invoke_command $AFTER -prune
 # find -type d  -execdir test -d {}/.git \;  -print -exec pwd \;   -prune
 # is slower!
 # todo -execdir
@@ -90,7 +109,8 @@ else
 
     # back from from dir/.git into dir:
     # todo: if only there was a test for test -f .git
-    dir=$(expr match $1 '\(.*\)/.git')
+
+    dir=${1%/.git}
     shift
     cd $dir
 
