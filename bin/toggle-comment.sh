@@ -1,0 +1,76 @@
+#!/bin/zsh -feu
+
+# Given a text file:
+text_file=/etc/hosts
+# comment & uncomment the parts between delimiters:
+# example:
+
+# # a delimiter
+# bbb
+# # end delimiter
+# # delimiter2
+# # ccc
+# # end another delimiter
+
+
+# 2 functions:
+# comment(from, to)
+# uncomment(from, to)
+
+# invoke('# AT HOME', '# AT WORK')
+# invoke('# AT WORK', '# END')
+
+usage()
+{
+    cat <<EOF
+usage: ${0##*/} [+-hdw]
+
+-d  at home
+-w  at work
+
+EOF
+}
+
+at_home=y
+# at home:
+while getopts :hdw OPT; do
+    case $OPT in
+        h|+h)
+            usage
+            exit 0
+            ;;
+        d|+d)
+            at_home=y
+            ;;
+        w|+w)
+            at_home=n
+            ;;
+        *)
+            usage >&2
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+if [[ $at_home = y ]]
+then
+    cecho red "at home!"
+    BEGIN_UNCOMMENT='# AT HOME'
+    END_UNCOMMENT='# AT WORK'
+
+    BEGIN_COMMENT='# AT WORK'
+    END_COMMENT='# END'
+
+else
+    # at work:
+    cecho red "at work!"
+    BEGIN_COMMENT='# AT HOME'
+    END_COMMENT='# AT WORK'
+
+    BEGIN_UNCOMMENT='# AT WORK'
+    END_UNCOMMENT='# END'
+fi
+
+# set -x
+sed -i -e ":start ;/^$BEGIN_COMMENT/bcomment_start;/^$BEGIN_UNCOMMENT/buncomment_start;b;:comment ;s/^ *#* \?/# /;:comment_start ; n;/$END_COMMENT/bstart; bcomment;:uncomment ;s/^ *#\?//;:uncomment_start ;n;/^$END_UNCOMMENT/bstart;buncomment" $text_file
