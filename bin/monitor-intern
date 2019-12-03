@@ -22,7 +22,8 @@ ARGS=()
 while getopts :shd:o OPT; do
     case $OPT in
         s|+s)
-            xrandr --size 1366x768
+            xrandr --size 0
+            # by index! 1920x1080
             # xrandr --dpi 142x142
 
             # this is invoked by /etc/acpi/power.sh
