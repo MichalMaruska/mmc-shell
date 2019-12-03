@@ -43,7 +43,7 @@ set_remote_name()
     then
         : ${GIT_REMOTE_NAME=e6440}
     else
-        die "cannot decide for a favorite remote"
+        die "$0 cannot decide for a favorite remote"
     fi
 
     GIT_URL=$(git remote get-url $GIT_REMOTE_NAME)
