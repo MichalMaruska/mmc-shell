@@ -1,0 +1,6 @@
+#compdef git-ff
+
+_arguments -C \
+           '-h' \
+           '-f' \
+           ':remote repository:__git_any_repositories' && return 0
