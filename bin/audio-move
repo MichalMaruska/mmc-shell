@@ -21,10 +21,15 @@ EOF
 
 move_to()
 {
-    sink=$1
-    sink_input=$(pactl list short sink-inputs|cut -f 1)
+    local sink=$1
+    # sink_input=$(pactl list short sink-inputs|cut -f 1)
     pactl set-default-sink $sink
-    pactl move-sink-input $sink_input $sink
+
+    pactl list short sink-inputs|cut -f 1 |
+        while read si
+        do
+            pactl move-sink-input $si $sink
+        done
 }
 
 while getopts :pbsh OPT; do
