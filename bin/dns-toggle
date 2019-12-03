@@ -73,4 +73,13 @@ else
 fi
 
 # set -x
-sed -i -e ":start ;/^$BEGIN_COMMENT/bcomment_start;/^$BEGIN_UNCOMMENT/buncomment_start;b;:comment ;s/^ *#* \?/# /;:comment_start ; n;/$END_COMMENT/bstart; bcomment;:uncomment ;s/^ *#\?//;:uncomment_start ;n;/^$END_UNCOMMENT/bstart;buncomment" $text_file
+sudo sed --in-place --expression \
+     ":start
+/^$BEGIN_COMMENT/bcomment_start
+/^$BEGIN_UNCOMMENT/buncomment_start;b
+:comment ;s/^ *#* \?/# /;
+:comment_start ; n;
+/$END_COMMENT/bstart; bcomment;
+:uncomment ;s/^ *#\?//;
+:uncomment_start ;n;
+/^$END_UNCOMMENT/bstart;buncomment" $text_file
