@@ -1,6 +1,8 @@
 #!/bin/zsh -feu
 
-set -x
+source /usr/share/mmc-shell/mmc-functions.sh
+colors
+
 sink_number()
 {
     pactl list short sinks|grep -e $1 | cut -f 1
@@ -54,7 +56,10 @@ while getopts :bhlpsi: OPT; do
             move_to $OPTARG
             ;;
         l)
+            LOG_STEP "sinks-inputs"
             pactl list short sink-inputs
+            LOG_STEP "sinks:"
+            pactl list short sinks
             ;;
         *)
             usage >&2
