@@ -28,10 +28,7 @@ install-zsh:
 	for file in $$(cd  zsh;find . -type f ); do \
 		install -v -m 444 zsh/$$file $(DESTDIR)/usr/share/zsh/site-functions/$$file; done
 
-
-
 clean:
 
 git-clean:
 	git clean -f -d -x
-
