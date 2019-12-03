@@ -83,11 +83,11 @@ shift OPTIND-1
 OPTIND=1
 
 # the remote:
-set_remote_name
-
 if [ $# -gt 1 ]; then
     GIT_REMOTE_NAME=$1
     shift
+else
+    set_remote_name
 fi
 
 # the branch
