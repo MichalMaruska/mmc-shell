@@ -57,6 +57,7 @@ set -x
 IP=$2
 # [[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
 IP_REGEXP="[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+"
+
 if ! echo $IP| grep -E "$IP_REGEXP"; then
     die "invalid IP: $IP"
 fi
