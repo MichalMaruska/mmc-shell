@@ -99,7 +99,6 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
 
     invoke_command+=( -execdir $0 '{}' $args "$@" \; )
     if [[ $error_exit = y ]]; then
-        set -x
         invoke_command=(
                  '(' $invoke_command -o -printf 'Quit on error!\n' -quit ')' )
     fi

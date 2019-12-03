@@ -35,7 +35,6 @@ verbose=n
 cmd_options=$(getopt --name $0 --shell bash \
                      --longoptions verbose,url:,name:,dry,help \
                      --options hcdfn:u:v -- "$@") || { usage && exit 1 }
-set -x
 # setopt KSH_ARRAYS
 eval set -- "$cmd_options"
 
