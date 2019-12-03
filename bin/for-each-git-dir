@@ -41,13 +41,14 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
     # print_args=(-printf '\033[01;33m%p\033[0m\n')
 
     typeset -a args
-    args=()
     # default
     FOR_EACH_DIR_CHILD=2
     AFTER=()
     error_exit=n
+    print_dirs=n
+
     cmd_options=$(getopt --name $0 --shell bash \
-        --longoptions pass,debug,help,wait,exit-on-error --options edhpw \
+        --longoptions pass,debug,help,wait,exit-on-error,verbose --options edDhpw \
         -- "$@" ) || { usage && exit 1 }
     eval set -- "$cmd_options"
 
@@ -58,6 +59,9 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
                 ;;
             -d|--debug)
                 args+=(-d)
+                ;;
+            -D| --verbose)
+                print_dirs=y
                 ;;
             -e)
                 error_exit=y
@@ -88,7 +92,12 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
     # exit-on-error
     # \( -execdir $0 \{\} $args "$@" \; -o -quit \) $AFTER -prune
     typeset -a invoke_command
-    invoke_command=( -execdir $0 '{}' $args "$@" \; )
+
+    if [[ $print_dirs = y ]]; then
+       invoke_command+=( -printf "%h\n" )
+    fi
+
+    invoke_command+=( -execdir $0 '{}' $args "$@" \; )
     if [[ $error_exit = y ]]; then
         set -x
         invoke_command=(
