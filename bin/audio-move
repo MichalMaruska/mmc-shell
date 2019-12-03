@@ -32,7 +32,7 @@ move_to()
         done
 }
 
-while getopts :pbsh OPT; do
+while getopts :bhlps OPT; do
     case $OPT in
         p|+p)
             headphones=$(sink_number 'USB.*Dock_0')
@@ -49,6 +49,9 @@ while getopts :pbsh OPT; do
         h|+h)
             usage
             exit 0
+            ;;
+        l)
+            pactl list short sink-inputs
             ;;
         *)
             usage >&2
