@@ -7,6 +7,8 @@
 # die ... maybe git-functions should source it?
 source /usr/share/mmc-shell/mmc-functions.sh
 source /usr/share/mmc-shell/git-functions.sh
+check_getopt
+
 
 unsetopt FUNCTION_ARGZERO
 usage()
@@ -18,9 +20,6 @@ usage: ${0##*/} [+-h] [-n URL] [-d]
 --url -u ex ${GIT_URL-}
 EOF
 }
-if getopt -T; then # should test (( $? = -4 ))
-    die "incompatible  getopt(1) installed. Abort"
-fi
 
 #possible wrapped into echo(1). for a dry run.
 CMD=
