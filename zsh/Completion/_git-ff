@@ -1,6 +1,44 @@
 #compdef git-ff
+#description fast-forward to a remote branch.
 
-_arguments -C \
-           '-h' \
-           '-f' \
-           ':remote repository:__git_any_repositories' && return 0
+# to get the functionality of _git, I really have to *invoke* it!
+# autoload __git_remotes _git
+
+# copied from _git-cp-to
+
+_git-ff()
+{
+    local curcontext="$curcontext" state line
+
+    _arguments -C -s -S  \
+               '-h[help]' \
+               '1:remote repository:->git_remotes' && return 0
+
+    # only this works:
+    case $state in
+        git_remotes)
+            # or _sum
+            _alternative \
+                'remote:remote:__git_remotes'
+            # _arguments "1:Segments:($available)"
+            ;;
+        *)
+            ;; # _files
+    esac
+}
+
+
+if [[ ! $words[1] = 'git' ]]
+then
+    words[1]=(git "ff")
+    (( CURRENT++ ))
+else
+    # echo "already divided: $words[1] vs $words[2]">&2
+    :
+fi
+
+# echo $words[@] >> $TMPDIR/complete
+
+# Invoke:
+service=git;
+_git
