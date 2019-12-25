@@ -54,7 +54,7 @@ done
 shift OPTIND-1
 OPTIND=1
 
-temp=$(mktemp)
+temp=$(mktemp --suffix=.dot)
 
 echo "digraph { " > $temp
 echo "fontsize=24;" >> $temp
