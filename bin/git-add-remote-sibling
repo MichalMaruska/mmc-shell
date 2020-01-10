@@ -15,9 +15,10 @@ usage()
 {
     cat <<EOF
 usage: ${0##*/} [+-h] [-n URL] [-d]
--d verbose
---name -n ex. ${GIT_REMOTE_NAME-}
---url -u ex ${GIT_URL-}
+-d --dry
+-v --verbose
+-n --name  ex. ${GIT_REMOTE_NAME-}
+-u --url  ex ${GIT_URL-}
 EOF
 }
 
@@ -47,11 +48,11 @@ while (( $# > 0 )) do
           -f)
               override=y
               ;;
-          -d)
+          -d | --dry )
               # run_dry=y
               CMD=echo
               ;;
-          -h|--help)
+          -h | --help)
               usage
               exit 0
               ;;
@@ -59,11 +60,11 @@ while (( $# > 0 )) do
               GIT_REMOTE_NAME=$2
               shift
               ;;
-          -u)
+          -u | --url)
               GIT_URL=$2
               shift
               ;;
-          -v)
+          -v | verbose )
               verbose=y
               ;;
           --)
