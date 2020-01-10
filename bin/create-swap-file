@@ -2,7 +2,35 @@
 
 SWAP_FILE=/swapfile
 
+usage()
+{
+    cat <<EOF
+usage: ${0##*/} [+-h] [--] [file]
+
+-h help
+EOF
+}
+while getopts :h OPT; do
+    case $OPT in
+        h|+h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage >&2
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+if [[ $# -gt 0 ]]
+then
+    SWAP_FILE=$1
+fi
+
 set -x
+# with SSD I want to allocate the space? or sparse is ok?
 dd if=/dev/zero of=$SWAP_FILE bs=1M count=8192
 sudo chmod 0600 $SWAP_FILE
 mkswap $SWAP_FILE
