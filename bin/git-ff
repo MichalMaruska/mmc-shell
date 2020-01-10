@@ -8,11 +8,12 @@ colors
 usage() {
     setopt POSIX_ARGZERO
     cat <<EOF
-usage: ${0##*/} [+-h] [-f] [--] [remote-or-branch]
+usage: ${0##*/} [-h] [-f] [--] [remote-or-branch]
 
 Fast-forward to remote head, stashing around.
 -f not only fast-forward !
 
+-h help
 By default {branch} is the current one on the favorite remote.
 
 EOF
