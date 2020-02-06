@@ -11,11 +11,11 @@ all:
 install: install-zsh
 	$(INSTALL) -v -D --directory $(DESTDIR)$(BIN_INSTALL_DIR)
 	for p in $(BINFILES); do \
-	  $(INSTALL) -v -m 555 $$p $(DESTDIR)$(BIN_INSTALL_DIR) ; \
+	  $(INSTALL) --owner=root -v --mode 555 $$p $(DESTDIR)$(BIN_INSTALL_DIR) ; \
 	done
 	$(INSTALL) -v -D --directory $(DESTDIR)$(SHARED_INSTALL_DIR)
 	for p in share/*; do \
-	  $(INSTALL) -v -m 555 $$p $(DESTDIR)$(SHARED_INSTALL_DIR) ; \
+	  $(INSTALL) --owner=root -v --mode 555 $$p $(DESTDIR)$(SHARED_INSTALL_DIR) ; \
 	done
 
 
@@ -26,7 +26,7 @@ install-zsh:
 	for dir in $$(cd  zsh;find . -mindepth 1  -type d ); do \
 		mkdir -vp $(DESTDIR)/usr/share/zsh/site-functions/$$dir; done
 	for file in $$(cd  zsh;find . -type f ); do \
-		install -v -m 444 zsh/$$file $(DESTDIR)/usr/share/zsh/site-functions/$$file; done
+		install -v --mode 444 zsh/$$file $(DESTDIR)/usr/share/zsh/site-functions/$$file; done
 
 clean:
 
