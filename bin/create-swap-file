@@ -8,6 +8,7 @@ usage()
 usage: ${0##*/} [+-h] [--] [file]
 
 -h help
+have to be root!
 EOF
 }
 while getopts :h OPT; do
@@ -31,8 +32,8 @@ fi
 
 set -x
 # with SSD I want to allocate the space? or sparse is ok?
-dd if=/dev/zero of=$SWAP_FILE bs=1M count=8192
-sudo chmod 0600 $SWAP_FILE
+dd conv=fdatasync iflag=fullblock if=/dev/zero of=$SWAP_FILE bs=1M count=8192
+chmod 0600 $SWAP_FILE
 mkswap $SWAP_FILE
 swapon  $SWAP_FILE
 
