@@ -45,6 +45,8 @@ fi
 
 # find where to
 if [[ $# -gt 0 ]]; then
+    # $1 is remote or remote-branch
+
     if is_git_remote_branch $1
     then
         # select the branch
@@ -77,7 +79,7 @@ fi
 git_ff_to_cautiously()
 {
     # given $ref and $force
-    ref=$1
+    local ref=$1
 
     if [[ $(git rev-parse HEAD) != $(git rev-parse $ref) ]]; then
 
