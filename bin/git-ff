@@ -12,6 +12,7 @@ usage: ${0##*/} [-h] [-f] [--] [remote-or-branch]
 
 Fast-forward to remote head, stashing around.
 -f not only fast-forward !
+-b rebase.
 
 -h help
 By default {branch} is the current one on the favorite remote.
@@ -21,11 +22,15 @@ EOF
 }
 
 force=n
-while getopts :hf OPT; do
+rebase=n
+while getopts :bhf OPT; do
     case $OPT in
         h|+h)
             usage
             exit 0
+            ;;
+        b)
+            rebase=y
             ;;
         f)
             force=y
@@ -81,9 +86,16 @@ git_ff_to_cautiously()
     # given $ref and $force
     local ref=$1
 
+    # unless we are on it already:
     if [[ $(git rev-parse HEAD) != $(git rev-parse $ref) ]]; then
 
-        if [[ $force = y || $(git rev-parse HEAD) = $(git merge-base HEAD $ref) ]]
+        if [[ $rebase = y ]];
+        then
+            stash_if_non_clean "merge fast-forward"
+            git rebase $ref
+            unstash_if_stashed
+            cecho hiyellow "ff & unstashed"
+        elif [[ $force = y || $(git rev-parse HEAD) = $(git merge-base HEAD $ref) ]]
         then
             if git merge --ff-only $ref;
             then
@@ -92,8 +104,7 @@ git_ff_to_cautiously()
                 # touching timestamps:
                 stash_if_non_clean "merge fast-forward"
 
-                if [[ $force = y ]];
-                then
+                if [[ $force = y ]]; then
                     git reset --hard $ref
                 else
                     # git checkout $branch
