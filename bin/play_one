@@ -72,7 +72,12 @@ function play_file ()
             if which mplayer > /dev/null && [[ $use_gst == 'no' ]] ; then
                 play_mplayer $1
             else
-                DISPLAY= gst123 --novideo --quiet "$1"
+                if [[ $verbose = y ]]
+                then
+                    DISPLAY= gst123 --novideo  "$1"
+                else
+                    DISPLAY= gst123 --novideo --quiet "$1"
+                fi
             fi
             ;;
 
