@@ -91,9 +91,7 @@ git_ff_to_cautiously()
 
         if [[ $rebase = y ]];
         then
-            stash_if_non_clean "merge fast-forward"
-            git rebase $ref
-            unstash_if_stashed
+            git rebase --autosquash $ref
             cecho hiyellow "ff & unstashed"
         elif [[ $force = y || $(git rev-parse HEAD) = $(git merge-base HEAD $ref) ]]
         then
