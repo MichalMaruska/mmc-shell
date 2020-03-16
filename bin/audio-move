@@ -68,3 +68,24 @@ while getopts :bhlpsi: OPT; do
 done
 shift OPTIND-1
 OPTIND=1
+
+
+erase_configuration_file()
+{
+    local tdb_file=$1
+
+    drop=(sink-input-by-application-name:MPlayer
+          sink-input-by-application-name:mpg123
+          sink-input-by-application-name:gthumb
+          'sink-input-by-application-name:libao[ogg123]'
+         )
+
+    foreach key ($drop) {
+        if false; then
+            tdbtool $tdb_file delete "$key"
+        fi
+    }
+}
+
+
+erase_configuration_file  ~/.config/pulse/*-stream-volumes.tdb
