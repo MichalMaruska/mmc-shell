@@ -8,8 +8,10 @@ GREP=(/bin/grep --color)
 usage()
 {
 cat <<EOF
-usage: ${0##*/} [+-h} [--] HOSTNAME
-       ${0##*/} [+-h} [--] HOSTNAME  IP
+usage: ${0##*/} [+-h] [-v] [--] HOSTNAME
+       ${0##*/} [+-h] [-v] [--] HOSTNAME  IP
+
+-v  verbose
 
 - dump the IP in $HOST_FILE
 - or update the IP of the HOST in $HOST_FILE. -- overwrites the line.
@@ -26,11 +28,14 @@ dump_ip_of()
     $GREP -E "\b($HOSTNAME |$HOSTNAME$)" $HOST_FILE || :
 }
 
-while getopts :h OPT; do
+while getopts :hv OPT; do
     case $OPT in
         h|+h)
             usage
             exit 0
+            ;;
+        v)
+            set -x
             ;;
         *)
             usage >&2
@@ -53,7 +58,6 @@ if [ $# = 1 ]; then
     exit 0
 fi
 
-set -x
 IP=$2
 # [[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
 IP_REGEXP="[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+"
