@@ -48,7 +48,7 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
     print_dirs=n
 
     cmd_options=$(getopt --name $0 --shell bash \
-        --longoptions pass,debug,help,wait,exit-on-error,verbose --options edDhpw \
+        --longoptions pass,debug,help,wait,exit-on-error,verbose --options +edDhpw \
         -- "$@" ) || { usage && exit 1 }
     eval set -- "$cmd_options"
 
