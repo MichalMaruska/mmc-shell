@@ -13,15 +13,18 @@ function get_remote_path()
     echo $remote_path
 }
 
+# set GIT_URL
 guess_twin()
 {
-    if [[ $(hostname) = e6440 ]]
-    then
-        GIT_REMOTE_NAME=optiplex
-    elif [[ $(hostname) = "optiplex-maruska" ]]
-    then
-        GIT_REMOTE_NAME=e6440
-    fi
+    case $(hostname) in
+        e6440 | inspiron)
+            GIT_REMOTE_NAME=optiplex
+            ;;
+        optiplex | optiplex-maruska)
+            GIT_REMOTE_NAME=e6440
+            ;;
+        *)
+    esac
 
     GIT_URL="michal@$GIT_REMOTE_NAME:$(get_remote_path)"
 }
@@ -32,18 +35,30 @@ set_remote_name()
 {
     readonly remotes=($(git remote))
 
+    # need a dictionary of these:
+
+    # host e6440
+    # members of e6440_siblings=()
+    # if [[ ${e6440_siblings[(i)$hostname]} -le ${#e6440_siblings} ]]
+
     if [[ ${#remotes} = 1 ]]
     then
         GIT_REMOTE_NAME=${remotes[1]}
-    elif [[ $(hostname) = e6440 && -n ${remotes[(re)optiplex]-} ]]
-    then
-        # todo: check it exists:
-        : ${GIT_REMOTE_NAME:=optiplex}
-    elif [[ $(hostname) = "optiplex-maruska" && -n ${remotes[(re)e6440]-} ]]
-    then
-        : ${GIT_REMOTE_NAME=e6440}
     else
-        die "$0 cannot decide for a favorite remote"
+        e6440_siblings=(optiplex-maruska )
+        optiplex_siblings=(lat7280 e7240 inspiron e6440)
+        if [[ -n ${remotes[(re)e6440]-} &&
+                  ${e6440_siblings[(i)$hostname]} -le ${#e6440_siblings} ]]
+        then
+            # todo: check it exists:
+            : ${GIT_REMOTE_NAME=e6440}
+        elif [[ -n ${remotes[(re)optiplex]-}
+                && ${optiplex_siblings[(i)$hostname]} -le ${#optiplex_siblings} ]]
+        then
+            : ${GIT_REMOTE_NAME:=optiplex}
+        else
+            die "$0 cannot decide for a favorite remote"
+        fi
     fi
 
     GIT_URL=$(git remote get-url $GIT_REMOTE_NAME)
