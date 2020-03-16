@@ -1,6 +1,6 @@
 #! /bin/zsh -feu
 
-# this is recursive. First time it invokes the find
+# This is recursive. First time it invokes find(1)
 # and the second time (invoked by find) it will invoke (correctly)
 # the user's command.
 # The key aim is to invoke the command in the "found" directory.
@@ -11,6 +11,10 @@ if getopt -T; then # should test (( $? = -4 ))
 fi
 
 
+# note: must not be set in environment already!
+# 0 parent
+# 1 child with parameters
+# 2       with more parameters
 : ${FOR_EACH_DIR_CHILD=0}
 export FOR_EACH_DIR_CHILD
 
@@ -33,23 +37,21 @@ EOF
 
 
 ## Executed in the parent:
-if [ $FOR_EACH_DIR_CHILD = 0 ]; then
-
-    # declare
-    typeset -a print_args
+if [ $FOR_EACH_DIR_CHILD = 0 ]
+then
+    # This is unused now.
+    typeset -a print_args WAIT_AFTER args
     print_args=()
-    # print_args=(-printf '\033[01;33m%p\033[0m\n')
+    WAIT_AFTER=()
 
-    typeset -a args
     # default
     FOR_EACH_DIR_CHILD=2
-    AFTER=()
     error_exit=n
-    print_dirs=n
 
     cmd_options=$(getopt --name $0 --shell bash \
         --longoptions pass,debug,help,wait,exit-on-error,verbose --options +edDhpw \
         -- "$@" ) || { usage && exit 1 }
+    # note + -> first non-option is like --
     eval set -- "$cmd_options"
 
     while (( $# > 0 )) do
@@ -58,9 +60,8 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
                 FOR_EACH_DIR_CHILD=1
                 ;;
             -d|--debug | -D| --verbose )
-                # args+=(-d)
-                # print_args=(-printf '\033[01;33m%p\033[0m\n')
-                print_dirs=y
+                # %h ?
+                print_args=(-printf '\033[01;34m%h\033[0m\n')
                 ;;
             -e)
                 error_exit=y
@@ -70,7 +71,8 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
                 exit 0
                 ;;
             --wait| -w)
-                AFTER=(-exec sleep 3 \;)
+                # so not -e!
+                WAIT_AFTER=(-exec sleep 3 \;)
                 ;;
             --)
                 shift
@@ -83,19 +85,13 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
     if [ $# = 0 ]; then
         usage; exit 1
     fi
-    # skip  .repo
-    export FOR_EACH_BASE_DIR=$(pwd)
 
     # continue:
     # -execdir $0 \{\} $args "$@" \;  $AFTER -prune
     # exit-on-error
     # \( -execdir $0 \{\} $args "$@" \; -o -quit \) $AFTER -prune
+
     typeset -a invoke_command
-
-    if [[ $print_dirs = y ]]; then
-       invoke_command+=( -printf "%h\n" )
-    fi
-
     invoke_command+=( -execdir $0 '{}' $args "$@" \; )
     if [[ $error_exit = y ]]; then
         invoke_command=(
@@ -103,29 +99,31 @@ if [ $FOR_EACH_DIR_CHILD = 0 ]; then
     fi
 
     set -x
-    find . -name .repo -prune \
+    find . -name ".repo" -prune \
          -o \
          -type d -name .git $print_args \
-         $invoke_command $AFTER -prune
+         $WAIT_AFTER $invoke_command -prune
+    # I have to wait before, since the command can fail, and the rest is not executed!
 
-# find -type d  -execdir test -d {}/.git \;  -print -exec pwd \;   -prune
-# is slower!
-# todo -execdir
 
+    # find -type d  -execdir test -d {}/.git \;  -print -exec pwd \;   -prune
+    # is slower!
+    # todo -execdir
 else
     # return from the .git
 
     # back from from dir/.git into dir:
     # todo: if only there was a test for test -f .git
 
+    # echo $1
     dir=${1%/.git}
     shift
-    cd $dir
+    if [[ $dir != "." ]];
+    then
+        cd $dir
+    fi
 
-
-    # $(git describe) ;
-    # set -x
-    if [ $FOR_EACH_DIR_CHILD = 2 ]; then
+    if [[ $FOR_EACH_DIR_CHILD = 2 ]]; then
         eval $@[1] $@[2,-1]
     else
         eval $@[1] $dir $@[2,-1]
