@@ -34,10 +34,24 @@ move_to()
         done
 }
 
+activate_profile()
+{
+    local CARD=$1
+    local PROFILE=$2
+    pactl set-card-profile $CARD $PROFILE
+}
+
+WD15_SINK_REGEXP='USB.*Dock_0'
+# WD15_SINK_REGEXP='USB.*Dock_1'
+WD15_SINK_REGEXP='Generic_USB_Audio_200901010001'
+
+wd15card="alsa_card.usb-Generic_USB_Audio_200901010001-00"
 while getopts :bhlpsi: OPT; do
     case $OPT in
         p|+p)
-            headphones=$(sink_number 'USB.*Dock_0')
+            activate_profile $wd15card \
+                             "output:analog-stereo-headphone+input:analog-stereo-mic"
+            headphones=$(sink_number $WD15_SINK_REGEXP)
             move_to $headphones
             ;;
         b|+b)
@@ -45,7 +59,8 @@ while getopts :bhlpsi: OPT; do
             move_to $builtin
             ;;
         s|+s)
-            speakers=$(sink_number 'USB.*Dock_1')
+            activate_profile $wd15card "output:analog-stereo-speaker"
+            speakers=$(sink_number $WD15_SINK_REGEXP)
             move_to $speakers
             ;;
         h|+h)
