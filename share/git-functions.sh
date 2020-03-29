@@ -185,3 +185,47 @@ cat_git_file_from_commit()
         exit 1
     fi
 }
+
+
+# Given 2 commits as parameters ... look at the lattice
+# return 1 if A < B
+# 0 if  A=B
+# 1 less
+# 2 more
+# 3  incomparable
+# 4 error?
+
+#  Uses: $verbose
+compare_commits()
+{
+    # the sha?
+    # $(git rev-parse $1)
+    # local
+    readonly first=$(git log $1 --max-count=1 --format="%H")
+    readonly second=$(git log $2 --max-count=1 --format="%H")
+
+    if [[ -z "$first" || -z "$second" ]]; then
+        if [[ $verbose = n ]]; then echo "$first $second" >&2;fi
+        return 4
+    fi
+    if [[ $first = $second ]]; then
+        return 0;
+    fi
+
+    # `merge-base' is the key:
+    readonly common=$(git merge-base $first $second)
+    if [ $? != 0 ]; then
+        if [[ $verbose != n ]]; then echo "no common merge-base">&2;fi
+        return 4;
+    fi
+
+    if [[ $common = $second ]]; then
+        return 1;
+    elif [[ $common = $first ]]; then
+        return 2;
+        # -1 is nonsense if ever a standalone,
+        # but it got delivered as -1 as function!
+    else
+        return 3
+    fi
+}
