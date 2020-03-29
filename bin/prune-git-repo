@@ -1,0 +1,23 @@
+#!/bin/zsh -feu
+
+
+# I have a git-repo, which might contain the files (given in $2...) sometime in history.
+# Delete those, which are found.
+
+git_repo=$1
+shift
+
+foreach file ($@) {
+    sha=$(git hash-object $file)
+    cecho red "$file -> $sha"
+    tmpfile=$(mktemp)
+    if git -C $git_repo cat-file -p $sha > $tmpfile;
+    then
+        ls -l $file $tmpfile
+        if diff $file $tmpfile >/dev/null ; then
+            rm -fv $file
+        fi
+    fi
+    rm -vf $tmpfile
+    # sleep 1
+}
