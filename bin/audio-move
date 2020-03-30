@@ -14,11 +14,14 @@ sink_number()
 usage()
 {
     cat <<EOF
-usage: ${0##*/} [+-pbsh] [-l]
+usage: ${0##*/} [+-pbsh] [-i name] [-l]
 -b builtin
 
 -p  phones
 -s  speakers
+-u  USB phones
+
+-i [name] custom sink? ( pactl list short sinks)
 
 -l list sinks
 EOF
@@ -51,7 +54,9 @@ WD15_SINK_REGEXP='USB.*Dock_0'
 WD15_SINK_REGEXP='Generic_USB_Audio_200901010001'
 
 wd15card="alsa_card.usb-Generic_USB_Audio_200901010001-00"
-while getopts :bhi:lps OPT; do
+usb_phones='alsa_output.usb-Plantronics_Plantronics_C320-M_DC07CFE9246B394C99F2ECEDA32A7A3F-00.analog-stereo'
+
+while getopts :bhi:lpsu OPT; do
     case $OPT in
         p|+p)
             if [[ $WD15_DOCK = y ]]; then
@@ -87,6 +92,9 @@ while getopts :bhi:lps OPT; do
                 pactl set-sink-port $sink analog-output-lineout
                 move_to $sink
             fi
+            ;;
+        u) # usb headphones
+            move_to $usb_phones
             ;;
         h|+h)
             usage
