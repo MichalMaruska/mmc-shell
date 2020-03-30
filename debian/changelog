@@ -1,3 +1,60 @@
+mmc-shell (3.33) release; urgency=medium
+
+  * Use improved scan for connected devices.
+  * new toggle-comment.sh to flip /etc/hosts sections
+  * space in update-host-ip
+  * audio-move: decentralize the sink discovery
+  * redirect all current streams
+  * list sinks
+  * monitor-intern: use -s option with index, not absolute size
+  * rename to dns-toggle
+  * sudo & make sed more readable
+  * for-each-git-dir: implement --exit-on-error, and use -execdir
+  * git-add-remote-sibling: migrate to getopt; work with any (host)name
+  * simple/buggy completion git-ff
+  * audio-move: -i option to move to numbered sink
+  * audio-move: list in color sinks too
+  * spaces
+  * Use check_getopt
+  * todo (should die() do it?) Try to report which tool is failing
+  * Use the specified remote (if given)
+  * for-each-git-dir: add a -D option to print the dir
+  * Complete remotes for _git-ff
+  * mktemp provide suffix!
+  * create-swap-file: add usage() and optional $1 is the filename
+  * git-compare-remote: process the long options!
+  * git-ff: fix usage()
+  * drop tracing
+  * play_one: -g -v
+  * Makefile: Install as root.
+  * for-each-git-dir: fix the -d option (now also -D) to print correctly the relative path.
+  * git-ff: comment & improve shell
+  * git-ff: implement -b option to rebase!
+  * create-swap-file: assume sudo, improve the dd(1) line
+  * Use upstream --autosquash for rebase
+  * Use sets (arrays) to test hostname
+  * audio-move: erase_configuration_file
+  * audio-move: activate_profile on wd15 dock
+  * Fix: for-each-git-dir to stop options at first non-option argument
+  * for-each-git-dir: resume using print_args, use color, clean up
+  * update-host-ip: verbose conditionally
+  * update-host-ip: use zsh/regex
+  * traced_exec: finally a local way of enabling -x / xtrace option
+  * prune-git-repo: new tool
+  * prune-git-repo: -v verbose
+  * move compare_commits into git-functions
+  * document difference between audio-move & audio-select
+  * audio-move: improve "usage"
+  * audio-move: support both wd15 & e-docks. switch profiles on cards. Treat sinks as names, not numbers
+  * Support -u for usb headphones/plantronics
+  * configfiles: implement copy of the changed files.
+  * configfiles: copy also locally added files into /etc
+  * monitor-intern: when turning off (internal lcd), recalculate the size
+  * update-host-ip: Check IP with zsh native regexp function, inside separate
+  * avoid separate grep
+
+ -- Michal Maruska <mmaruska@gmail.com>  Mon, 30 Mar 2020 14:53:21 +0200
+
 mmc-shell (3.31) release; urgency=medium
 
   * fix: audio show the -l for the selected card (-c)
