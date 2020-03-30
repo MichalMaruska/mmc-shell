@@ -18,6 +18,7 @@ EOF
 }
 
 ARGS=()
+OFF=n
 
 while getopts :shd:o OPT; do
     case $OPT in
@@ -35,6 +36,7 @@ while getopts :shd:o OPT; do
             exit 0
             ;;
         o)
+            OFF=y
             ARGS+=(-o)
             ;;
         d|+d)
@@ -50,3 +52,9 @@ shift `expr $OPTIND - 1`
 OPTIND=1
 
 $(dirname $0)/monitor-setup -d $device $ARGS
+
+if [[ $OFF = 'n' &&  $(xrandr |grep ' connected'|wc -l) = 1 ]]
+then
+   echo "we are the only -> resize!"
+   xrandr --size 0
+fi
