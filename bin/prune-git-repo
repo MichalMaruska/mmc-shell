@@ -3,9 +3,43 @@
 
 # I have a git-repo, which might contain the files (given in $2...) sometime in history.
 # Delete those, which are found.
+usage()
+{
+    cat <<EOF
+usage: ${0##*/} [+-hv] [--] <git-repo>  file ...
+
+-v verbose
+EOF
+}
+
+
+verbose=n
+while getopts :hv OPT; do
+    case $OPT in
+        h|+h)
+            usage
+            exit 0
+            ;;
+        v|+v)
+            verbose=y
+            ;;
+        *)
+            usage >&2
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
 
 git_repo=$1
 shift
+
+RM_ARGS=()
+if [[ $verbose = y ]]; then
+    RM_ARGS+=(--verbose)
+fi
+
 
 foreach file ($@) {
     sha=$(git hash-object $file)
@@ -13,11 +47,15 @@ foreach file ($@) {
     tmpfile=$(mktemp)
     if git -C $git_repo cat-file -p $sha > $tmpfile;
     then
-        ls -l $file $tmpfile
+        if [[ $verbose = y ]]; then
+            ls -l $file $tmpfile
+        fi
+
         if diff $file $tmpfile >/dev/null ; then
-            rm -fv $file
+            rm $RM_ARGS $file
         fi
     fi
-    rm -vf $tmpfile
+
+    rm $RM_ARGS $tmpfile
     # sleep 1
 }
