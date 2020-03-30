@@ -61,14 +61,19 @@ if [ $# = 1 ]; then
 fi
 
 IP=$2
-# [[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
-IP_REGEXP="[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+"
 
-if [[ ! $IP -regex-match "$IP_REGEXP" ]]
-then
-    die "invalid IP: $IP"
-fi
+check_ip()
+{
+    # [[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
+    IP_REGEXP="[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+"
 
+    if [[ ! $1 -regex-match "$IP_REGEXP" ]]
+    then
+        die "invalid IP: $IP"
+    fi
+}
+
+check_ip $IP
 dump_ip_of $HOSTNAME
 
 # sudo sed -ie "s/.*\b$HOSTNAME/$IP $HOSTNAME/" $HOST_FILE
