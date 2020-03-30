@@ -82,3 +82,33 @@ find /etc/ -name '*.dpkg-old' | \
         fi
     done
 
+: ${TMPDIR:=/run/user/$(id --real)/}
+# can I find /etc/ld.so.conf.d/zzz_pkgsrc.conf.no
+dlocate  --filename-only  -w '/etc/.*'|\
+    while read file; do
+        if [[ -f $file ]]; then echo $file;
+        fi;
+    done |\
+        sort  > $TMPDIR/from-debs
+sudo find /etc/ -type f -o -type l |sort    > $TMPDIR/from-fs
+
+# removed from debians:
+# -3 common
+# -1
+
+cecho red "generated"
+backup_root=$backup_root/generated/
+comm -3 -2 $TMPDIR/from-fs $TMPDIR/from-debs |\
+    while read filename; do
+        if [[ $list_only = n ]]; then
+            # this skips symlinks, so I don't want empty directories either!
+            copy_file $filename
+        fi
+    done
+cd $backup_root && find -depth -type d -exec rmdir {} \;
+
+
+# disappeared:
+cecho red "disappeared:"
+# maybe symlinks:
+comm -3 -1 $TMPDIR/from-fs $TMPDIR/from-debs
