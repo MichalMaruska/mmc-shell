@@ -3,15 +3,22 @@
 usage()
 {
     cat <<EOF
-usage: ${0##*/} [+-h]
+usage: ${0##*/} [-l] [+-h] <backup root>
 
-list the user-MODIFIED conffiles of debian.
+-l  list the user-MODIFIED conffiles of debian.
+copy to backup-root
 
 (better to invoke as root -- needs read access)
 EOF
 }
-while getopts :h OPT; do
+
+list_only=n
+
+while getopts :hl OPT; do
     case $OPT in
+        l)
+            list_only=y
+            ;;
         h|+h)
             usage
             exit 0
@@ -24,6 +31,28 @@ done
 shift OPTIND-1
 OPTIND=1
 
+if [[ $list_only == n ]]
+then
+    if [[ $(id --user) != 0 ]]; then
+        usage >&2
+        exit 1
+    fi
+    if [[ $# -lt 1 ]]
+    then
+        usage >&2
+        exit 1
+    else
+        backup_root=$1
+        shift
+    fi
+fi
+
+
+copy_file()
+{
+    # cp --archive
+    rsync --relative $1 $backup_root
+}
 
 dpkg-query --showformat='${Conffiles}\n' --show |\
     grep -v -e '^$'|
@@ -36,7 +65,20 @@ dpkg-query --showformat='${Conffiles}\n' --show |\
             ls -l $file
             cecho red "$hash\n"
             cecho yellow $(md5sum $file| cut -f 1 -d ' ')
+            if [[ $list_only = n ]]; then
+                copy_file $file
+            fi
         else
             # cecho yellow "ok $file"
         fi
     done
+#.dpkg-dist
+#.dpkg-new
+find /etc/ -name '*.dpkg-old' | \
+    while read filename; do
+        ls -l $filename
+        if [[ $list_only = n ]]; then
+            copy_file $filename
+        fi
+    done
+
