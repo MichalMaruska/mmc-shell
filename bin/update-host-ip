@@ -80,9 +80,10 @@ dump_ip_of $HOSTNAME
 # 10.17.150.209
 # sudo sed -ie "s/.*\b\($HOSTNAME \|$HOSTNAME\$\)/$IP $HOSTNAME/" $HOST_FILE
 SUFFIX=.old
-if sudo sed --regexp-extended --in-place=$SUFFIX -e \
-     "s/^($IP_REGEXP)(.*\b)($HOSTNAME( .*)|$HOSTNAME$)/$IP\2$HOSTNAME\4/" \
-     $HOST_FILE | grep -F $HOSTNAME
+# sed -ie 's/tup/tulipan/;t log; b; : log ;w /dev/stdout'  zapis
+if sudo sed --regexp-extended --in-place=$SUFFIX \
+        -e "s/^($IP_REGEXP)(.*\b)($HOSTNAME( .*)|$HOSTNAME$)/$IP\2$HOSTNAME\4/; t log; b;: log; w /dev/stdout" \
+        $HOST_FILE | grep --quiet --fixed-strings $HOSTNAME >& /dev/null
 then
 
     # dump all IP addresses:
