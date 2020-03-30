@@ -1,5 +1,8 @@
 #!/bin/zsh -feu
 
+# Pure pulse-audio switching between sinks.
+# No alsa access.
+
 source /usr/share/mmc-shell/mmc-functions.sh
 colors
 
