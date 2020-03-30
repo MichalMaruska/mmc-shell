@@ -8,6 +8,14 @@ check_getopt()
     fi
 }
 
+traced_exec()
+{
+    x=$options[xtrace]
+    options[xtrace]=on
+    eval $@
+    options[xtrace]=$x
+}
+
 local_cecho()
 {
     color=$1
