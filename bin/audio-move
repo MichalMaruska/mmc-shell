@@ -44,28 +44,49 @@ activate_profile()
     local PROFILE=$2
     pactl set-card-profile $CARD $PROFILE
 }
+WD15_DOCK=n
 
 WD15_SINK_REGEXP='USB.*Dock_0'
 # WD15_SINK_REGEXP='USB.*Dock_1'
 WD15_SINK_REGEXP='Generic_USB_Audio_200901010001'
 
 wd15card="alsa_card.usb-Generic_USB_Audio_200901010001-00"
-while getopts :bhlpsi: OPT; do
+while getopts :bhi:lps OPT; do
     case $OPT in
         p|+p)
-            activate_profile $wd15card \
-                             "output:analog-stereo-headphone+input:analog-stereo-mic"
-            headphones=$(sink_number $WD15_SINK_REGEXP)
-            move_to $headphones
+            if [[ $WD15_DOCK = y ]]; then
+                activate_profile $wd15card \
+                                 "output:analog-stereo-headphone+input:analog-stereo-mic"
+                headphones=$(traced_exec sink_number $WD15_SINK_REGEXP)
+                move_to $headphones
+            else
+                sink="alsa_output.pci-0000_00_1b.0.analog-stereo"
+                pactl set-sink-port $sink analog-output-headphones
+                move_to $sink
+            fi
             ;;
         b|+b)
-            builtin=$(sink_number "alsa_output.pci-0000_00_1f.3.analog-stereo")
-            move_to $builtin
+            sink="alsa_output.pci-0000_00_1b.0.analog-stereo"
+            builtin=$(traced_exec sink_number $sink
+                      #"alsa_output.pci-0000_00_1f.3.analog-stereo"
+                   )
+            pactl set-sink-port $sink analog-output-speaker
+            move_to $sink
             ;;
         s|+s)
-            activate_profile $wd15card "output:analog-stereo-speaker"
-            speakers=$(sink_number $WD15_SINK_REGEXP)
-            move_to $speakers
+            if [[ $WD15_DOCK = y ]]
+            then
+                activate_profile $wd15card "output:analog-stereo-speaker"
+                speakers=$(traced_exec sink_number $WD15_SINK_REGEXP)
+                move_to $speakers
+            else
+                # e-dock
+                # profile pactl set-card-profile
+                # alsa_card.pci-0000_00_1b.0 output:analog-stereo+input:analog-stereo
+                sink="alsa_output.pci-0000_00_1b.0.analog-stereo"
+                pactl set-sink-port $sink analog-output-lineout
+                move_to $sink
+            fi
             ;;
         h|+h)
             usage
