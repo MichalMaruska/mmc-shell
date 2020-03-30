@@ -14,12 +14,13 @@ sink_number()
 usage()
 {
     cat <<EOF
-usage: ${0##*/} [+-pbsh} [--] ARGS...
+usage: ${0##*/} [+-pbsh] [-l]
 -b builtin
 
 -p  phones
--s speakers
+-s  speakers
 
+-l list sinks
 EOF
 }
 
