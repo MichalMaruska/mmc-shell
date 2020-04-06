@@ -1,0 +1,6 @@
+#compdef update-host-ip
+
+_arguments \
+    '(- :)--help[display help message]' \
+    "1:hostname:_host" \
+    "2:ip:"
