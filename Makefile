@@ -1,6 +1,7 @@
 INSTALL := install
 BIN_INSTALL_DIR := /usr/bin
 SHARED_INSTALL_DIR := /usr/share/mmc-shell/
+ZSH_COMPLETIONS_DIR := /usr/share/zsh/vendor-completions
 
 # fixme: ignore *~ files
 BINFILES := $(wildcard bin/*)
@@ -22,11 +23,11 @@ install: install-zsh
 
 # zsh infrastructure to better use the provided commands!
 install-zsh:
-	$(INSTALL) -v -D --directory $(DESTDIR)/usr/share/zsh/site-functions/
-	for dir in $$(cd  zsh;find . -mindepth 1  -type d ); do \
-		mkdir -vp $(DESTDIR)/usr/share/zsh/site-functions/$$dir; done
-	for file in $$(cd  zsh;find . -type f ); do \
-		install -v --mode 444 zsh/$$file $(DESTDIR)/usr/share/zsh/site-functions/$$file; done
+	$(INSTALL) -v -D --directory $(DESTDIR)$(ZSH_COMPLETIONS_DIR)
+#	for dir in $$(cd  zsh;find . -mindepth 1  -type d ); do \
+#		mkdir -vp $(DESTDIR)$(ZSH_COMPLETIONS_DIR)/$$dir; done
+	for file in $$(cd  zsh/Completion; find . -type f ); do \
+		install -v --mode 444 zsh/Completion/$$file $(DESTDIR)$(ZSH_COMPLETIONS_DIR)/$$file; done
 
 clean:
 
