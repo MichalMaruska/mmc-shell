@@ -4,10 +4,10 @@
 # to get the functionality of _git, I really have to *invoke* it!
 # autoload __git_remotes _git
 
-# copied from _git-cp-to
-
+# I need this as I invoke other _functions:
 _git-ff()
 {
+    # I need this as I invoke other _functions:
     local curcontext="$curcontext" state line
 
     _arguments -C -s -S  \
