@@ -1,3 +1,12 @@
+mmc-shell (3.34) release; urgency=medium
+
+  * audio-move: use audio-select to force the auto-switch hw option
+  * zsh completion _git-cp-to
+  * update-host-ip zsh completion
+  * fix installing the zsh completion files
+
+ -- Michal Maruska <mmaruska@gmail.com>  Tue, 07 Apr 2020 19:39:20 +0200
+
 mmc-shell (3.33) release; urgency=medium
 
   * Use improved scan for connected devices.
