@@ -141,7 +141,7 @@ else
     line_out='off'
     speaker='off'
     headphone=unmuted
-    headphone_value=60
+    # headphone_value=60
 fi
 
 # both:
@@ -163,7 +163,9 @@ set_mixer_control $speaker_control    $speaker
 # set_control 'Headphone Playback Switch' $headphone
 set_mixer_control $headphones_control $headphone
 # set volumes:
-set_mixer_control $headphones_control $headphone_value
+if [[ -z ${headphone_value-} ]]; then
+    set_mixer_control $headphones_control $headphone_value
+fi
 
 SET_PULSE_AUDIO=(pactl --server unix:/run/user/1000/pulse/native)
 
