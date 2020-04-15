@@ -36,6 +36,13 @@ INFO()
     local_cecho yellow $@
 }
 
+pause()
+{
+    print "$1"
+    print "pause: Enter to continue"
+    read cont
+}
+
 LOG_STEP()
 {
     local_cecho cyan $@
