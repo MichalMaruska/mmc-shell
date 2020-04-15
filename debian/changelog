@@ -1,3 +1,11 @@
+mmc-shell (3.35) release; urgency=medium
+
+  * Don't correct the headphones level?
+  * (mmc-functions.sh): introduce pause()
+  * work with different (alsa) cards: by CLI option & fallback to PCH
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 15 Apr 2020 18:31:11 +0200
+
 mmc-shell (3.34) release; urgency=medium
 
   * audio-move: use audio-select to force the auto-switch hw option
