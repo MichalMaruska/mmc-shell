@@ -99,9 +99,8 @@ old_scan()
 # set -x
 if [[ $list = y || -z "$OUTPUT" ]]
 then
-    # xrandr |- grep '\bconnected'|cut -d ' ' -f 1
-    OUTPUT=$(xrandr | grep ' connected'| grep -v primary|cut -f 1 -d ' ')
-    # old_scan
+    xrandr | grep "${PATTERN:= connected\|unknown connection}" >&2
+    OUTPUT=$(xrandr | grep "$PATTERN" | grep -v primary|cut -f 1 -d ' ')
 fi
 
 connected()
