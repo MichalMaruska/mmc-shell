@@ -2,4 +2,14 @@
 
 exec /usr/bin/dc --file - --expression='9k  [+  z1<r]sr z1<r  p' 2>/dev/null
 
+# spaces
+# 9k  sets the precision!
+
+# r reverse the top 2 values.
+
+# `p' print the top
+# `n' print & pop off (no newline)
+# `P' pop.
+# `f' print the whole stack.
+
 # +  sums 2/ pops and result on top.
