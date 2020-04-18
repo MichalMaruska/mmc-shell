@@ -1,11 +1,5 @@
 #! /bin/zsh -feu
 
-# one day I started to use zsh modules (& read the last chapter of Zsh manual)
-zmodload zsh/regex
-. /usr/share/mmc-shell/mmc-functions.sh
-colors
-
-verbose=n
 # Dump the git history since the release which is `git-tagged', or `installed'
 # not `available'
 
@@ -14,11 +8,19 @@ verbose=n
 #  o  available debian package version.
 #   grep-status   -F package   --regex '^make$'
 
+
+
+# one day I started to use zsh modules (& read the last chapter of Zsh manual)
+zmodload zsh/regex
+
+. /usr/share/mmc-shell/mmc-functions.sh
+colors
+
 readonly GIT_DESCRIBE_TAG_ERX='^(.*)-([[:digit:]]+)-g([[:alnum:]]+)$'
 # 1568-rc56
 #     ^ must be there
 
-
+verbose=n
 # Binary package, somehow representing the source package in that Git repo:
 # is this an array?
 find_installed_version()
@@ -30,7 +32,6 @@ find_installed_version()
     # I could attempt all of the binary packages...
     deb-pkg-installed-version $deb_pkg[1] |tail -n 1
 }
-
 
 usage()
 {
