@@ -36,6 +36,11 @@ INFO()
     local_cecho yellow $@
 }
 
+warn()
+{
+    local_cecho red $@
+}
+
 pause()
 {
     print "$1"
