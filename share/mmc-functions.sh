@@ -41,11 +41,12 @@ warn()
     local_cecho red $@
 }
 
+# bash has read -p
 pause()
 {
     print "$1"
-    print "pause: Enter to continue"
-    read cont
+    local cont
+    read "cont?Enter to continue ..."
 }
 
 LOG_STEP()
