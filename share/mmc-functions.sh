@@ -10,10 +10,12 @@ check_getopt()
 
 traced_exec()
 {
-    x=$options[xtrace]
+    local x=$options[xtrace]
     options[xtrace]=on
     eval $@
+    local last_status=$?
     options[xtrace]=$x
+    return $last_status
 }
 
 local_cecho()
