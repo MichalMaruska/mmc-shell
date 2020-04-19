@@ -34,18 +34,18 @@ function play_file ()
     case $(realpath $1) in
         *.mpg)
         # mpg123 -b 10000 "$1" ;;
-            INFO $1
+            info $1
             $MPG123 "$1"
             ;;
         *.mp2)
-            INFO $1
+            info $1
             $MPG123  "$1" ;;
 
          *.xmms.mp3)
             echo xmms  --play ${1}
             ;;
         *.mp3)
-            INFO "$1"
+            info "$1"
         #    echo `color red`  `color bd` $1 `color off`
 
        # mpg321 skips when over Net!
@@ -59,7 +59,7 @@ function play_file ()
             ;;
 
         *.ogg)
-            INFO "$1"
+            info "$1"
             if [[ $pulse = y ]]; then
                 ogg123 -d pulse --quiet  "$1"
             else
@@ -67,7 +67,7 @@ function play_file ()
             fi
             ;;
         *.flv | *.mp4 | *.m4a | *.wma | *.webm | *.ape | *.mkv )
-            INFO "$1"
+            info "$1"
             #
             if which mplayer > /dev/null && [[ $use_gst == 'no' ]] ; then
                 play_mplayer $1
@@ -82,7 +82,7 @@ function play_file ()
             ;;
 
         *.flac)
-            INFO "$1"
+            info "$1"
             if which mplayer > /dev/null ; then
                 play_mplayer $1
             else
