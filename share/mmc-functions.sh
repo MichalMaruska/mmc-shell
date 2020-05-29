@@ -32,7 +32,7 @@ die()
     exit -1
 }
 
-INFO()
+info()
 {
     # green
     local_cecho yellow $@
