@@ -74,32 +74,43 @@ usage()
 {
     setopt POSIX_ARGZERO
     cat <<EOF
-usage: ${0##*/} [+-n] [-c dir] [-b dir] [--] ARGS...
+usage: ${0##*/} [-d distro [-a arch] | -C dir ]    [+-n] [ -c dir] [-b dir] [--] ARGS...
+       ${0##*/} [-l | -L]   list
+       ${0##*/} [-k] .. (todo)
+
+
+# which one
+-a arch
+-d  --distro ... name of the $MACHINES_DIR subdirectory
+-a  --arch     i386, x32
+-C --container  dir
 
 # commands:
 --start
 -B --boot   ...
-
--a arch
--d  --distro ... name of the $MACHINES_DIR subdirectory
--a  --arch     i386, x32
-
--l  list the running machines
--L  list available machines?
-
 -n --private-network ... setup private network (no networking at start?)
+
+
+# Generic commands:
+-l --list\tlist the running machines
+-L --list-image\tlist available machines?
+
+# Enter:
 -b --bind  .. add directory as --bind mount.
 -r  ... start as root
 -c  ... chdir at start
--C --container  dir
+
+# Misc
 -h  --usage --help ..
 EOF
 }
 
+# what's the binding between short & long? only in the `case' below!
 cmd_options=$(getopt --name $0 --shell bash \
                      --options a:b:BcC:d:hilLmn:rsv \
                      --longoptions \
-                     arch:,bind:,boot,chdir:,container:,distro:,help,list,list-image,name,private-network,root,start,usage,verbose \
+                     arch:,bind:,boot,chdir:,container:,distro:,help,list,list-image,name,\
+                     private-network,root,start,usage,verbose \
                      -- "$@" ) || { usage; exit 1 }
 # name: n:
 eval set -- "$cmd_options"
