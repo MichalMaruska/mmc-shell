@@ -226,7 +226,13 @@ rewrite_array()
     local i
     for ((i=1; i<= ${#bind_mounts}; i++))
         {
-            bind_mounts[$i]="$prefix$bind_mounts[$i]$suffix"
+            if [[ -d $bind_mounts[$i] ]]
+               then
+                   bind_mounts[$i]="$prefix$bind_mounts[$i]$suffix"
+            else
+                # delete it:
+                bind_mounts[$i]=""
+            fi
         }
     # echo $bind_mounts
 }
