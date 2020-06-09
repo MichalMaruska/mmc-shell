@@ -109,8 +109,7 @@ EOF
 cmd_options=$(getopt --name $0 --shell bash \
                      --options a:b:BcC:d:hilLmn:rsv \
                      --longoptions \
-                     arch:,bind:,boot,chdir:,container:,distro:,help,list,list-image,name,\
-                     private-network,root,start,usage,verbose \
+                     arch:,bind:,boot,chdir:,container:,distro:,help,list,list-image,name,private-network,root,start,usage,verbose \
                      -- "$@" ) || { usage; exit 1 }
 # name: n:
 eval set -- "$cmd_options"
