@@ -108,6 +108,21 @@ else
     value='Line Out+Speaker'
 fi
 
+save_control()
+{
+    # value:
+    # fixme:  -q  breaks it!
+    amixer -c $CARD cget $1 |sed -ne 's/^.*: values=\(.*\)$/\1/g;T ;p'
+}
+
+restore_control()
+{
+    # value:
+    # fixme:  -q  breaks it!
+    amixer -c $CARD cset $1 $2
+}
+
+
 set_control()
 {
     # name value
@@ -121,6 +136,7 @@ set_mixer_control()
     $AMIXER sset $@
 }
 
+HEADPHONES_SAVE_FILE=~/.headphones
 
 # for `line_control'
 if [[ $jack = 1 ]]; then
@@ -134,14 +150,17 @@ elif [[ $builtin = 1 ]] then
     speaker='on'
     # fixme:
     headphone=unmuted
-
     headphone_value=0
 else
-    # phones:
+    # Head phones:
     line_out='off'
     speaker='off'
     headphone=unmuted
-    # headphone_value=60
+
+    # maybe only if still at 0?
+    headphone_value=$(< $HEADPHONES_SAVE_FILE)
+    rm -f $HEADPHONES_SAVE_FILE
+    # will be restored!
 fi
 
 # both:
@@ -154,18 +173,24 @@ set_mixer_control $auto_mute_control $value
 $AMIXER sset 'Speaker+LO' 100
 
 
+
 # pswitch
 # value=off
 set_mixer_control $line_control       $line_out
 # a bit counter-intuitive, & restrictive:
 set_mixer_control $speaker_control    $speaker
 
-# set_control 'Headphone Playback Switch' $headphone
+#set_control 'Headphone Playback Switch' $headphone
 set_mixer_control $headphones_control $headphone
+
 # set volumes:
-if [[ -z ${headphone_value-} ]]; then
-    set_mixer_control $headphones_control $headphone_value
+if [[ ${headphone_value-} = 0 ]]; then
+    if [[ !  -e $HEADPHONES_SAVE_FILE ]]; then
+        save_control "numid=3,iface=MIXER,name='Headphone Playback Volume'" >! $HEADPHONES_SAVE_FILE
+    fi
 fi
+set_mixer_control $headphones_control $headphone_value
+# : # restore_control "numid=3,iface=MIXER,name='Headphone Playback Volume'" $(<$HEADPHONES_SAVE_FILE)
 
 SET_PULSE_AUDIO=(pactl --server unix:/run/user/1000/pulse/native)
 
