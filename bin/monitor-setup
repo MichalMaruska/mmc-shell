@@ -110,8 +110,8 @@ connected()
     test -z "$a"
 }
 
+# I think that X exposes under different numbers.
 
-# set -x
 if [ $OUTPUT = "DP1" ]; then
    if ! connected $OUTPUT; then
        echo "ok!">&2

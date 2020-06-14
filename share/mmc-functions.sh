@@ -37,6 +37,7 @@ info()
     # green
     local_cecho yellow $@
 }
+# INFO=info
 
 warn()
 {

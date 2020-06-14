@@ -108,7 +108,9 @@ git_dir()
 }
 
 # fixme: protect this:
+# static
 GIT_STASHED=no
+# fixme: are these from some library?
 ## possibly stash:
 # sets the variable STASHED
 stash_if_non_clean()
@@ -133,7 +135,6 @@ stash_if_non_clean()
     fi
 }
 
-
 unstash_if_stashed()
 {
     if [ "$GIT_STASHED" = "yes" ]
@@ -144,13 +145,13 @@ unstash_if_stashed()
     fi
 }
 
-
-
+# is the $1 a valid ref to remote branch?
 is_git_remote_branch()
 {
     git rev-parse remotes/$1 2>/dev/null
 }
 
+# is it a name of a remote?
 is_git_remote()
 {
     git remote get-url $1 > /dev/null

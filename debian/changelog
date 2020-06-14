@@ -1,3 +1,9 @@
+mmc-shell (3.38) release; urgency=medium
+
+  * Backup & restore headphones level
+
+ -- Michal Maruska <mmaruska@gmail.com>  Sun, 14 Jun 2020 03:01:04 +0200
+
 mmc-shell (3.37) release; urgency=medium
 
   * rename INFO -> info

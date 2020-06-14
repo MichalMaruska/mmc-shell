@@ -5,7 +5,7 @@
 
 #  o  Git repository which carries a source debian package
 # with
-#  o  available debian package version.
+#  o  available(installed, reprepro?) debian package version.
 #   grep-status   -F package   --regex '^make$'
 
 

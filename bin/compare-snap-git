@@ -10,6 +10,7 @@
 # But now I retrieve it from the dpkg database!
 
 source /usr/share/mmc-shell/mmc-functions.sh
+colors
 
 usage()
 {
@@ -17,10 +18,11 @@ usage()
     cat <<EOF
 usage: ${0##*/} [+-vh} [--] [dir]
 
+-v verbose
+
 Invoked inside git-managed debian package source-tree (or pointed at by DIR)
 ...
-dumps the history (list of commits) still not released.
-
+dumps the history (list of commits) still not installed.
 EOF
 }
 
@@ -42,18 +44,18 @@ done
 shift OPTIND-1
 OPTIND=1
 
-
 # in which directory?
-if [[ $# -gt 1 ]];
+if [[ $# -ge 1 ]];
 then
     DIR=$1
-    cd $DIR
+    # cd $DIR
 else
     DIR=.
 fi
 
-
+set -x
 # Parse the `last-built' debian/changelog:
+
 if ! changelog_version=$(deb-pkg-version $DIR/debian/changelog); then
     die "error in $DIR"
 fi
@@ -62,11 +64,16 @@ extract_gitsha_rx='.*~[[:digit:]]\+\.gbp\(.*\)'
 
 # Extract the sha1 ... from git & from the changelog
 # set -x
-readonly pkgname=$(deb-pkg-name .)
+
+# bug: adding `readonly' will make it ignore the failure!
+#readonly
+pkgname=$(deb-pkg-name $DIR)
 if [[ $? != 0 || -z "$pkgname" ]]; then
    die "deb-pkg-name failed"
 fi
-if debian_changelog_sha=$(dpkg-query --show --showformat='${Dgit}' $pkgname)
+git_rev="HEAD"
+
+if installed_changelog_sha=$(dpkg-query --show --showformat='${Dgit}' $pkgname)
         #expr match $changelog_version $extract_gitsha_rx
 # mmc:
 #   dpkg-query --show --showformat='${binary:Package} ${Status} ${Dgit} ${Version} ${Maintainer}\n' mmc-shellw
@@ -75,20 +82,20 @@ if debian_changelog_sha=$(dpkg-query --show --showformat='${Dgit}' $pkgname)
 
 then
     # So it is a `SNAP' changelog:
-    readonly git_head_sha1=$(git rev-parse HEAD) # |head -c 6
+    readonly git_head_sha1=$(git -C $DIR rev-parse $git_rev) # |head -c 6
 
-    if [ $git_head_sha1 = $debian_changelog_sha ]; then
+    if [[ $git_head_sha1 = $installed_changelog_sha ]]; then
         # no progress since the last SNAP version.
         if [[ $VERBOSE = y ]]; then
-            echo $DIR;
-            cecho hiyellow "snap $changelog_version (no progress)";
+            # echo $DIR;
+            cecho hiyellow "snap $changelog_version (no progress since $git_rev)";
         else
             # quiet
             exit 0
         fi
     else
-        echo $DIR
-        git log --oneline $debian_changelog_sha..$git_head_sha1
+        # echo $DIR
+        git -C $DIR log --oneline $installed_changelog_sha..$git_head_sha1
         exit 1
     fi
 else
@@ -98,26 +105,26 @@ else
     # How far in the past is it?
     # Find it & compare with HEAD.
     # Check the GIT tag!
-    if tag=$(git tag --contains HEAD) && test -n "$tag"
+    if tag=$(git -C $DIR tag --contains $git_rev) && test -n "$tag"
     then
         if [[ $VERBOSE = y ]]; then
-           echo $DIR
+           # echo $DIR
            INFO "release: $changelog_version tag: $tag"
         fi
     else
-        set -x
+        # set -x
 
         # get the release tag:
-        readonly distro=$(deb-pkg-distribution debian/changelog)
-        readonly last_release_tag=$(git tag --list "$distro/$changelog_version")
+        readonly distro=$(deb-pkg-distribution $DIR/debian/changelog)
+        readonly last_release_tag=$(git -C $DIR tag --list "$distro/$changelog_version")
         # I should verify, that indeed I have that version in repo!
 
         if [[ -n "$last_release_tag" ]]
         then
-            echo $DIR
+            # echo $DIR
             cecho yellow "Found the release in the past -- need to make at least SNAP"
         else
-            echo $DIR
+            # echo $DIR
             cecho yellow "NON-tagged release: $changelog_version"
         fi
     fi

@@ -102,6 +102,8 @@ fi
 if [[ $builtin = 1 ]]; then
     value='Disabled'
 elif [[ $jack = 1 ]]; then
+    # I must keep "Speaker+LO" unmuted, and the volume.
+    # but to avoid the builtin speakers, I need to have this:
     value='Speaker Only'
 else
     # value='Speaker Only'
@@ -126,12 +128,15 @@ restore_control()
 set_control()
 {
     # name value
+    cecho red $@
     $AMIXER cget $1
     $AMIXER cset $@
 }
 
 set_mixer_control()
 {
+    # name value
+    cecho red $@
     $AMIXER sget $1
     $AMIXER sset $@
 }
@@ -145,6 +150,8 @@ if [[ $jack = 1 ]]; then
 
     headphone=unmuted
     headphone_value=0
+    # maybe unmuted ?
+
 elif [[ $builtin = 1 ]] then
     line_out='off'
     speaker='on'
@@ -195,7 +202,9 @@ set_mixer_control $headphones_control $headphone_value
 SET_PULSE_AUDIO=(pactl --server unix:/run/user/1000/pulse/native)
 
 # not HDMI:
-$SET_PULSE_AUDIO set-card-profile 1 output:analog-stereo+input:analog-stereo
+if false; then
+    $SET_PULSE_AUDIO set-card-profile 1 output:analog-stereo+input:analog-stereo
+fi
 # HDMI:
 #                                               set-card-profile 0 output:hdmi-stereo+input:analog-stereo
 
@@ -208,3 +217,7 @@ cat /sys/class/drm/card0/card0-HDMI-A-1/status
     /sys/class/drm/card0/card0-HDMI-A-2/status
     /sys/class/drm/card0/card0-HDMI-A-3/status
 EOF
+
+# save:
+# amixer -c 2    cget numid=3,iface=MIXER,name='Headphone Playback Volume'|sed  's/: values=//;'
+# amixer -c 2 cset numid=3,iface=MIXER,name='Headphone Playback Volume' '0,0'

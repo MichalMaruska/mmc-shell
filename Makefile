@@ -9,6 +9,7 @@ BINFILES := $(wildcard bin/*)
 all:
 	echo ""
 
+# Do I need --owner=root ?
 install: install-zsh
 	$(INSTALL) -v -D --directory $(DESTDIR)$(BIN_INSTALL_DIR)
 	for p in $(BINFILES); do \

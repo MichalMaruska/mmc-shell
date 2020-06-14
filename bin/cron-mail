@@ -3,13 +3,13 @@
 usage()
 {
     cat <<EOF
-Usage:  $0 [-s subject] cmd args
+Usage: $0 [-s subject] cmd args
 
- Invoke "CMD args", redirecting its output (also stderr!) into a file, and
- email it at the end.
+Invoke "CMD args", redirecting its output (also stderr!) into a file, and
+email it at the end.
 
- If the exit status is 0, the email subject starts with "OK [subject]",
- otherwise "FAIL [subject]".
+If the exit status is 0, the email subject starts with "OK [subject]",
+otherwise "FAIL [subject]".
 EOF
 }
 

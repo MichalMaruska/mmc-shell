@@ -114,3 +114,6 @@ if [ -t 1 -o "${FORCE_COLOR-}" = y -o -S /dev/stdout ]; then
 else
     echo $echo_args "$@"
 fi
+
+# setab man terminfo
+# echoti setaf 5; echo ahoj

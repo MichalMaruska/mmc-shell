@@ -59,6 +59,8 @@ typeset -a bind_mounts=(
 # full machine:
 readonly special_id=$(id -u michal)
 # my Source repositories to be able to build.
+
+# fixme: maybe does not exist:
 typeset -r new_machine_mounts=(/run/tmp/ /home/)
 # sorry this break dbus on the host!  /run/user/$special_id
 # you can only bind  /run/user/$special_id/pulse maybe.

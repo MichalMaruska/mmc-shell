@@ -10,6 +10,17 @@ colors
 sink_number()
 {
     pactl list short sinks|grep -e $1 | cut -f 1
+
+
+    # pactl list clients
+    # -> number #1206
+    # pactl list sink-inputs
+    # Sink Input #268
+    # ....
+    # Client: 1196
+
+    # so:
+    # pactl move-sink-input 268  alsa_output.pci-0000_00_1b.0.analog-stereo
 }
 
 usage()
@@ -39,7 +50,7 @@ move_to()
     pactl list short sink-inputs|cut -f 1 |
         while read si
         do
-            pactl move-sink-input $si $sink
+            traced_exec pactl move-sink-input $si $sink
         done
 }
 
@@ -73,7 +84,7 @@ find_pch()
 CARD=1
 find_pch
 
-while getopts :bc:hi:lpsu OPT; do
+while getopts :bc:hi:lpsux OPT; do
     case $OPT in
         c)
             CARD=$OPTARG
@@ -99,6 +110,7 @@ while getopts :bc:hi:lpsu OPT; do
             pactl set-sink-port $sink analog-output-speaker
 
             audio-select -c $CARD -b
+            # $builtin
             move_to $sink
             ;;
         s|+s)
@@ -114,6 +126,7 @@ while getopts :bc:hi:lpsu OPT; do
                 # alsa_card.pci-0000_00_1b.0 output:analog-stereo+input:analog-stereo
                 sink="alsa_output.pci-0000_00_1b.0.analog-stereo"
                 pactl set-sink-port $sink analog-output-lineout
+                #
                 move_to $sink
             fi
             ;;
@@ -123,6 +136,9 @@ while getopts :bc:hi:lpsu OPT; do
         h|+h)
             usage
             exit 0
+            ;;
+        x)
+            set -x
             ;;
         i)
             move_to $OPTARG

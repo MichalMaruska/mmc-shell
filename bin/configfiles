@@ -1,5 +1,11 @@
 #!/bin/zsh -feu
 
+# make a copy of the system configuration which I made:
+# * all files in /etc/ which differ from debian defaults
+#     including those orphaned.
+# * all new files create atop of debian config.
+#
+
 usage()
 {
     cat <<EOF
@@ -72,6 +78,10 @@ dpkg-query --showformat='${Conffiles}\n' --show |\
             # cecho yellow "ok $file"
         fi
     done
+
+
+# ll -R system-configuration
+
 #.dpkg-dist
 #.dpkg-new
 find /etc/ -name '*.dpkg-old' | \
@@ -82,7 +92,17 @@ find /etc/ -name '*.dpkg-old' | \
         fi
     done
 
+
+if [[ $list_only = n ]]; then
+    ls -lR $backup_root
+    # tar -xapf system-configuration.tar.bz2 system-configuration/
+fi
+
+set -x
+# fixme for root it does not exist
 : ${TMPDIR:=/run/user/$(id --real)/}
+
+set +x
 # can I find /etc/ld.so.conf.d/zzz_pkgsrc.conf.no
 dlocate  --filename-only  -w '/etc/.*'|\
     while read file; do
@@ -108,7 +128,14 @@ comm -3 -2 $TMPDIR/from-fs $TMPDIR/from-debs |\
 cd $backup_root && find -depth -type d -exec rmdir {} \;
 
 
+
 # disappeared:
 cecho red "disappeared:"
 # maybe symlinks:
 comm -3 -1 $TMPDIR/from-fs $TMPDIR/from-debs
+
+cecho blue "sudo tar --use-compress-program  bzip2 -cpf system-configuration.tar.bz2 system-configuration"
+
+
+# sudo rsync var/tmp/pkgsrc  root@e7240:/mnt/big/
+

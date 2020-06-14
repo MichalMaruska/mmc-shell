@@ -105,7 +105,6 @@ then
          $WAIT_AFTER $invoke_command -prune
     # I have to wait before, since the command can fail, and the rest is not executed!
 
-
     # find -type d  -execdir test -d {}/.git \;  -print -exec pwd \;   -prune
     # is slower!
     # todo -execdir
@@ -126,6 +125,7 @@ else
     if [[ $FOR_EACH_DIR_CHILD = 2 ]]; then
         eval $@[1] $@[2,-1]
     else
+        # pass the relative path
         eval $@[1] $dir $@[2,-1]
     fi
 fi

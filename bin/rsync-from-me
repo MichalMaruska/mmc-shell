@@ -62,10 +62,13 @@ die()
 
 do_rsync()
 {
-    if [ $ECHO_RSYNC_COMMAND = y ]; then set -x;fi
+    # if [ $ECHO_RSYNC_COMMAND = y ]; then set -x;fi
+    set -x
+    local cmd=""
+    # echo
 
     # fixme: choose the local from $ROOT or $SOURCE_REPO
-    time rsync \
+    time $cmd rsync \
          $GLOBAL_OPTIONS \
          $FAITHFUL_COPY_OPTIONS \
          $COMPARISON_OPTIONS \
@@ -130,6 +133,7 @@ delete_level=0
 # ==
 # --recursive --links --perms --group --owner --devices --specials
 # --times
+
 GLOBAL_OPTIONS=(--hard-links --omit-dir-times  --recursive --links  --devices --specials)
 # I don't want to keep the --perms
 FAITHFUL_COPY_OPTIONS=(--group --owner) # --times --perms
@@ -138,7 +142,7 @@ FAITHFUL_COPY_OPTIONS=(--group --owner) # --times --perms
 # By default we compare by time & thus maintain it too:
 # log:  t with --times
 #       T  ... current time!
-# --checksum --size-only --ignore-times
+# --checksum > --size-only > --ignore-times (basically no heuristics)
 COMPARISON_OPTIONS=()
 comparison_level=0
 
@@ -181,10 +185,13 @@ while (( $# > 0 )) do
             ((delete_level+=1))
             ;;
 
-        -s | --size-only)			# don't check time, but size.
+        -s | --size-only) # size equals -> ok, unless force checksum.
             # todo: contradicts --checksum
-            # --ignore-times  contradicst --checksum, --size-only !
+            # --ignore-times --> don't check time.
+            # --size-only --> look at size and decide.  (unless checksum forced.)
+            # contradicst --checksum, --size-only !
             COMPARISON_OPTIONS=(--size-only)
+
             if [[ $comparison_level -gt 0 ]];
             then
                 echo "mismatch in the heuristics"

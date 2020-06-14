@@ -55,6 +55,8 @@ fi
 
 
 HOSTNAME=$1
+
+# Only read it
 if [ $# = 1 ]; then
     dump_ip_of $HOSTNAME
     exit 0
