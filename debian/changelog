@@ -1,3 +1,9 @@
+mmc-shell (3.39) release; urgency=medium
+
+  * git-add-remote-sibling: Support a different USERname on other hosts
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 25 Sep 2020 17:40:04 +0200
+
 mmc-shell (3.38) release; urgency=medium
 
   * Backup & restore headphones level
