@@ -9,7 +9,7 @@ source /usr/share/mmc-shell/mmc-functions.sh
 source /usr/share/mmc-shell/git-functions.sh
 check_getopt
 
-
+# asume USER is set!
 unsetopt FUNCTION_ARGZERO
 usage()
 {
@@ -19,6 +19,7 @@ usage: ${0##*/} [+-h] [-n URL] [-d]
 -v --verbose
 -n --name  ex. ${GIT_REMOTE_NAME-}
 -u --url  ex ${GIT_URL-}
+-U --user {name}  ssh as that user.
 EOF
 }
 
@@ -33,8 +34,8 @@ verbose=n
 
 # this splits, reorders,
 cmd_options=$(getopt --name $0 --shell bash \
-                     --longoptions verbose,url:,name:,dry,help \
-                     --options hcdfn:u:v -- "$@") || { usage && exit 1 }
+                     --longoptions verbose,url:,name:,dry,user:,help \
+                     --options hcdfn:u:U:v -- "$@") || { usage && exit 1 }
 # setopt KSH_ARRAYS
 eval set -- "$cmd_options"
 
@@ -63,6 +64,10 @@ while (( $# > 0 )) do
               GIT_URL=$2
               shift
               ;;
+          -U | --user)
+              USER=$2
+              shift
+              ;;
           -v | verbose )
               verbose=y
               ;;
@@ -86,7 +91,7 @@ done
 
       if [[ -n $GIT_REMOTE_NAME ]]; then
           if [[ -z ${GIT_URL-} ]];then
-              GIT_URL=michal@$GIT_REMOTE_NAME:$(get_remote_path)
+              GIT_URL=$USER@$GIT_REMOTE_NAME:$(get_remote_path)
           fi
       else
           guess_twin
