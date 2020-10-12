@@ -1,0 +1,19 @@
+#!/bin/zsh -feu
+
+# I need i2c-dev in /etc/modules-load.d/ddccontrol-i2c-dev.conf
+br_register=10
+
+# better add group i2c or /etc/sudoers.d/10maruska
+# to avoid password prompt ?
+DDCUTIL=(sudo ddcutil)
+
+# I have suid ddcutil:
+DDCUTIL=(ddcutil)
+
+if [[ $# -gt 0 ]]
+then
+    $DDCUTIL setvcp $br_register $1
+else
+    $DDCUTIL getvcp $br_register
+fi
+
