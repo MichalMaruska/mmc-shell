@@ -1,0 +1,29 @@
+#!/bin/zsh -feu
+
+source /usr/share/mmc-shell/mmc-functions.sh
+
+central_repository=~/.deb-gits/
+mkdir -pv $central_repository
+
+if [[ $# != 1 ]]; then
+    die "wrong nr of parameters"
+fi
+
+
+dir=$1
+real_path=$(realpath --canonicalize-existing $dir)
+
+source_package_name=$(deb-pkg-name $dir)
+symlink=$central_repository/$source_package_name
+
+if [[ -h $symlink ]]; then
+    if [[ $(readlink $symlink) = $real_path ]];then
+        echo "Already registered: $source_package_name" >&2
+    else
+        echo "redirecting! $source_package_name" >&2
+    fi
+else
+    echo "a new one $source_package_name" >&2
+    ln --symbolic --verbose $real_path $symlink
+fi
+
