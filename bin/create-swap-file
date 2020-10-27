@@ -32,7 +32,7 @@ fi
 
 set -x
 # with SSD I want to allocate the space? or sparse is ok?
-dd conv=fdatasync iflag=fullblock if=/dev/zero of=$SWAP_FILE bs=1M count=8192
+dd conv=fdatasync iflag=fullblock if=/dev/zero of=$SWAP_FILE bs=1M count=8192 || rm -f $SWAP_FILE
 chmod 0600 $SWAP_FILE
 mkswap $SWAP_FILE
 swapon  $SWAP_FILE
