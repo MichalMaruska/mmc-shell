@@ -2,7 +2,7 @@
 
 source /usr/share/mmc-shell/mmc-functions.sh
 
-central_repository=~/.deb-gits/
+central_repository=~/.deb-gits
 mkdir -pv $central_repository
 
 if [[ $# != 1 ]]; then
@@ -21,9 +21,10 @@ if [[ -h $symlink ]]; then
         echo "Already registered: $source_package_name" >&2
     else
         echo "redirecting! $source_package_name" >&2
+        ln --no-target-directory --force --symbolic --verbose $real_path $symlink
     fi
 else
     echo "a new one $source_package_name" >&2
-    ln --symbolic --verbose $real_path $symlink
+    ln --symbolic --verbose --no-target-directory $real_path $symlink
 fi
 
