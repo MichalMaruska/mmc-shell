@@ -1,8 +1,6 @@
 #!/bin/zsh -feu
 
 zmodload zsh/regex
-# Pure pulse-audio switching between sinks.
-# No alsa access.
 
 source /usr/share/mmc-shell/mmc-functions.sh
 colors
@@ -37,6 +35,10 @@ usage: ${0##*/} [-c N] [+-pbsh] [-i name] [-l]
 -i [name] custom sink? ( pactl list short sinks)
 
 -l list sinks
+
+*****
+Pure pulse-audio switching between sinks.
+No alsa access.
 EOF
 }
 

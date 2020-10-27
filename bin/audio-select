@@ -1,7 +1,5 @@
 #!/bin/zsh -feu
 
-# This is the ALSA level way of choosing the output.
-
 # How to get the list of controls:
 # use -l option?
 # am F6 & trial/error
@@ -33,14 +31,17 @@ phones=0
 usage()
 {
 cat <<EOF
-usage: ${0##*/} [+-jbh] [--] ARGS...
+usage: ${0##*/} [+-jbh] [-c #] [--] ARGS...
 
 -l list the controls (of the card $CARD)
+-c card
 
 -b builtin speakers
 -j line-out jack (in dock)
 -p phones
 
+********
+This is the ALSA level way of choosing the output.
 EOF
 }
 
