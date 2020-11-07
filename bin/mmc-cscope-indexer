@@ -75,7 +75,7 @@ export PATH
 
 LIST_ONLY=
 DIR='.'
-DIR=$(git rev-parse --show-toplevel)
+DIR=$(git rev-parse --show-toplevel || echo ".")
 
 LIST_FILE='cscope.files'
 DATABASE_FILE='cscope.out'
