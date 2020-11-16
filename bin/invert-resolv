@@ -1,0 +1,28 @@
+#!/bin/zsh -feu
+
+# Make sure localhost DNS is first -- we rely on  192.168.2.254 being first?
+
+
+TMP=$(mktemp -t resolve.conf.XXX)
+
+# NEEDED_FIRST=
+# ANCHOR
+
+# this can be either symlink or ??
+if [[ ! -f ${RESOLVE::=/etc/resolv.conf} ]]
+then
+    RESOLVE=/run/systemd/resolve/resolv.conf
+
+    gawk '/nameserver 192.168.2.254/ {print "nameserver 10.98.64.41"}; //  {print;}'  < $RESOLVE > $TMP
+else
+    # skip the previously
+    gawk '/^nameserver/ {if (!found) {found=1; print "nameserver 127.0.0.1"}}; /nameserver 127.0.0.1/ {next}; // {print;}'  < $RESOLVE > $TMP
+    # gawk '/nameserver 192.168.2.254/ {print "nameserver 127.0.0.1"}; //  {print;}'  < $RESOLVE > $TMP
+fi
+
+diff $TMP $RESOLVE || :
+# fixme: between FS's?
+sudo mv -v $TMP $RESOLVE
+
+# host  bitbucket.tomtomgroup.com
+# awk -e '/nameserver 192.168.2.254/ {print "nameserver 10.98.64.41"};  print $d'

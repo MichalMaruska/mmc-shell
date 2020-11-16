@@ -1,0 +1,15 @@
+#!/bin/zsh -feu
+
+LOG=/run/vpn.log
+[[ -e $LOG ]] || touch $LOG
+
+date >> $LOG
+
+if true; then
+    /usr/bin/invert-resolv
+    # before, but not after!
+    systemctl restart dnsmasq.service
+
+    # who resolves optiplex ? do we have CLIENT_iP ?
+    /sbin/route add -net 10.123.0.0/16 gw "optiplex"
+fi
