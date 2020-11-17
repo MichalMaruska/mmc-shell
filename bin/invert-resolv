@@ -16,7 +16,10 @@ then
     gawk '/nameserver 192.168.2.254/ {print "nameserver 10.98.64.41"}; //  {print;}'  < $RESOLVE > $TMP
 else
     # skip the previously
-    gawk '/^nameserver/ {if (!found) {found=1; print "nameserver 127.0.0.1"}}; /nameserver 127.0.0.1/ {next}; // {print;}'  < $RESOLVE > $TMP
+    gawk -e $'
+/^nameserver/ {if (!found) {found=1; print "nameserver 127.0.0.1"}}
+/^nameserver 127.0.0.1/ {next}
+{print}'  < $RESOLVE > $TMP
     # gawk '/nameserver 192.168.2.254/ {print "nameserver 127.0.0.1"}; //  {print;}'  < $RESOLVE > $TMP
 fi
 
