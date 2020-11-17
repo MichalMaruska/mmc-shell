@@ -25,7 +25,7 @@ fi
 
 diff $TMP $RESOLVE || :
 # fixme: between FS's?
-sudo install --mode 755 -owner root $TMP $RESOLVE
+sudo install --no-target-directory  --verbose --mode 'u=rw,o=r,g=r' --owner root $TMP $RESOLVE
 
 # host  bitbucket.tomtomgroup.com
 # awk -e '/nameserver 192.168.2.254/ {print "nameserver 10.98.64.41"};  print $d'
