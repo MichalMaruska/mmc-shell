@@ -1,3 +1,20 @@
+mmc-shell (3.41) release; urgency=medium
+
+  * new add-deb-git (to be used as a build-system hook)
+  * add-deb-git: make the links exactly & handle change
+  * mmc-cscope-indexer: default to recurse from the git root directory
+  * cscope: not git -> use cwd
+  * switch_files: ignore trailing /
+  * switch_files: exit (immediately) or error
+  * switch_files: formatting
+  * VPN route-up hook + invert-resolv
+  * (invert-resolv) Specify the file permissions
+  * (inert-resolv) Use inline multiline strings for AWK programs
+  * (inert-resolv) Fix the install(1) invocation
+  * ddc- accept relative values, and report the value after set
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 20 Nov 2020 13:41:43 +0100
+
 mmc-shell (3.40) release; urgency=medium
 
   * Add ddc-brightness
