@@ -12,8 +12,8 @@ DDCUTIL=(ddcutil)
 
 if [[ $# -gt 0 ]]
 then
-    $DDCUTIL setvcp $br_register $1
+    $DDCUTIL setvcp $br_register -- $1
+    $DDCUTIL getvcp $br_register
 else
     $DDCUTIL getvcp $br_register
 fi
-
