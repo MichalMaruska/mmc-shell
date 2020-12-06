@@ -1,0 +1,41 @@
+#!/usr/bin/zsh -feu
+
+source /usr/share/mmc-shell/mmc-functions.sh
+
+usage()
+{
+    cat <<EOF
+usage: $0 [git-repo] files...
+
+git-repo is directory with git repo.
+
+**********
+ Given directory A and git repo B
+ find out if files in A  are in the history of B.
+EOF
+}
+
+if [ $# -lt 2 ];
+then
+    usage
+    exit 1
+fi
+
+GIT_REPO=$1
+shift
+# ~/repo/rxvt-beta/
+
+# Check it's really a git repo:
+#  --git-dir=$(realpath $GIT_REPO)/.git
+(cd $GIT_REPO; git status >/dev/null) || die "not a (valid) git repository $GIT_REPO"
+
+foreach f ("$@")
+{
+    hash=$(git hash-object $f)
+    if (cd $GIT_REPO; git cat-file -p $hash  > /dev/null);
+    then
+        rm -v $f;
+    else
+        cecho red "$f not found";
+    fi
+}
