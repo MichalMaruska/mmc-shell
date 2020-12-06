@@ -1,0 +1,181 @@
+#!/bin/zsh -feu
+
+verbose=n
+
+usage()
+{
+    cat <<EOF
+usage: ${0##*/} [+-vh] [--] ARGS...
+
+******
+Given 2 git repositories, compare if the 'second' is subset of the first.
+
+Get all the refs, and see if they resolve in the other:
+tags
+heads
+segments are compared as patches.
+
+EOF
+}
+
+
+info()
+{
+    if [[ $verbose = y ]]; then
+        cecho blue $@
+    fi
+}
+
+step()
+{
+    cecho yellow $@
+}
+
+
+check_one_ref()
+{
+    local ref=$1
+    local name=$ref
+
+    local sha=$(git -C $second rev-parse $ref)
+
+    # see if present
+    if ! git -C $first cat-file commit  $sha > /dev/null;
+    then
+        report "$name is not covered"
+    fi
+}
+
+report()
+{
+    cecho red $@
+}
+
+while getopts :vh OPT; do
+    case $OPT in
+        v|+v)
+            verbose=y
+            ;;
+        h|+h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage >&2
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
+first=$1
+second=$2
+
+
+step "checking HEAD.."
+check_one_ref HEAD
+
+
+# git show-ref --heads
+# --tags
+# --hash  only
+# set -x
+# git show-ref --heads
+
+# check tags, branches
+step "checking tags.."
+git -C $second for-each-ref refs/tags/\* | {
+    while read sha type name
+    do
+        info "checking $name"
+        # git -C $second show $sha
+        # well, I need a reference which contains it!
+        if ! git -C $first cat-file commit  $sha > /dev/null;
+        then
+            report "$name is not covered"
+        fi
+        # git branch -r --contains $sha
+    done
+}
+
+step "checking tags..symbolically"
+
+git -C $second for-each-ref refs/tags/\* | {
+    while read sha type name
+    do
+        info "checking $name"
+        # git -C $second show $sha
+        # well, I need a reference which contains it!
+        if [[ $sha != $(git -C $first rev-parse $name) ]]
+        then
+            report "$name is different"
+        fi
+        # git branch -r --contains $sha
+    done
+}
+
+step "checking branches.."
+git -C $second for-each-ref refs/heads/\* | {
+    while read sha type name
+    do
+        info "checking $name"
+        # git -C $second show $sha
+        # well, I need a reference which contains it!
+        if ! git -C $first cat-file commit  $sha > /dev/null;
+        then
+            report "$name is not covered"
+        fi
+        # git branch -r --contains $sha
+    done
+}
+
+step "checking heads..symbolically"
+git -C $second for-each-ref refs/heads/\* | {
+    while read sha type name
+    do
+        info "checking $name"
+        # git -C $second show $sha
+        # well, I need a reference which contains it!
+        if [[ $sha != $(git -C $first rev-parse $name) ]]
+        then
+            report "$name is different"
+        fi
+        # git branch -r --contains $sha
+    done
+}
+
+step "checking segments"
+git -C $second segment | {
+    while read name base
+    do
+        # set -x
+        typeset -A shas
+        git -C $first segment -i $name | {
+            while read patch_id sha message;
+            do
+                # echo ">$patch_id<  --->$sha"
+                shas[$patch_id]=$sha
+            done
+        }
+
+        git -C $second segment $name
+
+        git -C $second segment -i $name | {
+            while read patch_id sha message;
+            do
+                # echo ">$patch_id<"
+                # invalid subscript ?
+                if [[ -z ${shas[(i)$patch_id]} ]] #  -le ${#shas}
+                   # [[ -k $shas[$sha] ]]
+                then
+                    echo "couldn't find: $message"
+                    git -C $second show $sha
+                fi
+            done
+        }
+
+    done
+}
+
+
+# git for-each-ref refs/heads/\*
