@@ -27,6 +27,7 @@ local_cecho()
 
 die()
 {
+    set +x
     colors
     local_cecho blue "ERROR:" $@ >&2
     exit -1
