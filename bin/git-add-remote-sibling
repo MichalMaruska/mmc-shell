@@ -83,10 +83,9 @@ while (( $# > 0 )) do
       shift
 done
 
-# if [ $# -gt 0 ]; then
-#     usage
-#     exit 1
-# fi
+if [ $# -gt 0 ]; then
+    GIT_REMOTE_NAME=$1
+fi
 
 # set_remote_name
 
