@@ -43,6 +43,7 @@ then
         usage >&2
         exit 1
     fi
+
     if [[ $# -lt 1 ]]
     then
         usage >&2
@@ -59,6 +60,14 @@ copy_file()
     # cp --archive
     rsync --relative $1 $backup_root
 }
+
+STAGE()
+{
+    cecho blue $@
+}
+
+### Find the modified ones:
+STAGE "Find the modified Conffiles"
 
 dpkg-query --showformat='${Conffiles}\n' --show |\
     grep -v -e '^$'|
@@ -80,8 +89,9 @@ dpkg-query --showformat='${Conffiles}\n' --show |\
     done
 
 
+### Find the backup files -- still a bit interesting.
+STAGE "Find the backup files (dpkg)"
 # ll -R system-configuration
-
 #.dpkg-dist
 #.dpkg-new
 find /etc/ -name '*.dpkg-old' | \
@@ -94,6 +104,7 @@ find /etc/ -name '*.dpkg-old' | \
 
 
 if [[ $list_only = n ]]; then
+    STAGE "show the backup store"
     ls -lR $backup_root
     # tar -xapf system-configuration.tar.bz2 system-configuration/
 fi
@@ -101,23 +112,28 @@ fi
 set -x
 # fixme for root it does not exist
 : ${TMPDIR:=/run/user/$(id --real)/}
+echo "*** using $TMPDIR for temp files" >&2
+
 
 set +x
 # can I find /etc/ld.so.conf.d/zzz_pkgsrc.conf.no
+STAGE "make a list of all DEBIAN files in /etc"
 dlocate  --filename-only  -w '/etc/.*'|\
     while read file; do
         if [[ -f $file ]]; then echo $file;
         fi;
     done |\
         sort  > $TMPDIR/from-debs
+
 sudo find /etc/ -type f -o -type l |sort    > $TMPDIR/from-fs
 
 # removed from debians:
 # -3 common
 # -1
 
+STAGE "List files in /etc/ not in DEBIAN packages"
 cecho red "generated"
-backup_root=$backup_root/generated/
+
 comm -3 -2 $TMPDIR/from-fs $TMPDIR/from-debs |\
     while read filename; do
         if [[ $list_only = n ]]; then
@@ -125,8 +141,14 @@ comm -3 -2 $TMPDIR/from-fs $TMPDIR/from-debs |\
             copy_file $filename
         fi
     done
-cd $backup_root && find -depth -type d -exec rmdir {} \;
 
+if [[ $list_only != y ]];
+then
+    # backup_root=$backup_root/generated/
+
+    # delete empty directories?
+    ( cd $backup_root && find -depth -type d -exec rmdir {} \; )
+fi
 
 
 # disappeared:
@@ -134,8 +156,7 @@ cecho red "disappeared:"
 # maybe symlinks:
 comm -3 -1 $TMPDIR/from-fs $TMPDIR/from-debs
 
-cecho blue "sudo tar --use-compress-program  bzip2 -cpf system-configuration.tar.bz2 system-configuration"
+cecho blue -e  "suggestion\n\tsudo tar --use-compress-program  bzip2 -cpf system-configuration.tar.bz2 system-configuration"
 
 
 # sudo rsync var/tmp/pkgsrc  root@e7240:/mnt/big/
-
