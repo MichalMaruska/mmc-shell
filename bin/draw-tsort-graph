@@ -75,7 +75,7 @@ echo "}" >> $temp
 
 echo $temp >&2
 
-(set -x; dot -T$FORMAT $temp)
+(set -x; xdot ${XDOT_PARAMS-} $temp)
 
 
 if [ $keep_graph_file = yes ];then
