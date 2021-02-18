@@ -1,6 +1,6 @@
 #! /bin/bash -e
 
-echo_args=""
+echo_args="-e"
 while getopts :neh OPT; do
     case $OPT in
         n|+n)
