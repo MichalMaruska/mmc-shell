@@ -62,7 +62,7 @@ activate_profile()
     local PROFILE=$2
     pactl set-card-profile $CARD $PROFILE
 }
-WD15_DOCK=n
+WD15_DOCK=y
 
 WD15_SINK_REGEXP='USB.*Dock_0'
 # WD15_SINK_REGEXP='USB.*Dock_1'
@@ -94,8 +94,9 @@ while getopts :bc:hi:lpsux OPT; do
         p|+p)
             if [[ $WD15_DOCK = y ]]; then
                 activate_profile $wd15card \
-                                 "output:analog-stereo-headphone+input:analog-stereo-mic"
+                                 "output:analog-stereo-headphone+input:analog-stereo-mic" || : ignore
                 headphones=$(traced_exec sink_number $WD15_SINK_REGEXP)
+                headphones="alsa_output.usb-Generic_USB_Audio_200901010001-00.HiFi__hw_Dock__sink"
                 move_to $headphones
             else
                 sink="alsa_output.pci-0000_00_1b.0.analog-stereo"
