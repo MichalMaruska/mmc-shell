@@ -1,3 +1,27 @@
+mmc-shell (3.42) release; urgency=medium
+
+  [ Michal Maruska ]
+  * draw-tsort-graph: name the temp file as graph
+  * new tool: git-prune-copied
+  * new command git-compare-2
+  * die() -- turn off tracing.
+  * improve configfiles
+  * git-add-remote-sibling: --clone option & fix --verbose getopt
+  * git-add-remote-sibling: the remote can be 1st parameter
+  * git-add-remote-sibling: re-indent
+  * debian: compat level 10
+  * draw-tsort-graph: use XDOT_PARAMS from env
+  * cecho default /bin/echo to use -e option
+  * audio-move: do use dock, help find the Phones jack, ignore profile setting failure
+  * debian: depend on gawk
+  * draw-tsort-graph: usage
+  * fix redirection to the temp filename
+  * git-compare-2: improve check_one_ref()
+  * git-compare-2: check_git_repo() & use die()
+  * monitor-setup: exit when no primary output found
+
+ --  <mmaruska@gmail.com>  Wed, 24 Feb 2021 22:58:30 +0100
+
 mmc-shell (3.41) release; urgency=medium
 
   * new add-deb-git (to be used as a build-system hook)
