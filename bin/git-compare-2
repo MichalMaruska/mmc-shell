@@ -1,5 +1,6 @@
 #!/bin/zsh -feu
 
+source /usr/share/mmc-shell/mmc-functions.sh
 verbose=n
 
 usage()
@@ -71,6 +72,16 @@ OPTIND=1
 
 first=$1
 second=$2
+
+check_git_repo()
+{
+    local dir=$1
+    pushd $dir && test -d .git || die "$dir is not Git repo"; popd
+
+}
+# sanity check:
+check_git_repo $first
+check_git_repo $second
 
 
 step "checking HEAD.."
