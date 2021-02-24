@@ -1,5 +1,7 @@
 #! /bin/zsh -feu
 
+. /usr/share/mmc-shell/mmc-functions.sh
+
 # see /etc/acpi/power.sh
 OUTPUT=""
 
@@ -101,6 +103,9 @@ if [[ $list = y || -z "$OUTPUT" ]]
 then
     xrandr | grep "${PATTERN:= connected\|unknown connection}" >&2
     OUTPUT=$(xrandr | grep "$PATTERN" | grep -v primary|cut -f 1 -d ' ')
+    if [[ -z $OUTPUT ]]; then
+        die "cannot determine external monitor"
+    fi
 fi
 
 connected()
