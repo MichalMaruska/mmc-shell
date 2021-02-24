@@ -1,11 +1,6 @@
 #! /bin/zsh -fue
 
-# Given a file prepared for tsort(1),
-# invoke dot(1) on it.
-# That means conversion + some header configuration.
-
 FORMAT=png
-#xlib
 keep_graph_file=no
 
 usage()
@@ -19,6 +14,11 @@ usage: ${0##*/} [+-kpj] [-F format] [--] {file}
 -P ps
 -f pdf
 -F format
+
+***
+Given a file prepared for tsort(1),
+invoke dot(1) on it.
+That means conversion + some header configuration.
 EOF
 }
 
