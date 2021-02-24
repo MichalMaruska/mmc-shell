@@ -56,9 +56,9 @@ OPTIND=1
 
 temp=$(mktemp --tmpdir --suffix=.dot graph.XXX)
 
-echo "digraph { " > $temp
-echo "fontsize=24;" >> $temp
 
+echo "digraph { " >> $temp
+echo "fontsize=24;" >> $temp
 # size=\"64,48\";
 
 # either from stdin or a file
