@@ -35,9 +35,10 @@ step()
 check_one_ref()
 {
     local ref=$1
+    local dir=$2
     local name=$ref
 
-    local sha=$(git -C $second rev-parse $ref)
+    local sha=$(git -C $dir rev-parse $ref)
 
     # see if present
     if ! git -C $first cat-file commit  $sha > /dev/null;
@@ -73,7 +74,7 @@ second=$2
 
 
 step "checking HEAD.."
-check_one_ref HEAD
+check_one_ref HEAD $second
 
 
 # git show-ref --heads
