@@ -119,8 +119,9 @@ while getopts :bc:hi:lpsux OPT; do
         s|+s)
             if [[ $WD15_DOCK = y ]]
             then
-                activate_profile $wd15card "output:analog-stereo-speaker"
+                activate_profile $wd15card "output:analog-stereo-speaker" || : ignore
                 speakers=$(traced_exec sink_number $WD15_SINK_REGEXP)
+                speakers="alsa_output.usb-Generic_USB_Audio_200901010001-00.HiFi__hw_Dock_1__sink"
                 move_to $speakers
             else
                 audio-select -c $CARD -j
