@@ -19,8 +19,9 @@ EOF
 }
 
 list_only=n
+verbose=n
 
-while getopts :hl OPT; do
+while getopts :hlv OPT; do
     case $OPT in
         l)
             list_only=y
@@ -28,6 +29,9 @@ while getopts :hl OPT; do
         h|+h)
             usage
             exit 0
+            ;;
+        v)
+            verbose=y
             ;;
         *)
             usage >&2
@@ -103,7 +107,7 @@ find /etc/ -name '*.dpkg-old' | \
     done
 
 
-if [[ $list_only = n ]]; then
+if [[ $list_only = n && $verbose = y ]]; then
     STAGE "show the backup store"
     ls -lR $backup_root
     # tar -xapf system-configuration.tar.bz2 system-configuration/
