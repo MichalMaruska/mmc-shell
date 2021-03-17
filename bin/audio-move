@@ -86,8 +86,11 @@ find_pch()
 CARD=1
 find_pch
 
-while getopts :bc:hi:lpsux OPT; do
+while getopts :bBc:hi:lpsux OPT; do
     case $OPT in
+        B)
+            move_to "bluez_sink.E8_07_BF_3E_41_06.headset_head_unit" # $usb_phones
+            ;;
         c)
             CARD=$OPTARG
             ;;
