@@ -60,10 +60,14 @@ function play_file ()
 
         *.ogg)
             info "$1"
-            if [[ $pulse = y ]]; then
-                ogg123 -d pulse --quiet  "$1"
+            if which ogg123; then
+                if [[ $pulse = y ]]; then
+                    ogg123 -d pulse --quiet  "$1"
+                else
+                    ogg123 --quiet  "$1"
+                fi
             else
-                ogg123 --quiet  "$1"
+                gst123 --novideo --quiet $1
             fi
             ;;
         *.flv | *.mp4 | *.m4a | *.wma | *.webm | *.ape | *.mkv )
