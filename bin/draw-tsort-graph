@@ -25,7 +25,7 @@ EOF
 invoke_xdot=no
 extension=""
 
-while getopts :dkpPfF: OPT; do
+while getopts :dkpPfF:x OPT; do
     case $OPT in
         h)
             usage
