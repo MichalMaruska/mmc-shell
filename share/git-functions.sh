@@ -119,7 +119,7 @@ stash_if_non_clean()
     # this is run after processing the command line args. Otherwise -h would be
     # handled by it
     set +u
-    . /usr/lib/git-core/git-sh-setup
+    . /usr/libexec/git-core/git-sh-setup
     # git rev-parse --is-inside-work-tree
     GIT_DIR=$(git_dir)
     set -u
