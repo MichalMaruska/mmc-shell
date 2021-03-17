@@ -22,6 +22,9 @@ That means conversion + some header configuration.
 EOF
 }
 
+invoke_xdot=no
+extension=""
+
 while getopts :dkpPfF: OPT; do
     case $OPT in
         h)
@@ -31,14 +34,20 @@ while getopts :dkpPfF: OPT; do
         k|+k)
             keep_graph_file=yes
             ;;
+        x)
+            invoke_xdot=yes
+            ;;
         p|+p)
             FORMAT=png
+            extension=png
             ;;
         P)
             FORMAT=ps
+            extension=ps
             ;;
         f)
             FORMAT=pdf
+            extension=pdf
             ;;
         F)
             FORMAT=$OPTARG
@@ -54,7 +63,7 @@ done
 shift OPTIND-1
 OPTIND=1
 
-temp=$(mktemp --tmpdir --suffix=.dot graph.XXX)
+temp=$(mktemp --tmpdir --suffix=.dot graph.XXX$extension)
 
 
 echo "digraph { " >> $temp
@@ -73,9 +82,18 @@ fi
 
 echo "}" >> $temp
 
+
+
 echo $temp >&2
 
-(set -x; xdot ${XDOT_PARAMS-} $temp)
+
+if [[ $invoke_xdot = yes ]]; then
+    (set -x; xdot ${XDOT_PARAMS-} $temp)
+else
+    (set -x
+     dot -T$FORMAT $temp
+    )
+fi
 
 
 if [ $keep_graph_file = yes ];then
