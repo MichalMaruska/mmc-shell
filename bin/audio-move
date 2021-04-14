@@ -62,7 +62,7 @@ activate_profile()
     local PROFILE=$2
     pactl set-card-profile $CARD $PROFILE
 }
-WD15_DOCK=y
+WD15_DOCK=n
 
 WD15_SINK_REGEXP='USB.*Dock_0'
 # WD15_SINK_REGEXP='USB.*Dock_1'
