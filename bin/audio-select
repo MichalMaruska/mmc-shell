@@ -184,7 +184,7 @@ set_mixer_control Master $master_volume
 
 # Auto-Mute Mode
 set_mixer_control $auto_mute_control $value
-$AMIXER sset 'Speaker+LO' 100
+$AMIXER sset 'Speaker+LO' 100 || : ignore
 
 
 
