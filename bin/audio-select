@@ -190,12 +190,12 @@ $AMIXER sset 'Speaker+LO' 100 || : ignore
 
 # pswitch
 # value=off
-set_mixer_control $line_control       $line_out
+set_mixer_control $line_control       $line_out || : ignore
 # a bit counter-intuitive, & restrictive:
-set_mixer_control $speaker_control    $speaker
+set_mixer_control $speaker_control    $speaker  || : ignore
 
 #set_control 'Headphone Playback Switch' $headphone
-set_mixer_control $headphones_control $headphone
+set_mixer_control $headphones_control $headphone || : ignore
 
 # set volumes:
 if [[ ${headphone_value-} = 0 ]]; then
@@ -203,7 +203,7 @@ if [[ ${headphone_value-} = 0 ]]; then
         save_control "numid=3,iface=MIXER,name='Headphone Playback Volume'" >! $HEADPHONES_SAVE_FILE
     fi
 fi
-set_mixer_control $headphones_control $headphone_value
+set_mixer_control $headphones_control $headphone_value || : ignore
 # : # restore_control "numid=3,iface=MIXER,name='Headphone Playback Volume'" $(<$HEADPHONES_SAVE_FILE)
 
 SET_PULSE_AUDIO=(pactl --server unix:/run/user/1000/pulse/native)
