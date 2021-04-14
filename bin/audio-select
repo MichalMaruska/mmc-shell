@@ -14,6 +14,9 @@
 #  Front Right: Playback [on]
 
 
+# asus:
+# "Auto-Mute Mode" disabled
+#
 verbose=n
 CARD=1
 # known/expected controls:
@@ -106,9 +109,12 @@ elif [[ $jack = 1 ]]; then
     # I must keep "Speaker+LO" unmuted, and the volume.
     # but to avoid the builtin speakers, I need to have this:
     value='Speaker Only'
+    # 2021: "Auto-Mute Mode"
+    value='Disabled'
 else
     # value='Speaker Only'
     value='Line Out+Speaker'
+    value='Enabled'
 fi
 
 save_control()
