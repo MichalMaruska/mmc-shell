@@ -1,3 +1,14 @@
+mmc-shell (3.44) release; urgency=medium
+
+  [ Michal Maruska ]
+  * draw-tsort-graph: fix -x option
+  * no WD15 dock now
+  * On Asus the enums are "enable/disabled"  -- enum
+  * Speaker+LO not present at all
+  * ignore missing controls :(
+
+ --  <mmaruska@gmail.com>  Thu, 22 Apr 2021 14:53:52 +0200
+
 mmc-shell (3.43) release; urgency=medium
 
   [ Michal Maruska ]
