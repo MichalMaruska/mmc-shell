@@ -62,7 +62,13 @@ activate_profile()
     local PROFILE=$2
     pactl set-card-profile $CARD $PROFILE
 }
-WD15_DOCK=n
+
+# pactl list cards |grep alsa.long_card_name = "Dell-WD15-Dock"
+if lsusb|grep 0bda:4014; then
+    WD15_DOCK=y
+else
+    WD15_DOCK=n
+fi
 
 WD15_SINK_REGEXP='USB.*Dock_0'
 # WD15_SINK_REGEXP='USB.*Dock_1'
