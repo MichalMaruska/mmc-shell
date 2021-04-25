@@ -105,7 +105,7 @@ while getopts :bBc:hi:lpsux OPT; do
                 activate_profile $wd15card \
                                  "output:analog-stereo-headphone+input:analog-stereo-mic" || : ignore
                 headphones=$(traced_exec sink_number $WD15_SINK_REGEXP)
-                headphones="alsa_output.usb-Generic_USB_Audio_200901010001-00.HiFi__hw_Dock__sink"
+                # headphones="alsa_output.usb-Generic_USB_Audio_200901010001-00.HiFi__hw_Dock__sink"
                 move_to $headphones
             else
                 sink="alsa_output.pci-0000_00_1b.0.analog-stereo"
@@ -128,9 +128,10 @@ while getopts :bBc:hi:lpsux OPT; do
         s|+s)
             if [[ $WD15_DOCK = y ]]
             then
-                activate_profile $wd15card "output:analog-stereo-speaker" || : ignore
+                info "so we have the dock -- turn on the Line (speaker profile), and get the sink"
+                activate_profile $wd15card "output:analog-stereo-speaker"
                 speakers=$(traced_exec sink_number $WD15_SINK_REGEXP)
-                speakers="alsa_output.usb-Generic_USB_Audio_200901010001-00.HiFi__hw_Dock_1__sink"
+                info "now move $speakers"
                 move_to $speakers
             else
                 audio-select -c $CARD -j
