@@ -13,6 +13,7 @@ usage: ${0##*/} [-h] [-f] [--] [remote | remote branch]
 Fast-forward to remote head, stashing around.
 -f not only fast-forward !
 -b rebase.
+-l list
 
 -h help
 By default {branch} is the current one on the favorite remote.
@@ -23,7 +24,8 @@ EOF
 
 force=n
 rebase=n
-while getopts :bhf OPT; do
+list=no
+while getopts :bfhl OPT; do
     case $OPT in
         h|+h)
             usage
@@ -34,6 +36,9 @@ while getopts :bhf OPT; do
             ;;
         f)
             force=y
+            ;;
+        l)
+            list=yes
             ;;
         *)
             usage >&2
@@ -91,7 +96,12 @@ else
 fi
 
 
-
+if [[ $list = yes ]];
+then
+    set -x
+    git log $current_branch..$target
+    exit 0
+fi
 # if the fast-forward would move ahead!
 
 git_ff_to_cautiously()
