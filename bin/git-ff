@@ -8,7 +8,7 @@ colors
 usage() {
     setopt POSIX_ARGZERO
     cat <<EOF
-usage: ${0##*/} [-h] [-f] [--] [remote-or-branch]
+usage: ${0##*/} [-h] [-f] [--] [remote | remote branch]
 
 Fast-forward to remote head, stashing around.
 -f not only fast-forward !
@@ -43,14 +43,27 @@ done
 shift OPTIND-1
 OPTIND=1
 
-if [[ $# -gt 1 ]]; then
+if [[ $# -gt 2 ]]; then
     usage >&2
     exit 2
 fi
 
 # find where to
-if [[ $# -gt 0 ]]; then
-    # $1 is remote or remote-branch
+# I need:
+# - remote host,
+# - local branch, and
+# - the remote branch!
+# $1 is remote or remote-branch
+if [[ $# = 2 ]]
+then
+    if is_git_remote $1; then
+        target=remotes/$1/$2
+        current_branch=$2
+    else
+        die "confused"
+    fi
+
+elif [[ $# = 1 ]]; then
 
     if is_git_remote_branch $1
     then
