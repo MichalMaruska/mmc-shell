@@ -1,3 +1,12 @@
+mmc-shell (3.45) release; urgency=medium
+
+  * Calculate WD15_DOCK
+  * revert the workaround -- now that the WD15 info is correct
+  * git-ff: formalize the 1 or 2 parameters:
+  * git-ff: -l to list the history
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 29 Apr 2021 16:09:07 +0200
+
 mmc-shell (3.44) release; urgency=medium
 
   [ Michal Maruska ]
