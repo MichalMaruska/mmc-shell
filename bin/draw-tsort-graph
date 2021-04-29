@@ -14,7 +14,7 @@ usage: ${0##*/} [+-kpj] [-F format] [--] {file}
 -P ps
 -f pdf
 -F format
-
+-H html
 ***
 Given a file prepared for tsort(1),
 invoke dot(1) on it.
@@ -25,11 +25,15 @@ EOF
 invoke_xdot=no
 extension=""
 
-while getopts :dkpPfF:x OPT; do
+while getopts :dkHpPfF:x OPT; do
     case $OPT in
         h)
             usage
             exit 0
+            ;;
+        H)
+            FORMAT=html
+            extension=.html
             ;;
         k|+k)
             keep_graph_file=yes
@@ -66,25 +70,69 @@ OPTIND=1
 temp=$(mktemp --tmpdir --suffix=.dot graph.XXX$extension)
 
 
-echo "digraph { " >> $temp
-echo "fontsize=24;" >> $temp
+if [[ $FORMAT = html ]]
+then
+    cat >> $temp <<EOF
+<!DOCTYPE html>
+<meta charset="utf-8">
+<body>
+  <script src="http://d3js.org/d3.v4.min.js"></script>
+  <script src="http://viz-js.com/bower_components/viz.js/viz-lite.js"></script>
+  <script src="https://github.com/magjac/d3-graphviz/releases/download/v0.1.2/d3-graphviz.min.js"></script>
+  <div id="graph" style="text-align: center;"></div>
+  <script>
+    d3.select("#graph").graphviz()
+    .renderDot('digraph  {\\
+EOF
+else
+    cat >> $temp <<EOF
+digraph {
+fontsize=24;
+EOF
+fi
 # size=\"64,48\";
 
 # either from stdin or a file
-if [ $# = 1 ];then
-    cat $1 >> $temp
+
+if [ $# = 1 ]
+then
+    if [[ $FORMAT = html ]]; then
+        sed -e 's/$/\\/;' $1 >> $temp
+    else
+        cat $1 >> $temp
+    fi
 elif [ $# = 0 ]; then
-    cat >> $temp
+    if [[ $FORMAT = html ]]; then
+        sed -e 's/$/\\/;'  >> $temp
+    else
+        cat >> $temp
+    fi
 else
     usage >&2
     exit 1
 fi
 
-echo "}" >> $temp
+{
+    if [[ $FORMAT = html ]]; then
+        cat <<EOF
+}');
+  </script>
+
+<ol>
+  <li><a href="https://github.com/d3/d3">D3: Data-Driven Documents</a>
+  <li><a href="https://github.com/mstefaniuk/graph-viz-d3-js">Graphviz dot in your browser (bower)</a>
+  <li><a href="https://github.com/magjac/d3-graphviz">d3-graphviz (used here)</a>
+</ol>
+
+</body>
+EOF
+    else
+        echo "}"
+    fi
+} >> $temp
 
 
-
-echo $temp >&2
+echo "graph in file: $temp" >&2
 
 
 if [[ $invoke_xdot = yes ]]; then
