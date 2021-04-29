@@ -63,7 +63,7 @@ if [[ $# = 2 ]]
 then
     if is_git_remote $1; then
         target=remotes/$1/$2
-        current_branch=$2
+        local_branch=$2
     else
         die "confused"
     fi
@@ -78,8 +78,8 @@ elif [[ $# = 1 ]]; then
     then
         GIT_REMOTE_NAME=$1
         # todo: the same I'm on
-        current_branch=$(current_branch_name)
-        target=$GIT_REMOTE_NAME/$current_branch
+        local_branch=$(current_branch_name)
+        target=$GIT_REMOTE_NAME/$local_branch
     else
         target=$1
     fi
@@ -89,17 +89,17 @@ else
     set_remote_name
 
     # todo: the same I'm on
-    current_branch=$(current_branch_name)
+    local_branch=$(current_branch_name)
 
     # default:
-    target=$GIT_REMOTE_NAME/$current_branch
+    target=$GIT_REMOTE_NAME/$local_branch
 fi
 
 
 if [[ $list = yes ]];
 then
     set -x
-    git log $current_branch..$target
+    git log $local_branch..$target
     exit 0
 fi
 # if the fast-forward would move ahead!
