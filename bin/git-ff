@@ -157,9 +157,11 @@ git_ff_to_cautiously()
             cecho hiyellow "done: rebased & unstashed"
         elif [[ $force = y ]]  || git merge-base --is-ancestor $local_branch $ref
         then
-            if git merge --ff-only $ref;
+            previous_branch=$(current_branch_name)
+
+            if [[ $previous_branch != $local_branch ]]
             then
-                cecho hiyellow "ff (without conflicts w/ dirty files)"
+                git branch --force $local_branch $ref
             else
                 # touching timestamps:
                 stash_if_non_clean "merge fast-forward"
