@@ -139,7 +139,22 @@ git_ff_to_cautiously()
 
         if [[ $rebase = y ]];
         then
+            mmc_stash_if_non_clean 'stash for git-ff/rebase'
+
+            # todo: switch back!
+            previous_branch=$(current_branch_name)
+            if [[ $previous_branch != $local_branch ]]; then
+                git switch $local_branch
+            fi
+
+            # automatically squash  !fixup commits:
+            cecho hiyellow "rebase & unstash:"
             git rebase --autosquash $ref
+
+            # return:
+            git switch -- # git switch $previous_branch
+            mmc_unstash_if_stashed
+            cecho hiyellow "done: rebased & unstashed"
         elif [[ $force = y ]]  || git merge-base --is-ancestor $local_branch $ref
         then
             if git merge --ff-only $ref;
