@@ -163,21 +163,33 @@ git_ff_to_cautiously()
             then
                 git branch --force $local_branch $ref
             else
-                # touching timestamps:
-                stash_if_non_clean "merge fast-forward"
-
-                if [[ $force = y ]]; then
-                    git reset --hard $ref
+                # the current, so stash!
+                if git merge --autostash --ff-only $ref;
+                then
+                    cecho hiyellow "ff (without conflicts w/ dirty files)"
                 else
-                    # git checkout $branch
-                    git merge --ff-only $ref
+                    # touching timestamps:
+                    # mmc_stash_if_non_clean "merge fast-forward"
+                    # stash_if_non_clean
+
+                    # Could not Fast-Forward, so only force can help:
+                    if [[ $force = y ]]; then
+                        cecho hiyellow "Forcing reset to $ref"
+                        git reset --hard $ref
+
+                    else
+                        # this case is impossible?
+                        cecho hiyellow "Fast-Forward failed"
+                        : do-nothing
+                        # git checkout $branch
+                        # git merge --ff-only $ref
+                    fi
+                    # mmc_unstash_if_stashed
                 fi
-                unstash_if_stashed
-                cecho hiyellow "ff & unstashed"
             fi
         else
             # todo: if ancestor, print a different message.
-            echo >&2 cannot fast-forward to $ref $fg[red]not our descendant$reset_color
+            echo >&2 "cannot fast-forward to $ref $fg[red]not our descendant$reset_color"
         fi
     fi
 }
