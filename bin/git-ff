@@ -135,13 +135,12 @@ git_ff_to_cautiously()
     local ref=$1
 
     # unless we are on it already:
-    if [[ $(git rev-parse HEAD) != $(git rev-parse $ref) ]]; then
+    if [[ $(git rev-parse $local_branch) != $(git rev-parse $ref) ]]; then
 
         if [[ $rebase = y ]];
         then
             git rebase --autosquash $ref
-            cecho hiyellow "ff & unstashed"
-        elif [[ $force = y || $(git rev-parse HEAD) = $(git merge-base HEAD $ref) ]]
+        elif [[ $force = y ]]  || git merge-base --is-ancestor $local_branch $ref
         then
             if git merge --ff-only $ref;
             then
