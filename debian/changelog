@@ -1,3 +1,15 @@
+mmc-shell (3.46) release; urgency=medium
+
+  * draw-tsort-graph: output HTML, based on d3-graphviz
+  * git-ff: local branch can be any!
+  * new set of functions: mmc_stash_if_non_clean, mmc_unstash_if_stashed
+  * not HEAD but local_branch, and use "git merge-base --is-ancestor"
+  * Rebase -- stash around it must be done explicitly -- we even switch branch!
+  * simple case branch is not current
+  * ff of current branch: stash & attempt "merge --ff-only" or force reset
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 05 May 2021 12:05:40 +0200
+
 mmc-shell (3.45) release; urgency=medium
 
   * Calculate WD15_DOCK
