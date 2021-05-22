@@ -1,3 +1,9 @@
+mmc-shell (3.47) release; urgency=medium
+
+  * Replace stash_if_non_clean with mmc_stash_if_non_clean
+
+ -- Michal Maruska <mmaruska@gmail.com>  Sat, 22 May 2021 12:21:42 +0200
+
 mmc-shell (3.46) release; urgency=medium
 
   * draw-tsort-graph: output HTML, based on d3-graphviz
