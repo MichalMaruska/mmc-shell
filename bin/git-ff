@@ -104,36 +104,13 @@ then
 fi
 
 
-# new:
-stash_commit=
-
-mmc_stash_if_non_clean()
-{
-    local message=$1
-    stash_commit=$(git stash create $message)
-    # is it HEAD ?
-    if [[ -n $stash_commit ]]; then
-        # this message goes into .git/logs/refs/stash
-        # 'stash for git-ff'
-        git stash store -m $message $stash_commit
-    fi
-}
-
-mmc_unstash_if_stashed()
-{
-    if [[ -n "$stash_commit" ]]
-    then
-        cecho yellow "unstashing now."
-        git stash pop --quiet
-    fi
-}
-
 # if the fast-forward would move ahead!
 git_ff_to_cautiously()
 {
     # given $ref and $force
     local ref=$1
 
+    echo "$local_branch $ref" >&2
     # unless we are on it already:
     if [[ $(git rev-parse $local_branch) != $(git rev-parse $ref) ]]; then
 

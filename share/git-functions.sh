@@ -107,43 +107,31 @@ git_dir()
     git rev-parse --git-dir
 }
 
-# fixme: protect this:
-# static
-GIT_STASHED=no
-# fixme: are these from some library?
-## possibly stash:
-# sets the variable STASHED
-stash_if_non_clean()
+# new:
+stash_commit=
+mmc_stash_if_non_clean()
 {
-    # fixme: some variable is used-before-defined, in upstream code.
-    # this is run after processing the command line args. Otherwise -h would be
-    # handled by it
-    set +u
-    . /usr/libexec/git-core/git-sh-setup
-    # git rev-parse --is-inside-work-tree
-    GIT_DIR=$(git_dir)
-    set -u
-
-    # todo:
-    # octopus can leave half work, so yes, I prefer:
-    if ! ( require_clean_work_tree $1 "$(gettext "Please commit or stash them.")" )
-    then
-        # todo: orange:
-        cecho yellow "stashing for you..."
-        git stash push
-        GIT_STASHED=yes
+    local message=$1
+    stash_commit=$(git stash create $message)
+    # is it HEAD ?
+    if [[ -n $stash_commit ]]; then
+        # this message goes into .git/logs/refs/stash
+        # 'stash for git-ff'
+        cecho yellow "stashed for you in $stash_commit"
+        git stash store -m $message $stash_commit
     fi
 }
 
-unstash_if_stashed()
+mmc_unstash_if_stashed()
 {
-    if [ "$GIT_STASHED" = "yes" ]
+    if [[ -n "$stash_commit" ]]
     then
         cecho yellow "unstashing now."
-        # eval $cmd
         git stash pop --quiet
     fi
 }
+
+
 
 # is the $1 a valid ref to remote branch?
 is_git_remote_branch()
