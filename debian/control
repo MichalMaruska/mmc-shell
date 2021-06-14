@@ -7,7 +7,7 @@ Standards-Version: 3.7.2
 
 Package: mmc-shell
 Architecture: all
-Depends: ${misc:Depends}, zsh, gawk, git(>= 1:2.31.0)
+Depends: ${misc:Depends}, zsh, gawk, git(>= 1:2.31.0), mp3info,mpg123
 Conflicts: tt-tools (<< 1.13)
-Recommends: mp3info, mpg123, gst123, systemd-container, alsa-utils, tdb-tools
+Recommends: gst123, systemd-container, alsa-utils, tdb-tools
 Description: collection of shell scripts
