@@ -12,15 +12,18 @@ _git-ff()
 
     _arguments -C -s -S  \
                '-h[help]' \
-               '1:remote repository:->git_remotes' && return 0
+               '-l[list]' \
+               '1:remote repository:->git_remotes'\
+               '2:local branch:->git_branch'&& return 0
 
     # only this works:
     case $state in
         git_remotes)
-            # or _sum
             _alternative \
                 'remote:remote:__git_remotes'
-            # _arguments "1:Segments:($available)"
+            ;;
+        git_branch)
+            _alternative 'branch::__git_branch_names'
             ;;
         *)
             ;; # _files
@@ -36,8 +39,6 @@ else
     # echo "already divided: $words[1] vs $words[2]">&2
     :
 fi
-
-# echo $words[@] >> $TMPDIR/complete
 
 # Invoke:
 service=git;
