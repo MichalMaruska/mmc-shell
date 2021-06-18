@@ -13,6 +13,7 @@ _git-ff()
     _arguments -C -s -S  \
                '-h[help]' \
                '-l[list]' \
+               '-u[fetch]' \
                '1:remote repository:->git_remotes'\
                '2:local branch:->git_branch'&& return 0
 

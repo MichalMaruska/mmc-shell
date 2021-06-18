@@ -8,12 +8,14 @@ colors
 usage() {
     setopt POSIX_ARGZERO
     cat <<EOF
-usage: ${0##*/} [-h] [-f] [--] [remote | remote branch]
+usage: ${0##*/} [-h] [-f] [-l] [-u] [--] [remote | remote branch]
 
 Fast-forward to remote head, stashing around.
 -f not only fast-forward !
 -b rebase.
 -l list
+-u fetch/update first
+
 
 -h help
 By default {branch} is the current one on the favorite remote.
@@ -25,7 +27,8 @@ EOF
 force=n
 rebase=n
 list=no
-while getopts :bfhl OPT; do
+fetch_too=no
+while getopts :bfhlu OPT; do
     case $OPT in
         h|+h)
             usage
@@ -39,6 +42,9 @@ while getopts :bfhl OPT; do
             ;;
         l)
             list=yes
+            ;;
+        u)
+            fetch_too=yes
             ;;
         *)
             usage >&2
@@ -62,6 +68,7 @@ fi
 if [[ $# = 2 ]]
 then
     if is_git_remote $1; then
+        GIT_REMOTE_NAME=$1
         target=remotes/$1/$2
         local_branch=$2
     else
@@ -95,8 +102,12 @@ else
     target=$GIT_REMOTE_NAME/$local_branch
 fi
 
+if [[ $fetch_too = yes ]]
+then
+    git fetch $GIT_REMOTE_NAME $local_branch
+fi
 
-if [[ $list = yes ]];
+if [[ $list = yes ]]
 then
     set -x
     git log $local_branch..$target
