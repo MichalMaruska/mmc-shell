@@ -1,0 +1,3 @@
+#!/usr/bin/sh
+
+echo "run compinit -D for the Zsh completion to start working"
