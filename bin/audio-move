@@ -37,6 +37,7 @@ usage: ${0##*/} [-c N] [+-pbsh] [-i name] [-l]
 
 -l list sinks
 
+-d debug
 *****
 Pure pulse-audio switching between sinks.
 No alsa access.
@@ -63,6 +64,8 @@ activate_profile()
     local PROFILE=$2
     pactl set-card-profile $CARD $PROFILE
 }
+
+debug=no
 
 # pactl list cards |grep alsa.long_card_name = "Dell-WD15-Dock"
 if lsusb|grep 0bda:4014 >/dev/null; then
@@ -93,8 +96,11 @@ find_pch()
 CARD=1
 find_pch
 
-while getopts :bBc:hi:lpsux OPT; do
+while getopts :bBc:dhi:lpsux OPT; do
     case $OPT in
+        d)
+            debug=yes
+            ;;
         B)
             # bluetoothctl connect 00:1B:66:C0:D0:41
             move_to "bluez_sink.E8_07_BF_3E_41_06.headset_head_unit" # $usb_phones
