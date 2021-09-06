@@ -84,7 +84,9 @@ WD15_SINK_REGEXP='USB.*Dock_0'
 WD15_SINK_REGEXP='Generic_USB_Audio_200901010001'
 
 wd15card="alsa_card.usb-Generic_USB_Audio_200901010001-00"
-usb_phones='alsa_output.usb-Plantronics_Plantronics_C320-M_DC07CFE9246B394C99F2ECEDA32A7A3F-00.analog-stereo'
+
+# usb_phones='alsa_output.usb-Plantronics_Plantronics_C320-M_DC07CFE9246B394C99F2ECEDA32A7A3F-00.analog-stereo'
+usb_phones='alsa_output.usb-Plantronics_Plantronics_Blackwire_325.1_B7BAE642E3D4304EA84DE1E1FC01BBA3-00.analog-stereo'
 
 
 find_pch()
