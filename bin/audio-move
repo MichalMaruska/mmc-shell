@@ -110,7 +110,7 @@ while getopts :bBc:dhi:lpsux OPT; do
             ;;
         B)
             # bluetoothctl connect 00:1B:66:C0:D0:41
-            move_to "bluez_sink.E8_07_BF_3E_41_06.headset_head_unit" # $usb_phones
+            # move_to "bluez_sink.E8_07_BF_3E_41_06.headset_head_unit"
             move_to "bluez_sink.00_1B_66_C0_D0_41.a2dp_sink"
             ;;
         c)
