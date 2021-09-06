@@ -49,13 +49,18 @@ move_to()
 {
     local sink=$1
     # sink_input=$(pactl list short sink-inputs|cut -f 1)
-    pactl set-default-sink $sink
+    (
+        if [[ $debug = yes ]]; then
+            set -x
+        fi
+        pactl set-default-sink $sink
 
-    pactl list short sink-inputs|cut -f 1 |
-        while read si
-        do
-            traced_exec pactl move-sink-input $si $sink
-        done
+        pactl list short sink-inputs|cut -f 1 |
+            while read si
+            do
+                traced_exec pactl move-sink-input $si $sink
+            done
+    )
 }
 
 activate_profile()
