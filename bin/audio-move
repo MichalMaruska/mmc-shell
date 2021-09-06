@@ -65,7 +65,7 @@ activate_profile()
 }
 
 # pactl list cards |grep alsa.long_card_name = "Dell-WD15-Dock"
-if lsusb|grep 0bda:4014; then
+if lsusb|grep 0bda:4014 >/dev/null; then
     WD15_DOCK=y
 else
     WD15_DOCK=n
