@@ -6,6 +6,8 @@
 OUTPUT=""
 
 mode="--auto"
+mode=(--mode 3840x2160)
+
 
 usage()
 {
