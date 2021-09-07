@@ -131,10 +131,11 @@ while getopts :bBc:dhi:lpsux OPT; do
             fi
             ;;
         b|+b)
+            # before precision 3530?
             sink="alsa_output.pci-0000_00_1b.0.analog-stereo"
-            builtin=$(traced_exec sink_number $sink
-                      #"alsa_output.pci-0000_00_1f.3.analog-stereo"
-                   )
+            # precision 3530:
+            sink=alsa_output.pci-0000_00_1f.3.analog-stereo
+            builtin=$(traced_exec sink_number $sink)
             pactl set-sink-port $sink analog-output-speaker
 
             audio-select -c $CARD -b
