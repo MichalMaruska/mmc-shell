@@ -1,5 +1,10 @@
 #! /usr/bin/zsh -euf
 
+debug()
+{
+    echo "$@" >&2
+}
+
 case $USER in
     michal | mmc)
         user=mmc
@@ -28,14 +33,28 @@ while getopts :mbr OPT; do
             exit 0
             ;;
         *)
-            print "usage: ${0##*/} [+-mb} [--] ARGS..."
+            cat <<EOF
+usage: ${0##*/} [+-mb} [--] [xkbfile]
+
+-m michal
+
+-r remove 'fork' plugin first.
+
+EOF
             exit 2
     esac
 done
 shift OPTIND-1
 OPTIND=1
 
-xkbfile=/usr/share/X11/xkb/keymap/xkb.$user
+if [[ $# -gt 0 ]]; then
+    xkbfile=$1
+else
+    xkbfile=/usr/share/X11/xkb/keymap/xkb.$user
+fi
+
+
+debug "using $xkbfile"
 # xkbfile=~/activity/conf/xkb-conf/xkb.mmc
 xkbcomp $xkbfile  $DISPLAY
 
