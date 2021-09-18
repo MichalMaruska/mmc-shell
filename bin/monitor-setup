@@ -24,8 +24,11 @@ VERBOSE=n
 reset=n
 off=n
 list=n
-while getopts :d:lorhv OPT; do
+while getopts :ad:lorhv OPT; do
     case $OPT in
+        a)
+            mode="--auto"
+            ;;
         d)
             OUTPUT=$OPTARG
             ;;
