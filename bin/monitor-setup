@@ -11,12 +11,15 @@ mode=(--mode 3840x2160)
 
 usage()
 {
-cat <<EOF
+    cat <<EOF
 usage: ${0##*/} [-vro] [-d device]
 
-r reset
+l list
+
+r reset -- off & on
 o off
 v verbose
+
 EOF
 }
 
@@ -102,6 +105,13 @@ old_scan()
     }
 }
 
+is_connected()
+{
+    local a
+    # xrandr does not set the exit status!
+    a=$(xrandr --query --output $1 2>&1)
+    test -z "$a"
+}
 
 # set -x
 if [[ $list = y || -z "$OUTPUT" ]]
@@ -113,22 +123,16 @@ then
     fi
 fi
 
-connected()
-{
-    # xrandr does not set the exit status!
-    a=$(xrandr --query --output $1 2>&1)
-    test -z "$a"
-}
 
 # I think that X exposes under different numbers.
 
 if [ $OUTPUT = "DP1" ]; then
-   if ! connected $OUTPUT; then
+   if ! is_connected $OUTPUT; then
        echo "ok!">&2
        OUTPUT="DP-1"
    fi
 elif [ $OUTPUT = "DP-2" ]; then
-   if ! connected $OUTPUT; then
+   if ! is_connected $OUTPUT; then
        echo "ok!">&2
        OUTPUT="DP2"
    fi
