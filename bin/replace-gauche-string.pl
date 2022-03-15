@@ -32,8 +32,8 @@ sub rename_install_file{
     # rename the debian/$pkg.install
     my $install_file="debian/" . $pkg . ".install";
     if (-f $install_file) {
-	rename($install_file,
-	       "debian/" . $newpkg . ".install");
+        rename($install_file,
+               "debian/" . $newpkg . ".install");
     }
 }
 
@@ -68,7 +68,7 @@ sub package_is_versioned{
     # fixme: this comes from Depends, and contains these subst. variables:
     # optimization
     if ($name eq '${shlibs:Depends}' || $name eq '${misc:Depends}') {
-	return;
+        return;
     }
     print STDERR "looking for package $name\n" if ($debug);
 
@@ -78,28 +78,28 @@ sub package_is_versioned{
 
     my $dir;
     foreach $dir (@debian_dirs) {
-	my $control_file;
-	# check that it's a directory indeed.
-	# if ! -d $dir; {break;}
-	if (-f "$dir/control.in") {
-	    # todo: generate control? I will need a rule ...
-	    $control_file="$dir/control.in";
-	} elsif (-f "$dir/control") {
-	    $control_file="$dir/control";
-	} else {
-	    break;
-	}
+        my $control_file;
+        # check that it's a directory indeed.
+        # if ! -d $dir; {break;}
+        if (-f "$dir/control.in") {
+            # todo: generate control? I will need a rule ...
+            $control_file="$dir/control.in";
+        } elsif (-f "$dir/control") {
+            $control_file="$dir/control";
+        } else {
+            break;
+        }
 
-	print STDERR "testing $control_file\n" if ($debug);
+        print STDERR "testing $control_file\n" if ($debug);
 
-	my $info=Dpkg::Control::Info->new($control_file);
-	my $pkg;
-	if ($pkg = $info->get_pkg_by_name($name)) {
-	    print STDERR "found $pkg->{Package}", "\n" if ($debug);
-	    if ($pkg) {
-		return ($pkg->{Architecture} ne "all");
-	    }
-	}
+        my $info=Dpkg::Control::Info->new($control_file);
+        my $pkg;
+        if ($pkg = $info->get_pkg_by_name($name)) {
+            print STDERR "found $pkg->{Package}", "\n" if ($debug);
+            if ($pkg) {
+                return ($pkg->{Architecture} ne "all");
+            }
+        }
     }
 }
 
@@ -122,21 +122,21 @@ sub adjust_pkg_dependencies {
     my @newdeps = ();
 
     foreach $_ (@deps) {
-	# print STDERR "Examining the dependency on $_\n";
-	# todo: parse dep to get pkg_name
-	if (package_is_versioned($_)) {
-	    my $new_pkg_name;
-	    $new_pkg_name=$_;
-	    while (my ($key, $version) = each(%versioned_apis) ) {
-		$new_pkg_name = insert_version_string($new_pkg_name, $key, $version);
-	    }
-	    push (@newdeps, $new_pkg_name);
-	} else {
-	    push (@newdeps, $_);
-	}
+        # print STDERR "Examining the dependency on $_\n";
+        # todo: parse dep to get pkg_name
+        if (package_is_versioned($_)) {
+            my $new_pkg_name;
+            $new_pkg_name=$_;
+            while (my ($key, $version) = each(%versioned_apis) ) {
+                $new_pkg_name = insert_version_string($new_pkg_name, $key, $version);
+            }
+            push (@newdeps, $new_pkg_name);
+        } else {
+            push (@newdeps, $_);
+        }
     }
-	# rewrite:
-	$pkg->{Depends} = join (", ", @newdeps);
+        # rewrite:
+        $pkg->{Depends} = join (", ", @newdeps);
     }
 
 # todo:
@@ -163,7 +163,7 @@ sub adjust_pkg_dependencies {
 
 my %versioned_apis = (
     "gauche" => "0",
-	"pg" => "13",
+        "pg" => "13",
 );
 
 #### CMD line processsing:
@@ -175,16 +175,16 @@ my $api;
 while (($option, $value, $pretty) = nextOption()) {
     if ($option eq "api") {
     ## --api gauche-0.9.5-b
-	$api = $value;
+        $api = $value;
     }
     elsif ($option eq "version") {
-	$versioned_apis{$api} = $value;
+        $versioned_apis{$api} = $value;
     }
     elsif ($option eq "help") {
-	print STDERR "Help!\n";
+        print STDERR "Help!\n";
     } elsif ($option eq "verbose") {
-	# print STDERR "I'll be verbose!\n";
-	$debug=1;
+        # print STDERR "I'll be verbose!\n";
+        $debug=1;
     };
 }
 Getopt::Mixed::cleanup();
@@ -208,7 +208,7 @@ my $name = "gauche";
 unless  (-f $file) {
     $file=$file . ".in";
     unless (-f $file) {
-	die("non-existent file");
+        die("non-existent file");
     }
 }
 
@@ -222,20 +222,20 @@ my $info=Dpkg::Control::Info->new($file);
 foreach $_ ($info->get_packages())
 {
     if ($_->{Architecture} ne "all") {
-	# Assumption: The api version applies only to native code.
-	my $pkg_name = $_->{Package};
+        # Assumption: The api version applies only to native code.
+        my $pkg_name = $_->{Package};
 
-	# replace `name' with `name_api'
-	my $new_pkg_name = $pkg_name;
+        # replace `name' with `name_api'
+        my $new_pkg_name = $pkg_name;
 
-	while (my ($key, $version) = each(%versioned_apis) ) {
-	    $new_pkg_name = insert_version_string($new_pkg_name, $key, $version);
-	}
-	print STDERR "fixed-api package: $new_pkg_name\n";
-	rename_binary_package($_, $pkg_name, $new_pkg_name);
-	adjust_pkg_dependencies($_, %versioned_apis);
-	# exchange & add
-	# print $_->{Package}, "\n";
+        while (my ($key, $version) = each(%versioned_apis) ) {
+            $new_pkg_name = insert_version_string($new_pkg_name, $key, $version);
+        }
+        print STDERR "fixed-api package: $new_pkg_name\n";
+        rename_binary_package($_, $pkg_name, $new_pkg_name);
+        adjust_pkg_dependencies($_, %versioned_apis);
+        # exchange & add
+        # print $_->{Package}, "\n";
     }
 }
 
