@@ -1,3 +1,25 @@
+mmc-shell (3.48) release; urgency=medium
+
+  * debian: move recommended to hard dependency
+  * Extend zsh completion for branches
+  * git-ff: -u to fetch also
+  * debian: add postinst
+  * audio-move: add bluetooth
+  * audio-move: redirect grep
+  * audio-move: add -d option to debug
+  * audio-move: trace move_to if debug
+  * audio-move: use a different USB headset
+  * Don't try other BT headset
+  * monitor-setup: Workaround -- use 4k resolution hardcoded
+  * audio-move: Correct the builtin speakers spec?
+  * xkb-configure: use provide xkbfile, and improve usage
+  * monitor-inter: use (new) -a option to moitor-setup
+  * monitor-setup: improve usage() and some shell
+  * untabify
+  * git-functions: correct mmc_stash_if_non_clean to reset after stash-store
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 12 May 2022 00:28:32 +0200
+
 mmc-shell (3.47) release; urgency=medium
 
   * Replace stash_if_non_clean with mmc_stash_if_non_clean
