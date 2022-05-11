@@ -119,6 +119,7 @@ mmc_stash_if_non_clean()
         # 'stash for git-ff'
         cecho yellow "stashed for you in $stash_commit"
         git stash store -m $message $stash_commit
+        git reset --hard
     fi
 }
 
