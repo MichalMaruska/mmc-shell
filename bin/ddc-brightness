@@ -6,9 +6,10 @@ br_register=10
 # better add group i2c or /etc/sudoers.d/10maruska
 # to avoid password prompt ?
 DDCUTIL=(sudo ddcutil)
+# Giving the bus speeds up very much.
+DDCUTIL=(/usr/local/bin/ddcutil --bus 11)
 
 # I have suid ddcutil:
-DDCUTIL=(ddcutil)
 
 if [[ $# -gt 0 ]]
 then
