@@ -22,7 +22,7 @@ local_cecho()
 {
     color=$1
     shift
-    echo $fg[$color] $@ $reset_color
+    echo "$fg[$color]$@$reset_color"
 }
 
 die()
