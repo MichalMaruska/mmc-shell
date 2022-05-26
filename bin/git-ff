@@ -4,6 +4,7 @@ source /usr/share/mmc-shell/git-functions.sh
 source /usr/share/mmc-shell/mmc-functions.sh
 colors
 
+trap 'print ${PROGRAM-$0} ERROR: $LINENO:  $ZSH_EVAL_CONTEXT $0 >&2' ZERR
 # set -x
 usage() {
     setopt POSIX_ARGZERO
