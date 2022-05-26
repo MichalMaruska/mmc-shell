@@ -122,7 +122,7 @@ git_ff_to_cautiously()
     # given $ref and $force
     local ref=$1
 
-    echo "$local_branch $ref" >&2
+    info "will fast-forward $local_branch to $ref"
     # unless we are on it already:
     if [[ $(git rev-parse $local_branch) != $(git rev-parse $ref) ]]; then
 
