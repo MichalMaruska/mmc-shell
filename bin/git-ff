@@ -9,7 +9,7 @@ trap 'print ${PROGRAM-$0} ERROR: $LINENO:  $ZSH_EVAL_CONTEXT $0 >&2' ZERR
 usage() {
     setopt POSIX_ARGZERO
     cat <<EOF
-usage: ${0##*/} [-h] [-f] [-l] [-u] [--] [remote | remote branch]
+usage: ${0##*/} [-h] [-f] [-l] [-u] [--] [remote | {remote} {local branch}]
 
 Fast-forward to remote head, stashing around.
 -f not only fast-forward !
