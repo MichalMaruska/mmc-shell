@@ -40,7 +40,7 @@ while getopts :shd:o OPT; do
             ARGS+=(-o)
             ;;
         d|+d)
-            device=$OPT_ARG
+            device=$OPTARG
             ;;
         *)
             usage>&2
