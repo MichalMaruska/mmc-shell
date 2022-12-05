@@ -16,7 +16,7 @@ Fast-forward to remote head, stashing around.
 -b rebase.
 -l list
 -u fetch/update first
-
+-v verbose
 
 -h help
 By default {branch} is the current one on the favorite remote.
@@ -29,7 +29,8 @@ force=n
 rebase=n
 list=no
 fetch_too=no
-while getopts :bfhlu OPT; do
+verbose=no
+while getopts :bfhluv OPT; do
     case $OPT in
         h|+h)
             usage
@@ -46,6 +47,9 @@ while getopts :bfhlu OPT; do
             ;;
         u)
             fetch_too=yes
+            ;;
+        v)
+            verbose=yes
             ;;
         *)
             usage >&2
@@ -124,6 +128,10 @@ git_ff_to_cautiously()
 
     info "will fast-forward $local_branch to $ref"
     # unless we are on it already:
+
+    if [[ $verbose = yes ]]; then
+        set -x
+    fi
     if [[ $(git rev-parse $local_branch) != $(git rev-parse $ref) ]]; then
 
         if [[ $rebase = y ]];
