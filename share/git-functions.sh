@@ -90,15 +90,12 @@ function git_ref_exists()
 # return the branch checked-out. Error if in "detached HEAD" state.
 function current_branch_name()
 {
-    local head
-    head=$(git rev-parse --symbolic-full-name HEAD)
-    head=${head##refs/heads/}
-    if [ $head = HEAD ]; then
-        cecho red "currently not on a branch" >&2
-        exit 1;
+    local branch
+    branch=$(git branch --show-current)
+    if [[ -z $branch ]]; then
+       exit 1
     fi
-
-    echo "$head"
+    echo $branch
 }
 
 git_dir()
