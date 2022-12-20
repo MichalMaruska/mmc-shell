@@ -1,3 +1,18 @@
+mmc-shell (3.49) release; urgency=medium
+
+  * speed up ddc-
+  * mmc-functions: fix: drop leading spaces in color output
+  * git-ff: add error handler
+  * git-ff: clarify usage
+  * git-ff: use color-log function
+  * fix: it's not OPT_ARG
+  * git-ff: -v verbose
+  * current_branch_name: use native solution!
+  * mmplay: avoid forking (for subdirectory)
+  * git-ff: formalize the use-cases, use branch.Branch.remote config
+
+ -- Michal Maruska <mmaruska@gmail.com>  Tue, 20 Dec 2022 21:42:02 +0100
+
 mmc-shell (3.48) release; urgency=medium
 
   * debian: move recommended to hard dependency
