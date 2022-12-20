@@ -5,13 +5,22 @@ source /usr/share/mmc-shell/mmc-functions.sh
 colors
 
 trap 'print ${PROGRAM-$0} ERROR: $LINENO:  $ZSH_EVAL_CONTEXT $0 >&2' ZERR
-# set -x
+
+# so 2 steps:
+# switch (maybe in worktree) to local branch
+# fetch --- either pull or ...
+#
+
 usage() {
     setopt POSIX_ARGZERO
     cat <<EOF
 usage: ${0##*/} [-h] [-f] [-l] [-u] [--] [remote | {remote} {local branch}]
 
 Fast-forward to remote head, stashing around.
+* if no remote --> just from the __followed__ branch
+* if remote --> same branch (name) on remote
+* if even local-branch given -> switch to it first.
+
 -f not only fast-forward !
 -b rebase.
 -l list
@@ -25,11 +34,13 @@ EOF
     unsetopt POSIX_ARGZERO
 }
 
-force=n
-rebase=n
-list=no
-fetch_too=no
+force=n # act even if not descendant
+rebase=n # if not descendant -> rebase
+list_difference=no  # show the git log between.
+
+fetch_too=no # start with git fetch ... from which remote?
 verbose=no
+
 while getopts :bfhluv OPT; do
     case $OPT in
         h|+h)
@@ -43,7 +54,7 @@ while getopts :bfhluv OPT; do
             force=y
             ;;
         l)
-            list=yes
+            list_difference=yes
             ;;
         u)
             fetch_too=yes
@@ -69,62 +80,117 @@ fi
 # - remote host,
 # - local branch, and
 # - the remote branch!
+
+# use-cases:
+# I'm on a branch X and want Y to move to H/Y
+#                   and want to move to its  ---
+#                   and want to move to H/X
+#
+# $1 is local branch -> either move to its or ...
 # $1 is remote or remote-branch
-if [[ $# = 2 ]]
-then
-    if is_git_remote $1; then
-        GIT_REMOTE_NAME=$1
-        target=remotes/$1/$2
-        local_branch=$2
+
+# So I need to set 3 variables:
+# local branch, remote host, and remote branch
+
+# local_branch
+# GIT_REMOTE_NAME
+# target
+#    remotes/GIT_REMOTE_NAME/target
+
+# sets GIT_REMOTE_NAME and target
+find_defaults_for_local_branch()
+{
+    local local_branch=$1
+    local remote
+    local remote_branch
+
+    if git config branch.${local_branch}.remote >&/dev/null
+    then
+        remote=$(git config branch.$local_branch.remote)
+        GIT_REMOTE_NAME=$remote
+
+        remote_branch=$(git config branch.$local_branch.merge)
+        #drop refs/heads
+        target=${remote_branch#refs/heads/}
+
     else
-        die "confused"
+        # find the friend remote:
+        echo "the branch $local_branch does not follow anything on remotes">&2
+        return 1
+        exit 1
+        set_remote_name
+
+        # todo: the same I'm on
+
+        # default:
+        # remotes/$GIT_REMOTE_NAME/
+        target=$local_branch
     fi
+}
+
+
+if [[ $# = 0 ]]
+then
+    local_branch=$(current_branch_name)
+    find_defaults_for_local_branch $local_branch
 
 elif [[ $# = 1 ]]; then
-
-    if is_git_remote_branch $1
+    # fixme:  branch, remote,
+    if git-branch-exists $1
     then
-        # select the branch
-        target=remotes/$1
+        local_branch=$1
+        find_defaults_for_local_branch $local_branch
+
     elif is_git_remote $1
     then
-        GIT_REMOTE_NAME=$1
-        # todo: the same I'm on
-        local_branch=$(current_branch_name)
-        target=$GIT_REMOTE_NAME/$local_branch
+         # host/branch
+         local_branch=$(current_branch_name)
+         GIT_REMOTE_NAME=$1
+
+         # remotes/$GIT_REMOTE_NAME/
+         target=$local_branch
+    #
+    # elif is_git_remote_branch
     else
         target=$1
     fi
     shift
-else
-    # find the friend remote:
-    set_remote_name
 
-    # todo: the same I'm on
-    local_branch=$(current_branch_name)
-
-    # default:
-    target=$GIT_REMOTE_NAME/$local_branch
+elif [[ $# = 2 ]]
+then
+    if is_git_remote $1 &>/dev/null; then
+        GIT_REMOTE_NAME=$1
+        # todo: ask git wh
+        target=remotes/$1/$2
+        local_branch=$2
+    elif is_git_remote_branch $1; then
+        target=$1
+        local_branch=$2
+    else
+        die "confused"
+    fi
 fi
+
+cecho red "$local_branch $GIT_REMOTE_NAME $target"
 
 if [[ $fetch_too = yes ]]
 then
     git fetch $GIT_REMOTE_NAME $local_branch
 fi
 
-if [[ $list = yes ]]
+if [[ $list_difference = yes ]]
 then
-    set -x
-    git log $local_branch..$target
+    git log --oneline $local_branch..remotes/$GIT_REMOTE_NAME/$target
     exit 0
 fi
-
 
 # if the fast-forward would move ahead!
 git_ff_to_cautiously()
 {
     # given $ref and $force
-    local ref=$1
+    local local_branch=$1
+    local ref=$2
+
 
     info "will fast-forward $local_branch to $ref"
     # unless we are on it already:
@@ -132,6 +198,14 @@ git_ff_to_cautiously()
     if [[ $verbose = yes ]]; then
         set -x
     fi
+
+    # todo: check that the ref exists!
+    if ! git rev-parse $ref -- ; then
+        git branch -a
+        die "the remote branch does not exist: $ref"
+    fi
+
+    echo "compare $local_branch  $(git rev-parse $local_branch) != $(git rev-parse $ref) $ref">&2
     if [[ $(git rev-parse $local_branch) != $(git rev-parse $ref) ]]; then
 
         if [[ $rebase = y ]];
@@ -188,7 +262,10 @@ git_ff_to_cautiously()
             # todo: if ancestor, print a different message.
             echo >&2 "cannot fast-forward to $ref $fg[red]not our descendant$reset_color"
         fi
+    else
+        echo >&2 "$local_branch and $ref resolve both to " $(git rev-parse $local_branch)
     fi
 }
 
-git_ff_to_cautiously $target
+
+git_ff_to_cautiously $local_branch "remotes/$GIT_REMOTE_NAME/$target"
