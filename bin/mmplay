@@ -90,9 +90,9 @@ do
         else
             if [ -d "$song" ];
             then
-                (cd "$song"
+                pushd "$song"
                 $SELF_CMD
-                )
+                popd
             else
                play_one  "$song"
             fi
