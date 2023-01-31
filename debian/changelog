@@ -1,3 +1,9 @@
+mmc-shell (3.50) release; urgency=medium
+
+  * ddc-brightness:  add -c & -d, plus switch to different source.
+
+ -- Michal Maruska <mmaruska@gmail.com>  Tue, 31 Jan 2023 20:43:21 +0100
+
 mmc-shell (3.49) release; urgency=medium
 
   * speed up ddc-
