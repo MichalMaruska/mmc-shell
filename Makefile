@@ -1,7 +1,8 @@
 INSTALL := install
 BIN_INSTALL_DIR := /usr/bin
-SHARED_INSTALL_DIR := /usr/share/mmc-shell/
+SHARED_INSTALL_DIR := /usr/share/mmc-shell
 ZSH_COMPLETIONS_DIR := /usr/share/zsh/vendor-completions
+ETC_DIR := /etc
 
 # fixme: ignore *~ files
 BINFILES := $(wildcard bin/*)
@@ -17,7 +18,11 @@ install: install-zsh
 	done
 	$(INSTALL) -v -D --directory $(DESTDIR)$(SHARED_INSTALL_DIR)
 	for p in share/*; do \
-	  $(INSTALL) --owner=root -v --mode 555 $$p $(DESTDIR)$(SHARED_INSTALL_DIR) ; \
+	  $(INSTALL) --owner=root -v --mode 555 $$p $(DESTDIR)$(SHARED_INSTALL_DIR)/ ; \
+	done
+	$(INSTALL) -v -D --directory $(DESTDIR)$(ETC_DIR)
+	for p in etc/*; do \
+	  $(INSTALL) --owner=root -v --mode 555 $$p $(DESTDIR)$(ETC_DIR)/ ; \
 	done
 
 

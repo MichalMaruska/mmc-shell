@@ -1,20 +1,80 @@
 #!/bin/zsh -feu
 
+CONFIG_FILE=/etc/ddc.conf
+# to source
+
+# Usage:
+PROGNAME=$0
+# ddc-brightness
+
+usage()
+{
+    cat <<EOF
+${0##*/} [+-th] [--] ARGS...
+
++N  brightness
+-N
+-t  switch to other input
+
+Environment
+Config files: $CONFIG_FILE
+
+example:
+$PROGNAME  - 20
+EOF
+}
+
+test -f $CONFIG_FILE && source $CONFIG_FILE
+# HINT=(--bus 8)
+
 # I need i2c-dev in /etc/modules-load.d/ddccontrol-i2c-dev.conf
-br_register=10
+brightness_register=10
+input_register=60
 
 # better add group i2c or /etc/sudoers.d/10maruska
 # to avoid password prompt ?
-DDCUTIL=(sudo ddcutil)
-# Giving the bus speeds up very much.
-DDCUTIL=(/usr/local/bin/ddcutil --bus 11)
 
+
+# --display 1
+# sudo
+# Giving the bus speeds up very much.
+DDCUTIL=(/usr/local/bin/ddcutil $HINT)
 # I have suid ddcutil:
+# DDCUTIL=(ddcutil)
+
+# time sudo /usr/local/bin/ddcutil --trace i2c --trace ddc   --timestamp --ddc  -vv --disable-usb  --timeout-i2c-io    --lazy-sleep  --async   --timestamp   setvcp 10 + 10
+
+
+while getopts :cdht OPT; do
+    case $OPT in
+        d)
+            $DDCUTIL detect
+            exit
+            ;;
+        c)
+            exec $DDCUTIL capabilities
+            ;;
+        t|+t)
+            $DDCUTIL setvcp $input_register 15
+            exit 0
+            ;;
+        h|+h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage >&2
+            exit 2
+    esac
+done
+shift OPTIND-1
+OPTIND=1
+
 
 if [[ $# -gt 0 ]]
 then
-    $DDCUTIL setvcp $br_register -- $1
-    $DDCUTIL getvcp $br_register
+    $DDCUTIL setvcp $brightness_register $@
+    $DDCUTIL getvcp $brightness_register
 else
-    $DDCUTIL getvcp $br_register
+    $DDCUTIL getvcp $brightness_register
 fi
