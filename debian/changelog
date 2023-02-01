@@ -1,3 +1,9 @@
+mmc-shell (3.51) release; urgency=medium
+
+  * ddc-: delegate the "next input" into config file
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 01 Feb 2023 11:21:52 +0100
+
 mmc-shell (3.50) release; urgency=medium
 
   * ddc-brightness:  add -c & -d, plus switch to different source.
