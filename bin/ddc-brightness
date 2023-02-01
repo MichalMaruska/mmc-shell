@@ -55,7 +55,7 @@ while getopts :cdht OPT; do
             exec $DDCUTIL capabilities
             ;;
         t|+t)
-            $DDCUTIL setvcp $input_register 15
+            $DDCUTIL setvcp $input_register $NEXT_INPUT
             exit 0
             ;;
         h|+h)
