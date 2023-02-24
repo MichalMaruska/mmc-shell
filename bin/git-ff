@@ -181,7 +181,7 @@ fi
 if [[ $list_difference = yes ]]
 then
     git log --oneline $local_branch..remotes/$GIT_REMOTE_NAME/$target
-    exit 0
+    # exit 0
 fi
 
 # if the fast-forward would move ahead!
