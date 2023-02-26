@@ -1,10 +1,14 @@
 #! /bin/bash -e
 
+if [[ $# -lt 1 ]]; then
+    echo "missing argument (a color name)">&2
+fi
+
 COLOR=$1
 
 # As requested, let's support Bash 3 (a shell without associative arrays)
 if [ x$BASH_VERSINFO != x \
-	-a $BASH_VERSINFO -lt 4 ]
+        -a $BASH_VERSINFO -lt 4 ]
 then
     hash_support=0
 else
@@ -50,34 +54,34 @@ fi
 
 emit_color()
 {
-if [ $hash_support = 1 ]
-then
-    echo -n -e "${_COLORS[$COLOR]}"
-else
-    for info in ${_COLORS[@]} ; do
-	KEY=${info%%:*}
-	VALUE=${info##*:}
-	if [ $KEY = $1 ]
-	    then
-	    echo -n -e "$VALUE"
-	fi
-    done
-fi
+    if [ $hash_support = 1 ]
+    then
+        echo -n -e "${_COLORS[$COLOR]}"
+    else
+        for info in ${_COLORS[@]} ; do
+            KEY=${info%%:*}
+            VALUE=${info##*:}
+            if [ $KEY = $1 ]
+            then
+                echo -n -e "$VALUE"
+            fi
+        done
+    fi
 }
 
 
 
 if [ -t 0 -o -S /dev/stdin ]; then
     if [ "${TERM}" = "xterm" \
-	-o "${TERM}" = "screen" \
-	-o "${TERM}" = "rxvt" \
-	-o "${TERM}" = "ansi" ]; then
-	emit_color $COLOR
+        -o "${TERM}" = "screen" \
+        -o "${TERM}" = "rxvt" \
+        -o "${TERM}" = "ansi" ]; then
+        emit_color $COLOR
 #	echo $@
 #	tput sgr0
-	# echo
+        # echo
     else
-	:
+        :
 #	echo $@
     fi
 else
