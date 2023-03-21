@@ -18,6 +18,7 @@ ${0##*/} [+-th] [--] ARGS...
 -d  detect (ddc chips)
 -c  list capabilities (of the configured chip) in $CONFIG_FILE
 -g NR   Get the register
+-s NR  Set the register
 
 Environment
 Config files: $CONFIG_FILE
@@ -48,7 +49,7 @@ DDCUTIL=(/usr/local/bin/ddcutil $HINT)
 # time sudo /usr/local/bin/ddcutil --trace i2c --trace ddc   --timestamp --ddc  -vv --disable-usb  --timeout-i2c-io    --lazy-sleep  --async   --timestamp   setvcp 10 + 10
 
 
-while getopts :cdg:ht OPT; do
+while getopts :cdg:hs:t OPT; do
     case $OPT in
         d)
             $DDCUTIL detect
@@ -59,6 +60,11 @@ while getopts :cdg:ht OPT; do
             ;;
         g)
             exec $DDCUTIL getvcp $OPTARG
+            ;;
+        s)
+            set -x
+            shift OPTIND-1
+            exec $DDCUTIL setvcp $OPTARG $1
             ;;
         t|+t)
             $DDCUTIL setvcp $input_register $NEXT_INPUT
