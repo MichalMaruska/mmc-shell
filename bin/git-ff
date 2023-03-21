@@ -219,13 +219,13 @@ git_ff_to_cautiously()
             fi
 
             # automatically squash  !fixup commits:
-            cecho hiyellow "rebase & unstash:"
+            info "rebase & unstash:"
             git rebase --autosquash $ref
 
             # return:
             git switch -- # git switch $previous_branch
             mmc_unstash_if_stashed
-            cecho hiyellow "done: rebased & unstashed"
+            info "done: rebased & unstashed"
         elif [[ $force = y ]]  || git merge-base --is-ancestor $local_branch $ref
         then
             # todo: can you do that without touching the working tree?
@@ -238,7 +238,7 @@ git_ff_to_cautiously()
                 # the current, so stash!
                 if git merge --autostash --ff-only $ref;
                 then
-                    cecho hiyellow "ff (without conflicts w/ dirty files)"
+                    info "ff (without conflicts w/ dirty files)"
                 else
                     # touching timestamps:
                     # mmc_stash_if_non_clean "merge fast-forward"
@@ -246,12 +246,12 @@ git_ff_to_cautiously()
 
                     # Could not Fast-Forward, so only force can help:
                     if [[ $force = y ]]; then
-                        cecho hiyellow "Forcing reset to $ref"
+                        info "Forcing reset to $ref"
                         git reset --hard $ref
 
                     else
                         # this case is impossible?
-                        cecho hiyellow "Fast-Forward failed"
+                        info "Fast-Forward failed"
                         : do-nothing
                         # git checkout $branch
                         # git merge --ff-only $ref
