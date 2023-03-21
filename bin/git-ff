@@ -210,11 +210,11 @@ git_ff_to_cautiously()
 
         if [[ $rebase = y ]];
         then
-            mmc_stash_if_non_clean 'stash for git-ff/rebase'
-
+            current_branch=$(current_branch_name)
             # todo: switch back!
-            previous_branch=$(current_branch_name)
-            if [[ $previous_branch != $local_branch ]]; then
+            # with-stash ...
+            mmc_stash_if_non_clean 'stash for git-ff/rebase'
+            if [[ $current_branch != $local_branch ]]; then
                 git switch $local_branch
             fi
 
@@ -228,9 +228,10 @@ git_ff_to_cautiously()
             cecho hiyellow "done: rebased & unstashed"
         elif [[ $force = y ]]  || git merge-base --is-ancestor $local_branch $ref
         then
-            previous_branch=$(current_branch_name)
+            # todo: can you do that without touching the working tree?
+            current_branch=$(current_branch_name_maybe)
 
-            if [[ $previous_branch != $local_branch ]]
+            if [[ $current_branch != $local_branch ]]
             then
                 git branch --force $local_branch $ref
             else
