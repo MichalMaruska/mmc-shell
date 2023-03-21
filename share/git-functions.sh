@@ -91,11 +91,23 @@ function git_ref_exists()
 function current_branch_name()
 {
     local branch
-    branch=$(git branch --show-current)
-    if [[ -z $branch ]]; then
-       exit 1
-    fi
+    branch=$(git rev-parse --symbolic-full-name HEAD)
+    # detached:
+    # HEAD
+    # branch=$(git branch --show-current)
+    # ""
+    # regular:
+    # refs/heads/xxx
+    # xxx
+
+    # if [[ -z $branch ]]; then
+    #    exit 1
+    # fi
     echo $branch
+}
+function current_branch_name_maybe()
+{
+    git rev-parse --symbolic-full-name HEAD
 }
 
 git_dir()
