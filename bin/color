@@ -1,7 +1,9 @@
 #! /bin/bash -e
 
+source /usr/share/mmc-shell/mmc-functions.sh
+
 if [[ $# -lt 1 ]]; then
-    echo "missing argument (a color name)">&2
+    die "missing argument: a color name"
 fi
 
 COLOR=$1
