@@ -107,7 +107,9 @@ function current_branch_name()
 }
 function current_branch_name_maybe()
 {
-    git rev-parse --symbolic-full-name HEAD
+    local branch
+    branch=$(git rev-parse --symbolic-full-name HEAD)
+    echo ${branch#refs/heads/}
 }
 
 git_dir()
