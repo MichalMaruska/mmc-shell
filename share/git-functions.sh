@@ -91,6 +91,7 @@ function git_ref_exists()
 function current_branch_name()
 {
     local branch
+    echo "**** Using deprecated function (current_branch_name)" >&2
     branch=$(git rev-parse --symbolic-full-name HEAD)
     # detached:
     # HEAD
