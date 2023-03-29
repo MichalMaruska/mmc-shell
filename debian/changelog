@@ -1,3 +1,9 @@
+mmc-shell (3.55) release; urgency=medium
+
+  * git-ff: another use-case resolved: giving the local-branch only
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 29 Mar 2023 11:31:42 +0200
+
 mmc-shell (3.54) release; urgency=medium
 
   * git-ff: correctly (in time) convert from remote to the remote branch name
