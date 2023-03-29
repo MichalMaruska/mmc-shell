@@ -111,8 +111,14 @@ find_defaults_for_local_branch()
 
         remote_branch=$(git config branch.$local_branch.merge)
         #drop refs/heads
-        target=${remote_branch#refs/heads/}
-
+        target=$remote/${remote_branch#refs/heads/}
+        if [[ $verbose = yes ]]; then
+            cat <<EOF
+for the $local_branch we have config branch.$local_branch.remote = $remote
+and the branch is: $remote_branch
+so the target is $target
+EOF
+        fi
     else
         # find the friend remote:
         #  print
@@ -209,7 +215,9 @@ git_ff_to_cautiously()
         die "the remote branch does not exist: $ref"
     fi
 
-    echo "compare $local_branch  $(git rev-parse $local_branch) != $(git rev-parse $ref) $ref">&2
+    if [[ $verbose = yes ]]; then
+        echo "compare $local_branch  $(git rev-parse $local_branch) != $(git rev-parse $ref) $ref">&2
+    fi
     if [[ $(git rev-parse $local_branch) != $(git rev-parse $ref) ]]; then
 
         if [[ $rebase = y ]];
