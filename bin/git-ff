@@ -274,6 +274,7 @@ git_ff_to_cautiously()
         else
             # todo: if ancestor, print a different message.
             echo >&2 "cannot fast-forward to $ref $fg[red]not our descendant$reset_color"
+            exit 1
         fi
     else
         echo >&2 "$local_branch and $ref resolve both to " $(git rev-parse $local_branch)
