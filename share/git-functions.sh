@@ -1,6 +1,8 @@
 #!/bin/zsh -f
 # to be sourced!
 
+source /usr/share/mmc-shell/mmc-functions.sh
+
 function get_remote_path()
 {
     # Strip $HOME
@@ -88,7 +90,7 @@ function git_ref_exists()
 
 # please use the one in ~/repo/git-hierarchy/share/functions.sh
 # return the branch checked-out. Error if in "detached HEAD" state.
-function current_branch_name()
+function current_branch_name_obsolete()
 {
     local branch
     echo "**** Using deprecated function (current_branch_name)" >&2
@@ -106,6 +108,32 @@ function current_branch_name()
     # fi
     echo $branch
 }
+
+git_dump_ref_without_ref()
+{
+    if true; then
+        git rev-parse --symbolic-full-name $1
+    else
+        a=$(dump_symbolic_ref $1)
+        print ${a#ref: }
+    fi
+}
+
+git_current_branch_name()
+{
+    local head
+    # git branch --show-current
+    head=$(git_dump_ref_without_ref HEAD)
+    head=${head##refs/heads/}
+    if [ $head = HEAD ]; then
+        colors
+        local_cecho red "currently not on a branch" >&2
+        exit 1;
+    fi
+
+    print "$head"
+}
+
 function current_branch_name_maybe()
 {
     local branch

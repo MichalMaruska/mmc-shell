@@ -54,7 +54,7 @@ if [ $# -gt 1 ]; then
     shift
 else
     # fixme: this can be empty!
-    branch=$(current_branch_name)
+    branch=$(git_current_branch_name)
     if [[ $? != 0 ]]; then
         die "not on a branch -> cannot compare"
     fi

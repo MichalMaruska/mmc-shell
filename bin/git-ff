@@ -138,7 +138,7 @@ EOF
 
 if [[ $# = 0 ]]
 then
-    local_branch=$(current_branch_name)
+    local_branch=$(git_current_branch_name)
     find_defaults_for_local_branch $local_branch
 
 elif [[ $# = 1 ]]; then
