@@ -1,3 +1,10 @@
+mmc-shell (3.56) release; urgency=medium
+
+  * git-ff: exit with failure status when not updated/fast-forwarded
+  * function: git_current_branch_name must not include refs/heads/
+
+ -- Michal Maruska <mmaruska@gmail.com>  Wed, 26 Apr 2023 09:10:42 +0200
+
 mmc-shell (3.55) release; urgency=medium
 
   * git-ff: another use-case resolved: giving the local-branch only
