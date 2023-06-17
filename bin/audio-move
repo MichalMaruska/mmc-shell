@@ -109,9 +109,13 @@ while getopts :bBc:dhi:lpsux OPT; do
             debug=yes
             ;;
         B)
-            # bluetoothctl connect 00:1B:66:C0:D0:41
+            bluetooth_sink=$(pactl list short sinks| cut -f 2|- grep bluez)
+            # bluetoothctl connect '00:1B:66:C0:D0:41'
             # move_to "bluez_sink.E8_07_BF_3E_41_06.headset_head_unit"
-            move_to "bluez_sink.00_1B_66_C0_D0_41.a2dp_sink"
+            move_to $bluetooth_sink
+            # bluez_output.00_16_94_1E_BA_C0.1
+            # 450: "bluez_sink.00_1B_66_C0_D0_41.a2dp_sink"
+            # bluez_sink.00_1B_66_C0_D0_41.handsfree_head_unit
             ;;
         c)
             CARD=$OPTARG
