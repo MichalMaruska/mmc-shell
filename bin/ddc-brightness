@@ -42,7 +42,7 @@ input_register=60
 # --display 1
 # sudo
 # Giving the bus speeds up very much.
-DDCUTIL=(/usr/local/bin/ddcutil $HINT)
+DDCUTIL=(ddcutil $HINT)
 # I have suid ddcutil:
 # DDCUTIL=(ddcutil)
 
