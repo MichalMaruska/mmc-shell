@@ -97,7 +97,9 @@ fi
 # target
 #    remotes/GIT_REMOTE_NAME/target
 
-# sets GIT_REMOTE_NAME and target
+
+# for $1
+# sets GIT_REMOTE_NAME and `target'
 find_defaults_for_local_branch()
 {
     local local_branch=$1
@@ -114,29 +116,19 @@ find_defaults_for_local_branch()
         target=$remote/${remote_branch#refs/heads/}
         if [[ $verbose = yes ]]; then
             cat <<EOF
-for the $local_branch we have config branch.$local_branch.remote = $remote
+For the $local_branch we have config branch.$local_branch.remote = $remote
 and the branch is: $remote_branch
 so the target is $target
 EOF
         fi
     else
-        # find the friend remote:
-        #  print
         echo "the branch $fg_bold[yellow]$local_branch$reset_color does not follow anything on remotes">&2
         return 1
-        exit 1
-        set_remote_name
-
-        # todo: the same I'm on
-
-        # default:
-        # remotes/$GIT_REMOTE_NAME/
-        target=$local_branch
     fi
 }
 
-
-local_branch=$(current_branch_name)
+# compute:
+#  local_branch, `target', GIT_REMOTE_NAME
 if [[ $# = 0 ]]
 then
     local_branch=$(git_current_branch_name)
@@ -151,21 +143,21 @@ elif [[ $# = 1 ]]; then
 
     elif is_git_remote $1
     then
-         # host/branch
-         local_branch=$(current_branch_name_maybe)
-         GIT_REMOTE_NAME=$1
-
-         # remotes/$GIT_REMOTE_NAME/
-         # target=$1/${local_branch#refs/heads/}
-         target=remotes/$GIT_REMOTE_NAME/$local_branch
-    #
-    # elif is_git_remote_branch
+        # host/branch
+        GIT_REMOTE_NAME=$1
+        # implicitly.... so we must be on a branch!
+        local_branch=$(git_current_branch_name)
+        target=remotes/$GIT_REMOTE_NAME/$local_branch
+    ## elif is_git_remote_branch
     else
+        # fixme: what?
         target=$1
+        # I guess:
+        local_branch=$(git_current_branch_name)
     fi
     shift
 
-elif [[ $# = 2 ]]
+elif [[ $# = 2 ]]  # [remote | remote/branch] [branch]
 then
     if is_git_remote $1 &>/dev/null; then
         GIT_REMOTE_NAME=$1
@@ -176,14 +168,17 @@ then
         # so is_git_remote_branch is useless?
         # but remote/branch is valid!
         # maybe `is_git_remote_branch' should return the expanded ref.
-        target=remotes/$1
+        target=remotes/${1#remotes/}
         local_branch=$2
     else
         die "confused: '$1' is not a remote, nor branch"
     fi
 fi
 
-[[ $verbose = yes ]] && info "$local_branch $GIT_REMOTE_NAME $target"
+
+
+
+[[ $verbose = yes ]] && info "$local_branch <- $GIT_REMOTE_NAME $target"
 
 GIT_QUIET=()
 if [[ $verbose != yes ]]
@@ -235,7 +230,7 @@ git_ff_to_cautiously()
 
         if [[ $rebase = y ]];
         then
-            current_branch=$(current_branch_name)
+            current_branch=$(git_current_branch_name)
             # todo: switch back!
             # with-stash ...
             mmc_stash_if_non_clean 'stash for git-ff/rebase'
@@ -254,7 +249,7 @@ git_ff_to_cautiously()
         elif [[ $force = y ]]  || git merge-base --is-ancestor $local_branch $ref
         then
             # todo: can you do that without touching the working tree?
-            current_branch=$(current_branch_name)
+            current_branch=$(git_current_branch_name)
 
             if [[ $current_branch != $local_branch ]]
             then
