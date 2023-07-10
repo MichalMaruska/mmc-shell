@@ -1,3 +1,10 @@
+mmc-shell (3.58) release; urgency=medium
+
+  [ Michal Maruska ]
+  * git-ff: drop dropped `current_branch_name'
+
+ --  <mmaruska@gmail.com>  Mon, 10 Jul 2023 16:21:42 +0200
+
 mmc-shell (3.57) release; urgency=medium
 
   [ Michal Maruska ]
