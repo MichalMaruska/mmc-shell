@@ -1,3 +1,13 @@
+mmc-shell (3.57) release; urgency=medium
+
+  [ Michal Maruska ]
+  * audio-move: find dynamically the bluetooth sink
+  * ddc-  use any ddcutil
+  * ddc-brightness: allow direct output specification for switch (-o)
+  * git-ff ?
+
+ --  <mmaruska@gmail.com>  Mon, 10 Jul 2023 09:12:00 +0200
+
 mmc-shell (3.56) release; urgency=medium
 
   * git-ff: exit with failure status when not updated/fast-forwarded
