@@ -136,6 +136,7 @@ EOF
 }
 
 
+local_branch=$(current_branch_name)
 if [[ $# = 0 ]]
 then
     local_branch=$(git_current_branch_name)
@@ -155,7 +156,8 @@ elif [[ $# = 1 ]]; then
          GIT_REMOTE_NAME=$1
 
          # remotes/$GIT_REMOTE_NAME/
-         target=$1/${local_branch#refs/heads/}
+         # target=$1/${local_branch#refs/heads/}
+         target=remotes/$GIT_REMOTE_NAME/$local_branch
     #
     # elif is_git_remote_branch
     else
@@ -177,15 +179,25 @@ then
         target=remotes/$1
         local_branch=$2
     else
-        die "confused"
+        die "confused: '$1' is not a remote, nor branch"
     fi
 fi
 
-cecho red "$local_branch $GIT_REMOTE_NAME $target"
+[[ $verbose = yes ]] && info "$local_branch $GIT_REMOTE_NAME $target"
+
+GIT_QUIET=()
+if [[ $verbose != yes ]]
+then
+    GIT_QUIET+=(--quiet)
+fi
+
 
 if [[ $fetch_too = yes ]]
 then
-    git fetch $GIT_REMOTE_NAME $local_branch
+    #
+    (
+        git fetch $GIT_QUIET $GIT_REMOTE_NAME $local_branch
+    )
 fi
 
 if [[ $list_difference = yes ]]
@@ -202,7 +214,7 @@ git_ff_to_cautiously()
     local ref=$2
 
 
-    info "will fast-forward $local_branch to $ref"
+    [[ $verbose = yes ]] && info "will fast-forward $local_branch to $ref"
     # unless we are on it already:
 
     if [[ $verbose = yes ]]; then
@@ -210,7 +222,7 @@ git_ff_to_cautiously()
     fi
 
     # todo: check that the ref exists!
-    if ! git rev-parse $ref -- ; then
+    if ! git rev-parse $ref -- > /dev/null; then
         git branch -a
         die "the remote branch does not exist: $ref"
     fi
@@ -218,6 +230,7 @@ git_ff_to_cautiously()
     if [[ $verbose = yes ]]; then
         echo "compare $local_branch  $(git rev-parse $local_branch) != $(git rev-parse $ref) $ref">&2
     fi
+
     if [[ $(git rev-parse $local_branch) != $(git rev-parse $ref) ]]; then
 
         if [[ $rebase = y ]];
@@ -241,16 +254,18 @@ git_ff_to_cautiously()
         elif [[ $force = y ]]  || git merge-base --is-ancestor $local_branch $ref
         then
             # todo: can you do that without touching the working tree?
-            current_branch=$(current_branch_name_maybe)
+            current_branch=$(current_branch_name)
 
             if [[ $current_branch != $local_branch ]]
             then
                 git branch --force $local_branch $ref
             else
                 # the current, so stash!
-                if git merge --autostash --ff-only $ref;
+                if git merge $GIT_QUIET --autostash --ff-only $ref;
                 then
-                    info "ff (without conflicts w/ dirty files)"
+                    if [[ $verbose = yes ]]; then
+                        info "ff (without conflicts w/ dirty files)"
+                    fi
                 else
                     # touching timestamps:
                     # mmc_stash_if_non_clean "merge fast-forward"
@@ -273,12 +288,15 @@ git_ff_to_cautiously()
             fi
         else
             # todo: if ancestor, print a different message.
+            # [[ $verbose = yes ]] &&
             echo >&2 "cannot fast-forward to $ref $fg[red]not our descendant$reset_color"
             exit 1
         fi
     else
-        echo >&2 "$local_branch and $ref resolve both to " $(git rev-parse $local_branch)
+        [[ $verbose = yes ]] &&
+            echo >&2 "$local_branch and $ref resolve both to " $(git rev-parse $local_branch)
+        : ok
     fi
 }
 
-git_ff_to_cautiously $local_branch "$target"
+git_ff_to_cautiously $local_branch $target
