@@ -1,3 +1,10 @@
+mmc-shell (3.59) release; urgency=medium
+
+  [ Michal Maruska ]
+  * git-ff: prune always on fetch
+
+ --  <mmaruska@gmail.com>  Tue, 18 Jul 2023 08:54:44 +0200
+
 mmc-shell (3.58) release; urgency=medium
 
   [ Michal Maruska ]
