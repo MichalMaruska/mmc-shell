@@ -113,7 +113,7 @@ find_defaults_for_local_branch()
 
         remote_branch=$(git config branch.$local_branch.merge)
         #drop refs/heads
-        target=$remote/${remote_branch#refs/heads/}
+        target=remotes/$remote/${remote_branch#refs/heads/}
         if [[ $verbose = yes ]]; then
             cat <<EOF
 For the $local_branch we have config branch.$local_branch.remote = $remote
@@ -191,7 +191,8 @@ if [[ $fetch_too = yes ]]
 then
     #
     (
-        git fetch $GIT_QUIET $GIT_REMOTE_NAME $local_branch
+        # -p, --prune  Before fetching, remove any remote-tracking references that no longer exist on the remote.
+        git fetch --prune --progress  --verbose $GIT_REMOTE_NAME ${target#remotes/$GIT_REMOTE_NAME/}
     )
 fi
 
