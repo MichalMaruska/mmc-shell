@@ -1,3 +1,11 @@
+mmc-shell (3.60) release; urgency=medium
+
+  [ Michal Maruska ]
+  * git-ff: improve verbose
+  * relax the git version: to install on rpi (bullseye)
+
+ --  <mmaruska@gmail.com>  Sun, 06 Aug 2023 13:26:05 +0200
+
 mmc-shell (3.59) release; urgency=medium
 
   [ Michal Maruska ]
