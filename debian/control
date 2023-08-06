@@ -2,12 +2,12 @@ Source: mmc-shell
 Section: misc
 Priority: extra
 Maintainer: Michal Maruska <mmaruska@gmail.com>
-Build-Depends: debhelper (>= 7)
+Build-Depends: debhelper (>= 10)
 Standards-Version: 3.7.2
 
 Package: mmc-shell
 Architecture: all
-Depends: ${misc:Depends}, zsh, gawk, git(>= 1:2.31.0), mp3info,mpg123
+Depends: ${misc:Depends}, zsh, gawk, git, mp3info,mpg123
 Conflicts: tt-tools (<< 1.13)
 Recommends: gst123, systemd-container, alsa-utils, tdb-tools
 Description: collection of shell scripts
