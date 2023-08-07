@@ -21,6 +21,8 @@ ${0##*/} [+-th] [-o h|c|d]
 -g NR   Get the register
 -s NR  Set the register
 
+-v verbose
+
 Environment
 Config files: $CONFIG_FILE
 
@@ -50,8 +52,11 @@ DDCUTIL=(ddcutil $HINT)
 # time sudo /usr/local/bin/ddcutil --trace i2c --trace ddc   --timestamp --ddc  -vv --disable-usb  --timeout-i2c-io    --lazy-sleep  --async   --timestamp   setvcp 10 + 10
 
 
-while getopts :cdg:ho:s:t OPT; do
+while getopts :cdg:ho:s:tv OPT; do
     case $OPT in
+        v)
+            set -x
+            ;;
         d)
             ddcutil detect
             exit
