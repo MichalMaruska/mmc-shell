@@ -53,7 +53,7 @@ DDCUTIL=(ddcutil $HINT)
 while getopts :cdg:ho:s:t OPT; do
     case $OPT in
         d)
-            $DDCUTIL detect
+            ddcutil detect
             exit
             ;;
         c)
