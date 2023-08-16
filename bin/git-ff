@@ -25,7 +25,7 @@ Fast-forward to remote head, stashing around.
 -f not only fast-forward !
 -b rebase.
 -l list
--u fetch/update first
+-u DO NOT fetch/update first
 -v verbose
 
 -h help
@@ -39,7 +39,7 @@ force=n # act even if not descendant
 rebase=n # if not descendant -> rebase
 list_difference=no  # show the git log between.
 
-fetch_too=no # start with git fetch ... from which remote?
+fetch_too=yes # start with git fetch ... from which remote?
 verbose=no
 
 while getopts :bfhluv OPT; do
@@ -58,7 +58,7 @@ while getopts :bfhluv OPT; do
             list_difference=yes
             ;;
         u)
-            fetch_too=yes
+            fetch_too=no
             ;;
         v)
             verbose=yes
