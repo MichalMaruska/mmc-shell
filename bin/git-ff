@@ -187,15 +187,14 @@ then
     GIT_QUIET+=(--quiet)
 fi
 
-
 if [[ $fetch_too = yes ]]
 then
-    #
     (
         if [[ $verbose = yes ]]; then
             set -x
         fi
         # -p, --prune  Before fetching, remove any remote-tracking references that no longer exist on the remote.
+        git remote prune $GIT_REMOTE_NAME
         git fetch --prune --progress  --verbose $GIT_REMOTE_NAME ${target#remotes/$GIT_REMOTE_NAME/}
     )
 fi
