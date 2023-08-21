@@ -1,3 +1,13 @@
+mmc-shell (3.61) release; urgency=medium
+
+  [ Michal Maruska ]
+  * ddc-brightness: don't use hint while detecting
+  * ddc-brightness: -v option for verbosity
+  * Invert the --fetch -u option
+  * git-ff: prune all from the remote
+
+ --  <mmaruska@gmail.com>  Mon, 21 Aug 2023 09:12:35 +0200
+
 mmc-shell (3.60) release; urgency=medium
 
   [ Michal Maruska ]
