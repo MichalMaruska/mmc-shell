@@ -253,7 +253,7 @@ git_ff_to_cautiously()
         elif [[ $force = y ]]  || git merge-base --is-ancestor $local_branch $ref
         then
             # todo: can you do that without touching the working tree?
-            current_branch=$(git_current_branch_name)
+            current_branch=$(current_branch_name_maybe)
 
             if [[ $current_branch != $local_branch ]]
             then
