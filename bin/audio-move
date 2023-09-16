@@ -155,12 +155,15 @@ while getopts :bBc:dhi:lpsux OPT; do
                 info "now move $speakers"
                 move_to $speakers
             else
-                audio-select -c $CARD -j
+                # audio-select -c $CARD -j
                 # e-dock
                 # profile pactl set-card-profile
                 # alsa_card.pci-0000_00_1b.0 output:analog-stereo+input:analog-stereo
-                sink="alsa_output.pci-0000_00_1b.0.analog-stereo"
-                pactl set-sink-port $sink analog-output-lineout
+                set -x
+                sink="alsa_output.pci-0000_00_1f.3.analog-stereo"
+                # pactl set-sink-port $sink analog-output-lineout
+                # analog-output-speaker
+                pactl set-sink-port $sink analog-output-headphones
                 #
                 move_to $sink
             fi
