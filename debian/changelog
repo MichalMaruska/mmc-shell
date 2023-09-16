@@ -1,3 +1,10 @@
+mmc-shell (3.62) release; urgency=medium
+
+  * fix (git-ff): use current_branch_name_MAYBE
+  * audio-move: -s don't invoke audio-select; change the sink & port
+
+ -- Michal Maruska <mmaruska@gmail.com>  Sat, 16 Sep 2023 17:27:48 +0200
+
 mmc-shell (3.61) release; urgency=medium
 
   [ Michal Maruska ]
