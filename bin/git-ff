@@ -170,6 +170,10 @@ then
         # but remote/branch is valid!
         # maybe `is_git_remote_branch' should return the expanded ref.
         target=remotes/${1#remotes/}
+        # why not simply:
+        # GIT_REMOTE_NAME=${{1#remotes/}%/*}
+        GIT_REMOTE_NAME=${1#remotes/}
+        GIT_REMOTE_NAME=${GIT_REMOTE_NAME%/*}
         local_branch=$2
     else
         die "confused: '$1' is not a remote, nor branch"
