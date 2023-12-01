@@ -1,3 +1,11 @@
+mmc-shell (3.63) release; urgency=medium
+
+  * calculate the remote-host name
+  * git-function: hide stderr when testing names
+  * git-ff: exit when only parameter is non-existing branch/remote
+
+ -- Michal Maruska <mmaruska@gmail.com>  Fri, 01 Dec 2023 15:57:49 +0100
+
 mmc-shell (3.62) release; urgency=medium
 
   * fix (git-ff): use current_branch_name_MAYBE
