@@ -177,13 +177,13 @@ mmc_unstash_if_stashed()
 # is the $1 a valid ref to remote branch?
 is_git_remote_branch()
 {
-    git rev-parse remotes/$1 2>/dev/null
+    git rev-parse remotes/$1 2>/dev/null 2>/dev/null
 }
 
 # is it a name of a remote?
 is_git_remote()
 {
-    git remote get-url $1 > /dev/null
+    git remote get-url $1 > /dev/null 2>/dev/null
     # git remote | grep -F $1
 }
 
