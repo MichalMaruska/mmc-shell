@@ -149,12 +149,11 @@ elif [[ $# = 1 ]]; then
         # implicitly.... so we must be on a branch!
         local_branch=$(git_current_branch_name)
         target=remotes/$GIT_REMOTE_NAME/$local_branch
-    ## elif is_git_remote_branch
+    ## fixme: useful?  elif is_git_remote_branch
+        # target=$1
+        # local_branch=$(git_current_branch_name)
     else
-        # fixme: what?
-        target=$1
-        # I guess:
-        local_branch=$(git_current_branch_name)
+        die "\`$1' is neither remote, nor local branch"
     fi
     shift
 
