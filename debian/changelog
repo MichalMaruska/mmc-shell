@@ -1,3 +1,9 @@
+mmc-shell (3.64) release; urgency=medium
+
+  * audio-move -B: set the profile on the Bluez "card"
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 01 Feb 2024 11:08:00 +0100
+
 mmc-shell (3.63) release; urgency=medium
 
   * calculate the remote-host name
