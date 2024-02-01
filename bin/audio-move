@@ -109,6 +109,10 @@ while getopts :bBc:dhi:lpsux OPT; do
             debug=yes
             ;;
         B)
+            card=$(pactl list short cards |grep bluez| cut -f 2)
+
+            pactl set-card-profile $card handsfree_head_unit
+
             bluetooth_sink=$(pactl list short sinks| cut -f 2|- grep bluez)
             # bluetoothctl connect '00:1B:66:C0:D0:41'
             # move_to "bluez_sink.E8_07_BF_3E_41_06.headset_head_unit"
