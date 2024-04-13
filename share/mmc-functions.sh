@@ -8,6 +8,16 @@ check_getopt()
     fi
 }
 
+optional_traced_exec()
+{
+    if [[ $debug = yes ]]
+    then
+        traced_exec $@
+    else
+        eval $@
+    fi
+}
+
 traced_exec()
 {
     local x=$options[xtrace]
