@@ -29,6 +29,7 @@ usage: ${0##*/} [-c N] [+-pbsh] [-i name] [-l]
 -b builtin
 
 -B bluetooth
+-F hands-free-profile on bluetooth
 -p  phones
 -s  speakers
 -u  USB phones
@@ -103,17 +104,33 @@ find_pch()
 CARD=1
 find_pch
 
-while getopts :bBc:dhi:lpsux OPT; do
+while getopts :bBc:dFhi:lpstux OPT; do
     case $OPT in
         d)
             debug=yes
             ;;
-        B)
+        t)
+            # find bluetooth
+            # set profile
+            # set as default sink
+            #   source
+
+            ;;
+        F | B)
             card=$(pactl list short cards |grep bluez| cut -f 2)
 
-            pactl set-card-profile $card handsfree_head_unit
+            profile=a2dp_sink
+            # handsfree_head_unit
+            pactl set-card-profile $card $profile
+
 
             bluetooth_sink=$(pactl list short sinks| cut -f 2|- grep bluez)
+            # pactl list cards
+            # Name: bluez_card.80_C3_BA_2A_08_92
+            # device.description = "MOMENTUM 4"
+            # cards=$(pactl list short cards|grep bluez)
+            # pactl set-card-profile 22 a2dp_sink
+            # pactl set-card-profile bluez_card.80_C3_BA_2A_08_92  handsfree_head_unit
             # bluetoothctl connect '00:1B:66:C0:D0:41'
             # move_to "bluez_sink.E8_07_BF_3E_41_06.headset_head_unit"
             move_to $bluetooth_sink
