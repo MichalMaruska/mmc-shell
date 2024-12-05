@@ -180,12 +180,17 @@ while getopts :bBc:dFhi:lpstux OPT; do
                 # audio-select -c $CARD -j
                 # e-dock
                 # profile pactl set-card-profile
+                card_name=pci-0000_00_1f.3
+                card=alsa_card.$card_name
+                card_output=analog-stereo
+                pactl set-card-profile $card "output:${card_output}+input:${card_output}"
                 # alsa_card.pci-0000_00_1b.0 output:analog-stereo+input:analog-stereo
                 set -x
-                sink="alsa_output.pci-0000_00_1f.3.analog-stereo"
+                sink="alsa_output.${card_name}.${card_output}"
                 # pactl set-sink-port $sink analog-output-lineout
                 # analog-output-speaker
                 pactl set-sink-port $sink analog-output-headphones
+                pactl set-sink-mute $sink off
                 #
                 move_to $sink
             fi
