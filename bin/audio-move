@@ -186,7 +186,6 @@ while getopts :bBc:dFhi:lpstux OPT; do
                 card_output=analog-stereo
                 pactl set-card-profile $card "output:${card_output}+input:${card_output}"
                 # alsa_card.pci-0000_00_1b.0 output:analog-stereo+input:analog-stereo
-                set -x
                 sink="alsa_output.${card_name}.${card_output}"
                 # pactl set-sink-port $sink analog-output-lineout
                 # analog-output-speaker
