@@ -1,3 +1,13 @@
+mmc-shell (3.65) release; urgency=medium
+
+  * function optional_traced_exec
+  * audio-move: -Fvs -B for a2dp & headset BT profiles
+  * audio-move: change the buil-in pci sink ID
+  * audio-move: -s compose the profile from 3 parts
+  * mark the doc as not present: todo: look at active/connected sinks
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 05 Dec 2024 09:38:50 +0100
+
 mmc-shell (3.64) release; urgency=medium
 
   * audio-move -B: set the profile on the Bluez "card"
