@@ -1,3 +1,9 @@
+mmc-shell (3.66) release; urgency=medium
+
+  * drop set -x
+
+ -- Michal Maruska <mmaruska@gmail.com>  Thu, 05 Dec 2024 09:53:55 +0100
+
 mmc-shell (3.65) release; urgency=medium
 
   * function optional_traced_exec
